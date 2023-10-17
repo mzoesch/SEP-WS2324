@@ -1,4 +1,9 @@
-package Cards;
+package App.Cards;
+
+import App.PlayerController;
+
+import java.util.Scanner;
+
 
 public class PrincessAnnette extends Card {
 
@@ -20,9 +25,31 @@ public class PrincessAnnette extends Card {
         return;
     }
 
+    /**
+     * Princess Annette can be played at any given time. <p>
+     * We do not need to check if the card is playable. <p>
+     */
     @Override
-    public void PlayEffect() {
-        System.out.printf("%s has been played by you.\n", this.name);
-        return;
+    public int PlayEffect(
+            Scanner scanner,
+            PlayerController PC,
+            boolean bPlayedManually,
+            Card pickedCardFromDeck,
+            String MessageForPlayerWhenForced
+    ) {
+        if (bPlayedManually) {
+            System.out.printf("%s has been played by you.\n", this.name);
+            PC.SetIsKnockedOut(true, false);
+
+            return 3;
+        }
+
+        if (PC.GetProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
+            return 1;
+        }
+
+        PC.SetIsKnockedOut(true, true);
+        return 3;
     }
 }

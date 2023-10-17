@@ -1,4 +1,9 @@
-package Cards;
+package App.Cards;
+
+import App.PlayerController;
+
+import java.util.Scanner;
+
 
 public abstract class Card {
 
@@ -37,6 +42,18 @@ public abstract class Card {
         return String.format("%s (Affection: %s)", this.name, this.affection);
     }
 
-    public abstract void PlayEffect();
+    public String GetAsDetailedString() {
+        return String.format("%s\n%s\n%s\n",
+                this.GetAsString(), this.backgroundStory, this.effectDescription);
+    }
+
+    /**
+     * Return codes: <p>
+     *     0: The card was played successfully. <p>
+     *     1: The card was not played successfully. <p>
+     *     2: The card was played successfully and players hands have been already updated. <p>
+     *     3: The card was played successfully and the player has been knocked out. <p>
+     */
+    public abstract int PlayEffect(Scanner scanner, PlayerController PC, boolean bPlayedManually, Card pickedCardFromDeck, String MessageForPlayerWhenForced);
 
 }

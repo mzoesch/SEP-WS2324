@@ -1,6 +1,8 @@
+package App;
+
+import App.Cards.*;
+
 import java.util.Scanner;
-import Cards.Card;
-import Cards.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,10 +16,17 @@ public class GameMode {
 
     /**
      * As written in the rules. <p>
-     * This card is not in the deck and is removed at the beginning of each round (Applies only to 2-player games). <p>
+     * These cards are not in the deck and are removed at the beginning of each round
+     * and placed faced-up on the table to be examined by everyone (Applies only to 2-player games). <p>
+     * <b>Warning:</b> This may be empty.
+     */
+    private final ArrayList<Card> examiningCards;
+    /**
+     * As written in the rules. <p>
+     * This card is removed from the top of the deck and placed faced-down on the table. <p>
      * <b>Warning:</b> This may be null.
-     * */
-    private Card examinedCard;
+     */
+    private Card hiddenCard;
     private final ArrayList<Card> deckOnTable;
 
     private final PlayerController[] players;
@@ -27,6 +36,7 @@ public class GameMode {
         this.scanner = scanner;
         this.playerCount = playerCount;
         this.deckOnTable = new ArrayList<Card>(0);
+        this.examiningCards = new ArrayList<Card>(0);
 
         this.players = new PlayerController[this.playerCount];
         for (int i = 0; i < this.playerCount; i++) {
@@ -38,16 +48,6 @@ public class GameMode {
     }
 
     // region Game helper functions
-
-    private void PrintArrayList(ArrayList<PlayerController> list, String sep) {
-        for (int i = 0; i < list.size(); i++) {
-            System.out.printf("%s", list.get(i).GetPlayerName());
-            if (i != list.size() - 1)
-                System.out.printf("%s", sep);
-            continue;
-        }
-        System.out.print("!\n");
-    }
 
     private int UpdateRoundWinnersListBasedOnAffection(
             ArrayList<PlayerController> winners, int highestAffection, PlayerController PC, int currentAffection
@@ -105,8 +105,7 @@ public class GameMode {
             System.out.print("The following players have won the round with ");
         System.out.printf("%s!\n",
                 winnersForSumOfAffectionInDiscardPile.get(0).GetCardInHand().GetAsString());
-
-        PrintArrayList(winnersForSumOfAffectionInDiscardPile, ", ");
+        App.PrintArrayListPC(winnersForSumOfAffectionInDiscardPile, ", ", "!\n");
 
         return;
     }
@@ -148,7 +147,7 @@ public class GameMode {
 
         if (winners.size() == 1) {
             System.out.printf("\n\n**** - ****\nThe winner of the game is %s!\n", winners.get(0).GetPlayerName());
-            System.out.print("But the other players also played pretty well:\n");
+            System.out.print("But the others also played pretty well:\n");
             this.PrintAffectionOfPlayers(false);
             System.out.print("\ngg\n");
 
@@ -157,8 +156,8 @@ public class GameMode {
 
         if (winners.size() > 1) {
             System.out.print("The winners are ");
-            PrintArrayList(winners, ", ");
-            System.out.print("But the other players also played pretty well:\n");
+            App.PrintArrayListPC(winners, ", ", "!\n");
+            System.out.print("But the others also played pretty well:\n");
             this.PrintAffectionOfPlayers(false);
             System.out.print("\ngg\n");
 
@@ -236,6 +235,13 @@ public class GameMode {
 
     private void SelectNextPlayer() {
         this.mostRecentPlayerID = (this.mostRecentPlayerID + 1) % this.playerCount;
+        if (this.players[this.mostRecentPlayerID].GetIsKnockedOut()) {
+            if (this.players[this.mostRecentPlayerID].GetSignalPlayerNextTurnAboutKnockout())
+                return;
+
+            this.SelectNextPlayer();
+        }
+
         return;
     }
 
@@ -253,7 +259,8 @@ public class GameMode {
      */
     private void SetupTableDeck() {
         this.deckOnTable.clear();
-        this.examinedCard = null;
+        this.hiddenCard = null;
+        this.examiningCards.clear();
 
         this.deckOnTable.add(new PrincessAnnette());
 
@@ -267,7 +274,7 @@ public class GameMode {
         this.deckOnTable.add(new HandmaidSusannah());
         this.deckOnTable.add(new HandmaidSusannah());
 
-        this.deckOnTable.add(new BaronTalus());
+        // this.deckOnTable.add(new BaronTalus());
         this.deckOnTable.add(new BaronTalus());
 
         this.deckOnTable.add(new PriestTomas());
@@ -280,8 +287,12 @@ public class GameMode {
         this.deckOnTable.add(new GuardOdette());
 
         Collections.shuffle(this.deckOnTable);
-        if (this.playerCount == 2)
-            this.examinedCard = this.deckOnTable.remove(0);
+        this.hiddenCard = this.deckOnTable.remove(0);
+        if (this.playerCount == 2) {
+            this.examiningCards.add(this.deckOnTable.remove(0));
+            this.examiningCards.add(this.deckOnTable.remove(0));
+            this.examiningCards.add(this.deckOnTable.remove(0));
+        }
 
         return;
     }
@@ -289,22 +300,25 @@ public class GameMode {
     private void PrepareNewRound() {
         this.SetupTableDeck();
 
-
         // As written in the rules. Each player will have one card in hand at the beginning of each round.
         for (int i = 0; i < this.playerCount; i++) {
             this.players[this.mostRecentPlayerID].SetCardInHand(this.deckOnTable.remove(0));
             this.SelectNextPlayer();
+
+            continue;
         }
 
         return;
     }
-
 
     private void StartNewRound() {
         this.PrepareNewRound();
 
         while (!this.deckOnTable.isEmpty()) {
             this.StartNewTurn();
+            if (this.GetRemainingPlayerCount() == 1)
+                break;
+
             this.SelectNextPlayer();
             continue;
         }
@@ -313,9 +327,13 @@ public class GameMode {
     }
 
     private void StartNewTurn() {
+        if (this.players[this.mostRecentPlayerID].GetIsKnockedOut()) {
+            this.players[this.mostRecentPlayerID].PlayTurn(this.scanner, null);
+            return;
+        }
+
         Card cardFromDeck = this.deckOnTable.remove(0);
         this.players[this.mostRecentPlayerID].PlayTurn(this.scanner, cardFromDeck);
-
         return;
     }
 
@@ -323,8 +341,20 @@ public class GameMode {
         return this.deckOnTable.size();
     }
 
-    public Card GetExaminedCard() {
-        return this.examinedCard;
+    public Card GetHiddenCard() {
+        return this.hiddenCard;
+    }
+
+    public ArrayList<Card> GetExaminingCards() {
+        return this.examiningCards;
+    }
+
+    public String GetExaminingCardsAsString() {
+        StringBuilder examiningCardsAsString = new StringBuilder();
+        for (Card card : this.examiningCards)
+            examiningCardsAsString.append(card.GetAsString()).append(" | ");
+
+        return examiningCardsAsString.toString();
     }
 
     public String[][] GetAllDiscardedCards() {
@@ -343,12 +373,78 @@ public class GameMode {
         return this.playerCount;
     }
 
+    public ArrayList<PlayerController> GetRemainingPlayers() {
+        ArrayList<PlayerController> remainingPlayers = new ArrayList<PlayerController>(0);
+        for (PlayerController PC : this.players)
+            if (!PC.GetIsKnockedOut())
+                remainingPlayers.add(PC);
+
+        return remainingPlayers;
+    }
+
+    public String[] GetRemainingPlayersAsStringArray() {
+        String[] remainingPlayersAsStringArray = new String[this.GetRemainingPlayerCount()];
+        int i = 0;
+        for (PlayerController PC : this.players)
+            if (!PC.GetIsKnockedOut())
+                remainingPlayersAsStringArray[i++] = PC.GetPlayerName();
+
+        return remainingPlayersAsStringArray;
+    }
+
+    public String GetRemainingPlayersAsString() {
+        StringBuilder remainingPlayersAsString = new StringBuilder();
+        for (PlayerController PC : this.players)
+            if (!PC.GetIsKnockedOut())
+                remainingPlayersAsString.append(PC.GetPlayerName()).append(" | ");
+
+        return remainingPlayersAsString.toString();
+    }
+
+    public int GetRemainingPlayerCount() {
+        int remainingPlayerCount = 0;
+        for (PlayerController PC : this.players)
+            if (!PC.GetIsKnockedOut())
+                remainingPlayerCount++;
+
+        return remainingPlayerCount;
+    }
+
+    public PlayerController GetPlayerControllerFromName(String playerName) {
+        for (PlayerController PC : this.players)
+            if (PC.GetPlayerName().equals(playerName))
+                return PC;
+
+        throw new IllegalArgumentException("Invalid player name.");
+    }
+
+    public void SwapHands(PlayerController PC1, PlayerController PC2) {
+        Card cardInHandPC1 = PC1.GetCardInHand();
+        Card cardInHandPC2 = PC2.GetCardInHand();
+
+        PC1.SetCardInHand(cardInHandPC2);
+        PC2.SetCardInHand(cardInHandPC1);
+
+        return;
+    }
+
+    public Card DrawCard() {
+        if (this.deckOnTable.isEmpty()) {
+            Card card = this.hiddenCard;
+            this.hiddenCard = null;
+            return card;
+        }
+
+        return this.deckOnTable.remove(0);
+    }
+
     private void ResetForNewRound() {
         for (PlayerController PC : this.players)
             PC.ResetForNewRound();
 
         this.deckOnTable.clear();
-        this.examinedCard = null;
+        this.hiddenCard = null;
+        this.examiningCards.clear();
 
         return;
     }

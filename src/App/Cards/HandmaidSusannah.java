@@ -1,4 +1,9 @@
-package Cards;
+package App.Cards;
+
+import App.PlayerController;
+
+import java.util.Scanner;
+
 
 public class HandmaidSusannah extends Card {
 
@@ -20,8 +25,20 @@ public class HandmaidSusannah extends Card {
     }
 
     @Override
-    public void PlayEffect() {
-        System.out.printf("%s has been played by you.\n", this.name);
-        return;
+    public int PlayEffect(Scanner scanner, PlayerController PC, boolean bPlayedManually, Card pickedCardFromDeck, String MessageForPlayerWhenForced) {
+        if (bPlayedManually) {
+            System.out.printf("%s has been played by you.\n", this.name);
+            PC.SetProtectedByHandmaid(true);
+
+            return 0;
+        }
+
+        if (PC.GetProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
+            return 1;
+        }
+
+        PC.SetMessageForPlayerWhenPlayEffectWasForced(MessageForPlayerWhenForced);
+        return 0;
     }
 }
