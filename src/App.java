@@ -40,6 +40,7 @@ public class App {
     static void ClearScreen(Scanner scanner) {
         System.out.print("*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n**** - ****\n");
 
+        // This does not work in out IDE.
         try {
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
@@ -49,28 +50,36 @@ public class App {
         return;
     }
 
-    static int WaitForCommand(Scanner scanner) {
+    static String WaitForCommand(Scanner scanner, String[] validCommands) {
         while (true) {
+            System.out.print("\nWhat do you want to do?: ");
             String input = scanner.nextLine();
+            String command = "";
+
             try {
                 if (input.charAt(0) != App.EscapeCharacter) {
                     System.out.printf(
                             "This is not a command. Please enter a command starting with %c.\n", App.EscapeCharacter);
                     System.out.printf(
-                            "For more information on commands, enter %chelp?.\n", App.EscapeCharacter);
+                            "For more information on commands, enter %chelp.\n", App.EscapeCharacter);
 
                     continue;
                 }
 
-                System.out.printf("Command recognized: %s.\n", input);
-                return 0;
+                command = input.substring(1);
+                for (String validCommand : validCommands)
+                    if (command.equals(validCommand))
+                        return command;
+
+                throw new IndexOutOfBoundsException();
             }
 
             catch (IndexOutOfBoundsException e) {
-                System.out.printf("Command %s not recognized.\n", input);
+                if (command.isEmpty())
+                    continue;
+                System.out.printf("Command \"%s\" not recognized.\n", command);
+                continue;
             }
-
-            continue;
         }
     }
 }
