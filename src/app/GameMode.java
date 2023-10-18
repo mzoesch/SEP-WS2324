@@ -295,7 +295,7 @@ public class GameMode {
      * - Handmaid Susannah (2x) <p>
      * - Baron Talus (2x) <p>
      * - Priest Tomas (2x) <p>
-     * - Guard Odette (5x)
+     * - Guard Odette (5x) <p>
      */
     private void setupTableDeck() {
         this.deckOnTable.add(new PrincessAnnette());

@@ -200,7 +200,7 @@ public class PlayerController {
                     this.bPlayedTurn = true;
                     return false;
                 }
-                reactToCardPlayed(RC);
+                this.reactToCardPlayed(RC);
 
                 return false;
             }
@@ -221,7 +221,7 @@ public class PlayerController {
                     return false;
                 }
 
-                reactToCardPlayed(RC);
+                this.reactToCardPlayed(RC);
                 return false;
             }
 

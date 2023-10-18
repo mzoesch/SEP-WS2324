@@ -56,7 +56,6 @@ public class PrinceArnaud extends Card {
                         );
 
                 if (Objects.equals(PC.getPlayerName(), choice)) {
-                    System.out.print("You have chosen to discard your hand and draw a new one.\n");
                     PC.addCardToDiscardedCards(this);
                     if (bIsHandCard)
                         PC.setCardInHand(PC.getPickedCardFromDeck());
