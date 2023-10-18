@@ -56,7 +56,7 @@ public class GameMode {
     }
 
     // region Game helper functions
-    
+
     public void printAffectionOfPlayersDSC(boolean bNewLine) {
         ArrayList<PlayerController> playersSortedByAffection = new ArrayList<PlayerController>(0);
         for (PlayerController PC : this.players) {
@@ -287,7 +287,7 @@ public class GameMode {
     // region Round helper functions
 
     /**
-     * Adds initial cards to table deck (16 cards).<p>
+     * Adds initial cards to table deck (16 cards). <p>
      * - Princess Annette (1x) <p>
      * - Countess Wilhelmina (1x) <p>
      * - King Arnaud IV (1x) <p>
