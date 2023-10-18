@@ -492,6 +492,10 @@ public class PlayerController {
         return;
     }
 
+    public boolean hasCountessWilhelminaInHand() {
+        return this.cardInHand instanceof CountessWilhelmina || this.pickedCardFromDeck instanceof CountessWilhelmina;
+    }
+
     // endregion Utility functions
 
 }

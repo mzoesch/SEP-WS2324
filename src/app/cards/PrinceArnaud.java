@@ -42,8 +42,7 @@ public class PrinceArnaud extends Card {
             String messageForPlayerWhenForced
     ) {
         if (bPlayedManually) {
-            if (Objects.equals(PC.getCardInHand().getName(), CountessWilhelmina.NAME)
-                    || Objects.equals(PC.getPickedCardFromDeck().getName(), CountessWilhelmina.NAME)) {
+            if (PC.hasCountessWilhelminaInHand()) {
                 System.out.print("You must discard the Countess Wilhelmina.\n");
                 return Card.RC_ERR;
             }

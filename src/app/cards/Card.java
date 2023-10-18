@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
-// TODO: Make the name a static public var, for easier access in isEquals() methods.
 public abstract class Card {
 
     protected final String name;
@@ -55,7 +54,6 @@ public abstract class Card {
     public String getAsDetailedString() {
         return String.format("%s\n%s\n%s\n", this.getAsString(), this.backgroundStory, this.effectDescription);
     }
-
 
     // endregion Getters
 

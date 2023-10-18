@@ -6,8 +6,6 @@ import java.io.IOException;
 
 public class App {
 
-    static private final char EscapeCharacter = '\\';
-
     public static void main(String[] args) {
 
         System.out.print("\n******************** - * - ********************\n");
