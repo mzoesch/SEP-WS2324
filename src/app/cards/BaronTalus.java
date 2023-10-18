@@ -1,25 +1,27 @@
 package app.cards;
 
-import app.PlayerController;
 import app.App;
+import app.PlayerController;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class BaronTalus extends Card {
 
+    public static final String NAME = "Baron Talus";
+    private static final int CARD_AFFECTION = 3;
+
     public BaronTalus() {
         super(
-            "Baron Talus",
+            BaronTalus.NAME,
             "The scion of an esteemed house that has long been a close ally of the royal family, "
                 + "Baron Talus has a quiet and gentle demeanor that conceals a man used to being obeyed. "
                 + "His suggestions are often treated as if they came from the King himself.",
             "When you discard the Baron, choose another player still in the round. You and that player "
                 + "secretly compare your hands. The player with the lower number is knocked out of the round. "
                 + "In case of a tie, nothing happens.",
-                3
+                BaronTalus.CARD_AFFECTION
         );
 
         return;
@@ -35,28 +37,19 @@ public class BaronTalus extends Card {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();
-            for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
-                if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
-                    continue;
-                if (tPC.getProtectedByHandmaid())
-                    continue;
-
-                targetablePCs.add(tPC);
-                continue;
-            }
-
-            if (targetablePCs.isEmpty()) {
+            PlayerController[] targetablePCs = Card.getAllRemainingPlayersTargetableByCardEffects(PC);
+            if (targetablePCs.length == 0) {
                 System.out.print(
-                    "There are no other players to compare hands with or they are protected by Handmaids.\n");
+                        "There are no other players to compare hands with or they are protected by Handmaids.\n");
                 System.out.print("The effect is cancelled.\n");
                 return Card.RC_OK;
             }
 
             String choice = App.waitForInputStringWithValidation_V2(
                     scanner,
-                    targetablePCs.stream().map(PlayerController::getPlayerName).toArray(String[]::new),
-                    "Choose a player to compare hands with (the player with the lower card will be knocked out of the round)"
+                    Arrays.stream(targetablePCs).map(PlayerController::getPlayerName).toArray(String[]::new),
+                    "Choose a player to compare hands with "
+                        + "(the player with the lower card will be knocked out of the round)"
                 );
 
             PlayerController targetPC = PC.getActiveGameMode().getPlayerControllerByName(choice);

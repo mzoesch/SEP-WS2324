@@ -2,6 +2,8 @@ package app.cards;
 
 import app.PlayerController;
 
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -71,4 +73,20 @@ public abstract class Card {
             Boolean bIsHandCard,
             String messageForPlayerWhenForced
     );
+
+    public static PlayerController[] getAllRemainingPlayersTargetableByCardEffects(PlayerController PC) {
+        ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();
+
+        for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
+            if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
+                continue;
+            if (tPC.getProtectedByHandmaid())
+                continue;
+
+            targetablePCs.add(tPC);
+            continue;
+        }
+
+        return targetablePCs.toArray(new PlayerController[0]);
+    }
 }

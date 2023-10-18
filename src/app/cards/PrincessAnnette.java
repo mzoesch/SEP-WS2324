@@ -7,9 +7,12 @@ import java.util.Scanner;
 
 public class PrincessAnnette extends Card {
 
+    public static final String NAME = "Princess Annette";
+    private static final int CARD_AFFECTION = 8;
+
     public PrincessAnnette() {
         super(
-            "Princess Annette",
+            PrincessAnnette.NAME,
             "Hampered only by the naïveté of youth, Princess Annette is elegant, charming, and beautiful. "
                 + "Obviously, you want the princess to carry your letter. However, she is self-conscious "
                 + "about matters of the heart, and if confronted, will toss your letter "
@@ -19,7 +22,7 @@ public class PrincessAnnette extends Card {
                 + "effect, any remaining effects of that card do not apply (you do not draw a card from the "
                 + "Prince, for example). Effects tied to being knocked out the round still apply (eg. "
                 + "Constable, Jester), however.",
-                8
+                PrincessAnnette.CARD_AFFECTION
         );
 
         return;

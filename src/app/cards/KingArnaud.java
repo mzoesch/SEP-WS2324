@@ -1,7 +1,7 @@
 package app.cards;
 
-import app.PlayerController;
 import app.App;
+import app.PlayerController;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -9,15 +9,18 @@ import java.util.Scanner;
 
 public class KingArnaud extends Card{
 
+    public static final String NAME = "King Arnaud IV";
+    private static final int CARD_AFFECTION = 6;
+
     public KingArnaud() {
         super(
-            "King Arnaud IV",
+            KingArnaud.NAME,
             "The undisputed ruler of Tempest... for the moment. Because of his role in the arrest "
                 + "of Queen Marianna, he does not rate as highly with Princess Annette as a father "
                 + "should. He hopes to work himself back into her graces.",
             "When you discard King Arnaud IV, trade the card in your hand with the card held by another "
                 + "player of your choice. You cannot trade with a player who is out of the round.",
-                6
+                KingArnaud.CARD_AFFECTION
         );
 
         return;
@@ -49,8 +52,8 @@ public class KingArnaud extends Card{
             String messageForPlayerWhenForced
     ) {
         if (bPlayedManually) {
-            if (Objects.equals(PC.getCardInHand().getName(), "Countess Wilhelmina")
-                    || Objects.equals(PC.getPickedCardFromDeck().getName(), "Countess Wilhelmina")) {
+            if (Objects.equals(PC.getCardInHand().getName(), CountessWilhelmina.NAME)
+                    || Objects.equals(PC.getPickedCardFromDeck().getName(), CountessWilhelmina.NAME)) {
                 System.out.print("You must discard the Countess Wilhelmina.\n");
                 return Card.RC_ERR;
             }

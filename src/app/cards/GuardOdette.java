@@ -1,21 +1,23 @@
 package app.cards;
 
-import app.PlayerController;
 import app.App;
+import app.PlayerController;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class GuardOdette extends Card {
+
+    public static final String NAME = "Guard Odette";
+    private static final int CARD_AFFECTION = 1;
 
     private static final int MIN_AFFECTION_WHEN_GUESSING = 2;
     private static final int MAX_AFFECTION_WHEN_GUESSING = 8;
 
     public GuardOdette() {
         super(
-                "Guard Odette",
+                GuardOdette.NAME,
                 "Charged with seeing to the security of the royal family, Odette follows her orders with "
                 + "persistence and diligence... even though her mentor is said to have drowned while fleeing "
                 + "arrest for complicity in the Queen’s treason.",
@@ -23,7 +25,7 @@ public class GuardOdette extends Card {
                 + "has that number in their hand, that player is knocked out of the round. If all other players "
                 + "still in the round cannot be chosen (eg. due to Handmaid or Sycophant), this card is "
                 + "discarded without effect.",
-                1
+                GuardOdette.CARD_AFFECTION
         );
 
         return;
@@ -40,26 +42,16 @@ public class GuardOdette extends Card {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();
-            for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
-                if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
-                    continue;
-                if (tPC.getProtectedByHandmaid())
-                    continue;
-
-                targetablePCs.add(tPC);
-                continue;
-            }
-
-            if (targetablePCs.isEmpty()) {
-                System.out.print("All players are unavailable for comparison.\n");
+            PlayerController[] targetablePCs = Card.getAllRemainingPlayersTargetableByCardEffects(PC);
+            if (targetablePCs.length == 0) {
+                System.out.print("All players are protected for comparison.\n");
                 System.out.print("The effect is cancelled.\n");
                 return Card.RC_OK;
             }
 
             String choice = App.waitForInputStringWithValidation_V2(
                     scanner,
-                    targetablePCs.stream().map(PlayerController::getPlayerName).toArray(String[]::new),
+                    Arrays.stream(targetablePCs).map(PlayerController::getPlayerName).toArray(String[]::new),
                     "Choose a player you want to guess the affection of their hand "
                             + "(they will be knocked out if you guess correctly)"
             );
@@ -76,7 +68,7 @@ public class GuardOdette extends Card {
                 System.out.printf("You guessed correctly. %s has been knocked out of the round.\n",
                         targetPC.getPlayerName());
                 targetPC.setIsKnockedOut(
-                        true, true, "A Guard was played on you and you were knocked out of the round.\n");
+                        true, true, "A Guard was played on you.\n");
 
                 return Card.RC_OK;
             }

@@ -1,24 +1,26 @@
 package app.cards;
 
-import app.PlayerController;
 import app.App;
+import app.PlayerController;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class PriestTomas extends Card {
 
+    public static final String NAME = "Priest Tomas";
+    private static final int CARD_AFFECTION = 2;
+
     public PriestTomas() {
         super(
-            "Priest Tomas",
+            PriestTomas.NAME,
             "Open, honest, and uplifting, Father Tomas always seeks out the opportunity to do good. "
                 + "With the arrest of the Queen, he is often seen about the palace, acting as confessor, "
                 + "counselor, and friend.",
             "When you discard the Priest, you can look at another player’s hand. Do not reveal the "
                 + "hand to any other players",
-                2
+                PriestTomas.CARD_AFFECTION
         );
 
         return;
@@ -35,26 +37,16 @@ public class PriestTomas extends Card {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();
-            for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
-                if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
-                    continue;
-                if (tPC.getProtectedByHandmaid())
-                    continue;
-
-                targetablePCs.add(tPC);
-                continue;
-            }
-
-            if (targetablePCs.isEmpty()) {
-                System.out.print("All players are unavailable for comparison.\n");
+            PlayerController[] targetablePCs = Card.getAllRemainingPlayersTargetableByCardEffects(PC);
+            if (targetablePCs.length == 0) {
+                System.out.print("All players are Protected. You are not able to see any other card.\n");
                 System.out.print("The effect is cancelled.\n");
                 return Card.RC_OK;
             }
 
             String choice = App.waitForInputStringWithValidation_V2(
                     scanner,
-                    targetablePCs.stream().map(PlayerController::getPlayerName).toArray(String[]::new),
+                    Arrays.stream(targetablePCs).map(PlayerController::getPlayerName).toArray(String[]::new),
                     "Choose a player you want to see the hand of"
                 );
 

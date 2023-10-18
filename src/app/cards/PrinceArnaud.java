@@ -9,9 +9,12 @@ import java.util.Scanner;
 
 public class PrinceArnaud extends Card {
 
+    public static final String NAME = "Prince Arnaud";
+    private static final int CARD_AFFECTION = 5;
+
     public PrinceArnaud() {
         super(
-            "Prince Arnaud",
+            PrinceArnaud.NAME,
             "As a social gady, Prince Arnaud was not as distressed over his mother’s arrest as one "
                 + "would suppose. Since many women clamor for his attention, he hopes to help his sister "
                 +" find the same banal happiness by playing matchmaker.",
@@ -20,7 +23,7 @@ public class PrinceArnaud extends Card {
                 + "Princess, see page 8) and draws a new one. If the deck is empty and the player cannot "
                 + "draw a card, that player draws the card that was removed at the start of the round. "
                 + "If all other players are protected by the Handmaid, you must choose yourself.",
-                5
+                PrinceArnaud.CARD_AFFECTION
         );
 
         return;
@@ -39,8 +42,8 @@ public class PrinceArnaud extends Card {
             String messageForPlayerWhenForced
     ) {
         if (bPlayedManually) {
-            if (Objects.equals(PC.getCardInHand().getName(), "Countess Wilhelmina")
-                    || Objects.equals(PC.getPickedCardFromDeck().getName(), "Countess Wilhelmina")) {
+            if (Objects.equals(PC.getCardInHand().getName(), CountessWilhelmina.NAME)
+                    || Objects.equals(PC.getPickedCardFromDeck().getName(), CountessWilhelmina.NAME)) {
                 System.out.print("You must discard the Countess Wilhelmina.\n");
                 return Card.RC_ERR;
             }
