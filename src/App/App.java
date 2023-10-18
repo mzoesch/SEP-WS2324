@@ -1,8 +1,5 @@
 package App;
 
-import App.Cards.Card;
-
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
 
@@ -13,41 +10,118 @@ public class App {
 
     public static void main(String[] args) {
 
+        System.out.print("\n******************** - * - ********************\n");
         System.out.print("Love Letter Premium Edition by Seiji Kanai.\n");
         System.out.print("Java implementation by Magnus Zoeschinger.\n");
-        System.out.print("**** - * - ****\n\n");
-
-        GameInstance gameInstance = null;
+        System.out.print("******************** - * - ********************\n\n");
 
         while (true) {
             try {
-                gameInstance = new GameInstance();
+                GameInstance.runGame();
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
-                System.out.print("The Game Instance quit unexpectedly. Do you want to try again? (Y/n): ");
+                System.out.print("The Game Instance quit unexpectedly. Do you want to restart the game? (y/N): ");
                 Scanner scanner = new Scanner(System.in);
                 String input = scanner.nextLine();
-                if (input.equals("n")) {
-                    System.out.print("\n\nThank you for playing!\n\n");
-                    return;
-                }
+                if (input.equals("y") || input.equals("Y"))
+                    continue;
 
-                continue;
+                break;
             }
         }
 
-        gameInstance = null;
         System.out.print("\nThank you for playing!\n");
         return;
     }
 
-    public static void ClearScreen(Scanner scanner) {
+    /**
+     * This will not work in an IDE out-console.
+     * Therefore, we print starts.
+     */
+    public static void clearStdOut() {
         System.out.print(
-                  "*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n"
-                + "*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n"
-                + "*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n"
-                + "**** - ****\n"
+"""
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+******************** - * - ********************
+"""
         );
 
         // Works only in CMD.
@@ -64,10 +138,10 @@ public class App {
         return;
     }
 
-    public static void PrintArrayListPC(ArrayList<PlayerController> list, String sep, String end) {
-        for (int i = 0; i < list.size(); i++) {
-            System.out.printf("%s", list.get(i).GetPlayerName());
-            if (i != list.size() - 1)
+    public static void printArray_V2(String[] arr, String sep, String end) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.printf("%s", arr[i]);
+            if (i != arr.length - 1)
                 System.out.printf("%s", sep);
 
             continue;
@@ -77,40 +151,28 @@ public class App {
         return;
     }
 
-    public static void PrintArrayListCard(ArrayList<Card> list, String sep) {
-        for (int i = 0; i < list.size(); i++) {
-            System.out.printf("(%d) %s", i + 1, list.get(i).GetName());
-            if (i != list.size() - 1)
-                System.out.printf("%s", sep);
-
-            continue;
-        }
-
-        return;
-    }
-
-    public static String WaitForCommand(Scanner scanner, String[] validCommands) {
+    public static String waitForCommand_V2(Scanner scanner, Command[] validCommands) {
         while (true) {
             System.out.print("\nWhat do you want to do?: ");
             String input = scanner.nextLine();
             String command = "";
 
             try {
-                if (input.charAt(0) != App.EscapeCharacter) {
+                if (input.charAt(0) != Command.EscapeCharacter) {
                     System.out.printf(
-                            "This is not a command. Please enter a command starting with %c.\n", App.EscapeCharacter);
+                            "This is not a command. Please enter a command starting with %c.\n", Command.EscapeCharacter);
                     System.out.printf(
-                            "For more information on commands, enter %chelp.\n", App.EscapeCharacter);
+                            "For more information on commands, enter %chelp.\n", Command.EscapeCharacter);
 
                     continue;
                 }
 
                 command = input.substring(1);
-                for (String validCommand : validCommands)
-                    if (command.equals(validCommand))
+                for (Command validCommand : validCommands)
+                    if (validCommand.isEqual(command))
                         return command;
 
-                throw new IndexOutOfBoundsException();
+                throw new IllegalArgumentException();
             }
 
             catch (IndexOutOfBoundsException e) {
@@ -119,15 +181,70 @@ public class App {
                 System.out.printf("Command \"%s\" not recognized.\n", command);
                 continue;
             }
+
+            catch (IllegalArgumentException e) {
+                if (command.isEmpty())
+                    continue;
+                System.out.printf("Command \"%s\" is not valid.\n", command);
+                continue;
+            }
         }
     }
 
-    public static String WaitForInput(Scanner scanner, String[] validInputs) {
+    public static int waitForInputInteger_V2(Scanner scanner, int min, int max, String prompt) {
         while (true) {
-            System.out.printf("Valid inputs: %s\n", String.join(", ", validInputs));
-            System.out.print("Enter your choice: ");
+            if (prompt == null)
+                System.out.printf("Enter your choice (%d-%d): ", min, max);
+            else
+                System.out.printf("%s (%d-%d): ", prompt, min, max);
+
             String input = scanner.nextLine();
 
+            if (input.isEmpty())
+                continue;
+
+            try {
+                Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.printf("Input \"%s\" not recognized. Retrying.\n\n", input);
+                continue;
+            }
+
+            int choice = Integer.parseInt(input);
+            if (choice < min || choice > max) {
+                System.out.printf("Input \"%s\" is out of bounds. Retrying.\n\n", input);
+                continue;
+            }
+
+            return choice;
+        }
+    }
+
+    public static String waitForInputString_V2(Scanner scanner, int minLength, String prompt) {
+        while (true) {
+            if (prompt == null)
+                System.out.printf("Enter your choice (min. %d characters): ", minLength);
+            else
+                System.out.printf("%s (min. %d characters): ", prompt, minLength);
+
+            String input = scanner.nextLine();
+            if (input.length() < minLength) {
+                System.out.printf("Input \"%s\" is too short. Retrying.\n\n", input);
+                continue;
+            }
+
+            return input;
+        }
+    }
+
+    public static String waitForInputStringWithValidation_V2(Scanner scanner, String[] validInputs, String prompt) {
+        while (true) {
+            if (prompt == null)
+                System.out.printf("Make a choice (%s): ", String.join(", ", validInputs));
+            else
+                System.out.printf("%s (%s): ", prompt, String.join(", ", validInputs));
+
+            String input = scanner.nextLine();
             if (input.isEmpty())
                 continue;
 
@@ -135,31 +252,8 @@ public class App {
                 if (input.equals(validInput))
                     return input;
 
-            System.out.printf("Input \"%s\" not recognized. Retrying.\n", input);
+            System.out.printf("Input \"%s\" not recognized. Retrying.\n\n", input);
             continue;
-        }
-    }
-
-    public static int WaitForInputInteger(Scanner scanner, int min, int max) {
-        while (true) {
-            System.out.printf("Enter your choice (%d-%d): ", min, max);
-            String input = scanner.nextLine();
-
-            if (input.isEmpty())
-                continue;
-
-            try {
-                int choice = Integer.parseInt(input);
-                if (choice < min || choice > max)
-                    throw new NumberFormatException();
-
-                return choice;
-            }
-
-            catch (NumberFormatException e) {
-                System.out.printf("Input \"%s\" not recognized. Retrying.\n", input);
-                continue;
-            }
         }
     }
 }

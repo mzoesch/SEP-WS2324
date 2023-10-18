@@ -10,6 +10,9 @@ import java.util.Scanner;
 
 public class GuardOdette extends Card {
 
+    private static final int MIN_AFFECTION_WHEN_GUESSING = 2;
+    private static final int MAX_AFFECTION_WHEN_GUESSING = 8;
+
     public GuardOdette() {
         super(
                 "Guard Odette",
@@ -27,57 +30,68 @@ public class GuardOdette extends Card {
     }
 
     @Override
-    public int PlayEffect(Scanner scanner, PlayerController PC, boolean bPlayedManually, Card pickedCardFromDeck, String MessageForPlayerWhenForced) {
+    public int playEffect(
+            Scanner scanner,
+            PlayerController PC,
+            boolean bPlayedManually,
+            Boolean bIsHandCard,
+            String messageForPlayerWhenForced
+    ) {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            ArrayList<PlayerController> remainingPCs = PC.GetActiveGameMode().GetRemainingPlayers();
             ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();
-            for (PlayerController remainingPC : remainingPCs) {
-                if (Objects.equals(PC.GetPlayerName(), remainingPC.GetPlayerName()))
+            for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
+                if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
                     continue;
-                if (remainingPC.GetProtectedByHandmaid())
+                if (tPC.getProtectedByHandmaid())
                     continue;
 
-                targetablePCs.add(remainingPC);
+                targetablePCs.add(tPC);
                 continue;
             }
 
             if (targetablePCs.isEmpty()) {
-                System.out.print(
-                        "There are no other players to compare hands with or they are protected by Handmaids.\n");
+                System.out.print("All players are unavailable for comparison.\n");
                 System.out.print("The effect is cancelled.\n");
-                return 0;
+                return Card.RC_OK;
             }
 
-            String choice =
-                    App.WaitForInput(
-                            scanner,
-                            targetablePCs.stream().map(PlayerController::GetPlayerName).toArray(String[]::new)
-                    );
+            String choice = App.waitForInputStringWithValidation_V2(
+                    scanner,
+                    targetablePCs.stream().map(PlayerController::getPlayerName).toArray(String[]::new),
+                    "Choose a player you want to guess the affection of their hand "
+                            + "(they will be knocked out if you guess correctly)"
+            );
 
-            PlayerController targetPC = PC.GetActiveGameMode().GetPlayerControllerFromName(choice);
-            int guess = App.WaitForInputInteger(scanner, 2, 8);
-            if (targetPC.GetCardInHand().GetAffection() == guess) {
-                System.out.printf("%s has the card with affection %d. %s is knocked out of the round.\n",
-                        targetPC.GetPlayerName(), guess, targetPC.GetPlayerName());
-                targetPC.SetIsKnockedOut(true, true);
-                targetPC.SetMessageForPlayerWhenPlayEffectWasForced(
-                        "A Guard was played on you and you were knocked out of the round.\n");
+            PlayerController targetPC = PC.getActiveGameMode().getPlayerControllerByName(choice);
+            int guess = App.waitForInputInteger_V2(
+                    scanner,
+                    GuardOdette.MIN_AFFECTION_WHEN_GUESSING,
+                    GuardOdette.MAX_AFFECTION_WHEN_GUESSING,
+                    "Take your educated guess"
+            );
 
-                return 0;
+            if (targetPC.getCardInHand().getAffection() == guess) {
+                System.out.printf("You guessed correctly. %s has been knocked out of the round.\n",
+                        targetPC.getPlayerName());
+                targetPC.setIsKnockedOut(
+                        true, true, "A Guard was played on you and you were knocked out of the round.\n");
+
+                return Card.RC_OK;
             }
 
-            System.out.printf("%s does not have the card with affection %d.\n", targetPC.GetPlayerName(), guess);
-            return 0;
+            System.out.printf("You guessed wrong. %s does not have a card with affection %d.\n",
+                    targetPC.getPlayerName(), guess);
+            return Card.RC_OK;
         }
 
-        if (PC.GetProtectedByHandmaid()) {
-            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
-            return 1;
+        if (PC.getProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
+            return Card.RC_ERR;
         }
 
-        PC.SetMessageForPlayerWhenPlayEffectWasForced(MessageForPlayerWhenForced);
-        return 0;
+        PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
+        return Card.RC_OK;
     }
 }

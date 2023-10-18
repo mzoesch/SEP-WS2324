@@ -26,25 +26,23 @@ public class BaronTalus extends Card {
     }
 
     @Override
-    public int PlayEffect(
+    public int playEffect(
             Scanner scanner,
             PlayerController PC,
             boolean bPlayedManually,
-            Card pickedCardFromDeck,
-            String MessageForPlayerWhenForced
+            Boolean bIsHandCard, String messageForPlayerWhenForced
     ) {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            ArrayList<PlayerController> remainingPCs = PC.GetActiveGameMode().GetRemainingPlayers();
             ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();
-            for (PlayerController remainingPC : remainingPCs) {
-                if (Objects.equals(PC.GetPlayerName(), remainingPC.GetPlayerName()))
+            for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
+                if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
                     continue;
-                if (remainingPC.GetProtectedByHandmaid())
+                if (tPC.getProtectedByHandmaid())
                     continue;
 
-                targetablePCs.add(remainingPC);
+                targetablePCs.add(tPC);
                 continue;
             }
 
@@ -52,59 +50,51 @@ public class BaronTalus extends Card {
                 System.out.print(
                     "There are no other players to compare hands with or they are protected by Handmaids.\n");
                 System.out.print("The effect is cancelled.\n");
-                return 0;
+                return Card.RC_OK;
             }
 
-            String choice =
-                    App.WaitForInput(
-                            scanner,
-                            targetablePCs.stream().map(PlayerController::GetPlayerName).toArray(String[]::new)
-                    );
+            String choice = App.waitForInputStringWithValidation_V2(
+                    scanner,
+                    targetablePCs.stream().map(PlayerController::getPlayerName).toArray(String[]::new),
+                    "Choose a player to compare hands with (the player with the lower card will be knocked out of the round)"
+                );
 
-            PlayerController targetPC = PC.GetActiveGameMode().GetPlayerControllerFromName(choice);
-            Card targetHandCard = targetPC.GetCardInHand();
-            Card ownHandCardToCompare = null;
-            if (Objects.equals(this.GetName(), PC.GetCardInHand().GetName()))
-                ownHandCardToCompare = pickedCardFromDeck;
+            PlayerController targetPC = PC.getActiveGameMode().getPlayerControllerByName(choice);
+            Card ownCardToCompare = null;
+            if (bIsHandCard)
+                ownCardToCompare = PC.getPickedCardFromDeck();
             else
-                ownHandCardToCompare = PC.GetCardInHand();
+                ownCardToCompare = PC.getCardInHand();
 
             System.out.printf("You have chosen to compare hands with %s.\n", choice);
             System.out.printf("Your hand: %s | Targets hand: %s\n",
-                    ownHandCardToCompare.GetAsString(), targetHandCard.GetAsString());
+                    ownCardToCompare.getAsString(), targetPC.getCardInHand().getAsString());
 
-            if (ownHandCardToCompare.GetAffection() == targetHandCard.GetAffection()) {
+            if (ownCardToCompare.getAffection() == targetPC.getCardInHand().getAffection()) {
                 System.out.print("You have the same card affection. Nothing happens.\n");
-                return 0;
+                return Card.RC_OK;
             }
 
-            if (ownHandCardToCompare.GetAffection() > targetHandCard.GetAffection()) {
+            if (ownCardToCompare.getAffection() > targetPC.getCardInHand().getAffection()) {
                 System.out.printf("You have won the comparison. %s is knocked out of the round.\n", choice);
-                targetPC.SetIsKnockedOut(true, true);
-                targetPC.SetMessageForPlayerWhenPlayEffectWasForced(
-                        "A Baron was played. You lost the comparison.\n");
-                return 0;
+                targetPC.setIsKnockedOut(true, true, "A Baron was played. You lost the comparison.\n");
+                return Card.RC_OK;
             }
 
-            if (ownHandCardToCompare.GetAffection() < targetHandCard.GetAffection()) {
-                System.out.print("You have lost the comparison. You are knocked out of the round.\n");
-                PC.SetIsKnockedOut(true, false);
-
-                PC.AddToDiscardedCards(this);
-                PC.SetCardInHand(ownHandCardToCompare);
-
-                return 0;
+            if (ownCardToCompare.getAffection() < targetPC.getCardInHand().getAffection()) {
+                System.out.print("You have lost the comparison.\n");
+                return Card.RC_OK_PLAYER_KNOCKED_OUT;
             }
 
-            return 0;
+            return Card.RC_ERR;
         }
 
-        if (PC.GetProtectedByHandmaid()) {
-            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
-            return 1;
+        if (PC.getProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
+            return Card.RC_ERR;
         }
 
-        PC.SetMessageForPlayerWhenPlayEffectWasForced(MessageForPlayerWhenForced);
-        return 0;
+        PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
+        return Card.RC_OK;
     }
 }

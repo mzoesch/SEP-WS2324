@@ -23,39 +23,54 @@ public class KingArnaud extends Card{
         return;
     }
 
+    private void updateHands(PlayerController PC, PlayerController TargetPC, Boolean bIsHandCard) {
+        PC.addCardToDiscardedCards(this);
+
+        if (bIsHandCard)
+            PC.setCardInHand(PC.getPickedCardFromDeck());
+        PC.setPickedCardFromDeck(null);
+
+        PC.getActiveGameMode().swapHands(PC, TargetPC);
+        System.out.printf("You have swapped hands with %s.\n", TargetPC.getPlayerName());
+
+        return;
+    }
+
     /**
      * As written in the rules. <p>
      * If the owner has the Countess Wilhelmina in their hand, they must discard the Countess and take the King. <p>
      */
     @Override
-    public int PlayEffect(Scanner scanner, PlayerController PC, boolean bPlayedManually, Card pickedCardFromDeck, String MessageForPlayerWhenForced) {
+    public int playEffect(
+            Scanner scanner,
+            PlayerController PC,
+            boolean bPlayedManually,
+            Boolean bIsHandCard,
+            String messageForPlayerWhenForced
+    ) {
         if (bPlayedManually) {
-            if (Objects.equals(PC.GetCardInHand().GetName(), "Countess Wilhelmina")
-                    || Objects.equals(pickedCardFromDeck.GetName(), "Countess Wilhelmina")) {
+            if (Objects.equals(PC.getCardInHand().getName(), "Countess Wilhelmina")
+                    || Objects.equals(PC.getPickedCardFromDeck().getName(), "Countess Wilhelmina")) {
                 System.out.print("You must discard the Countess Wilhelmina.\n");
-                return 1;
+                return Card.RC_ERR;
             }
 
             System.out.printf("%s has been played by you.\n", this.name);
-
-            String choice = "";
+            String choice = null;
             while (true) {
-                System.out.print("\nChoose another player to swap hands with:\n");
-                if (PC.GetActiveGameMode().GetRemainingPlayers().size() < 2) {
-                    System.out.print("There are no other players to swap hands with.\n");
-                    System.out.print("The effect is cancelled.\n");
-                    return 0;
-                }
+                choice =
+                    App.waitForInputStringWithValidation_V2(
+                        scanner,
+                        PC.getActiveGameMode().getRemainingPlayerNames(),
+                        "Choose a player to swap hands with"
+                    );
 
-                choice = App.WaitForInput(scanner, PC.GetActiveGameMode().GetRemainingPlayersAsStringArray());
-
-                if (Objects.equals(PC.GetPlayerName(), choice)) {
-                    // We swap the same hand. Nothing happens.
+                if (Objects.equals(PC.getPlayerName(), choice)) {
                     System.out.print("You have chosen to swap hands with yourself.\n");
-                    return 0;
+                    return Card.RC_OK;
                 }
 
-                if (PC.GetActiveGameMode().GetPlayerControllerFromName(choice).GetProtectedByHandmaid()) {
+                if (PC.getActiveGameMode().getPlayerControllerByName(choice).getProtectedByHandmaid()) {
                     System.out.printf("%s is protected by the Handmaid.\n", choice);
                     System.out.print("If all other players are protected by the Handmaid, you must choose yourself.\n");
 
@@ -65,22 +80,16 @@ public class KingArnaud extends Card{
                 break;
             }
 
-            PC.AddToDiscardedCards(this);
-            boolean bPlayedCardWasHandCard = Objects.equals(PC.GetCardInHand().GetName(), this.GetName());
-            if (bPlayedCardWasHandCard)
-                PC.SetCardInHand(pickedCardFromDeck);
-
-            PC.GetActiveGameMode().SwapHands(PC, PC.GetActiveGameMode().GetPlayerControllerFromName(choice));
-            System.out.printf("You have swapped hands with %s.\n", choice);
-            return 2;
+            this.updateHands(PC, PC.getActiveGameMode().getPlayerControllerByName(choice), bIsHandCard);
+            return Card.RC_OK_HANDS_UPDATED;
         }
 
-        if (PC.GetProtectedByHandmaid()) {
-            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
-            return 1;
+        if (PC.getProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
+            return Card.RC_ERR;
         }
 
-        PC.SetMessageForPlayerWhenPlayEffectWasForced(MessageForPlayerWhenForced);
-        return 0;
+        PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
+        return Card.RC_OK;
     }
 }

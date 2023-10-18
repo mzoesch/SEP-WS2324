@@ -25,31 +25,25 @@ public class PrincessAnnette extends Card {
         return;
     }
 
-    /**
-     * Princess Annette can be played at any given time. <p>
-     * We do not need to check if the card is playable. <p>
-     */
     @Override
-    public int PlayEffect(
+    public int playEffect(
             Scanner scanner,
             PlayerController PC,
             boolean bPlayedManually,
-            Card pickedCardFromDeck,
-            String MessageForPlayerWhenForced
+            Boolean bIsHandCard,
+            String messageForPlayerWhenForced
     ) {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
-            PC.SetIsKnockedOut(true, false);
-
-            return 3;
+            return Card.RC_OK_PLAYER_KNOCKED_OUT;
         }
 
-        if (PC.GetProtectedByHandmaid()) {
-            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
-            return 1;
+        if (PC.getProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
+            return Card.RC_ERR;
         }
 
-        PC.SetIsKnockedOut(true, true);
-        return 3;
+        PC.setIsKnockedOut(true, true, "While you were away, someone discarded your Princess Annette Card.");
+        return Card.RC_OK_PLAYER_KNOCKED_OUT;
     }
 }

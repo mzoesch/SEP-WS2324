@@ -26,68 +26,88 @@ public class PrinceArnaud extends Card {
         return;
     }
 
+    /**
+     * As written in the rules. <p>
+     * If the owner has the Countess Wilhelmina in their hand, they must discard the Countess and take the Prince. <p>
+     */
     @Override
-    public int PlayEffect(
+    public int playEffect(
             Scanner scanner,
             PlayerController PC,
             boolean bPlayedManually,
-            Card pickedCardFromDeck,
-            String MessageForPlayerWhenForced
+            Boolean bIsHandCard,
+            String messageForPlayerWhenForced
     ) {
         if (bPlayedManually) {
-            if (Objects.equals(PC.GetCardInHand().GetName(), "Countess Wilhelmina")
-                    || Objects.equals(pickedCardFromDeck.GetName(), "Countess Wilhelmina")) {
+            if (Objects.equals(PC.getCardInHand().getName(), "Countess Wilhelmina")
+                    || Objects.equals(PC.getPickedCardFromDeck().getName(), "Countess Wilhelmina")) {
                 System.out.print("You must discard the Countess Wilhelmina.\n");
-                return 1;
+                return Card.RC_ERR;
             }
 
             System.out.printf("%s has been played by you.\n", this.name);
-
-            String choice = "";
-            PlayerController pcToDiscard = null;
+            String choice = null;
             while (true) {
-                System.out.print("\nChoose a player to discard their hand:\n");
-                choice = App.WaitForInput(scanner, PC.GetActiveGameMode().GetRemainingPlayersAsStringArray());
+                choice =
+                    App.waitForInputStringWithValidation_V2(
+                            scanner,
+                            PC.getActiveGameMode().getRemainingPlayerNames(),
+                            "Choose a player to discard their hand and draw a new one"
+                        );
 
-                if (Objects.equals(choice, PC.GetPlayerName())) {
-                    PC.AddToDiscardedCards(this);
-                    PC.AddToDiscardedCards(pickedCardFromDeck);
-                    PC.SetNewPlayerHandWithDeckOrHiddenCard();
-
+                if (Objects.equals(PC.getPlayerName(), choice)) {
+                    System.out.print("You have chosen to discard your hand and draw a new one.\n");
+                    PC.addCardToDiscardedCards(this);
+                    if (bIsHandCard)
+                        PC.setCardInHand(PC.getPickedCardFromDeck());
+                    PC.setPickedCardFromDeck(null);
+                    PC.addCardToDiscardedCards(PC.getCardInHand());
+                    PC.overwriteCurrentHandCardWithNewDeckCard();
                     System.out.printf("You have discarded your hand and drawn %s.\n",
-                            PC.GetCardInHand().GetAsString());
-                    return 2;
+                            PC.getCardInHand().getAsString());
+
+                    return Card.RC_OK_HANDS_UPDATED;
                 }
 
-                pcToDiscard = PC.GetActiveGameMode().GetPlayerControllerFromName(choice);
-                if (pcToDiscard.GetProtectedByHandmaid()) {
-                    System.out.printf("%s is protected by the Handmaid.\n", choice);
-                    System.out.print("If all other players are protected by the Handmaid, you must choose yourself.\n");
+                PlayerController pcToDiscard = PC.getActiveGameMode().getPlayerControllerByName(choice);
+                if (pcToDiscard == null)
+                   throw new RuntimeException("pcToDiscard is null");
+
+                int RC = pcToDiscard.getCardInHand().playEffect(
+                        scanner,
+                        pcToDiscard,
+                        false,
+                        null,
+                        "You card has changed!\nA Prince Arnaud was played on you.\n"
+                );
+
+                if (RC == Card.RC_OK) {
+                    pcToDiscard.addCardToDiscardedCards(pcToDiscard.getCardInHand());
+                    pcToDiscard.overwriteCurrentHandCardWithNewDeckCard();
+                    System.out.printf("%s has discarded their hand and drawn a new one.\n", choice);
+                    return Card.RC_OK;
+                }
+
+                if (RC == Card.RC_ERR)
                     continue;
+
+                if (RC == Card.RC_OK_PLAYER_KNOCKED_OUT) {
+                    System.out.printf("You have knocked out %s.\n", choice);
+                    return Card.RC_OK;
                 }
 
                 break;
             }
 
-            pcToDiscard.GetCardInHand().PlayEffect(
-                    null,
-                    pcToDiscard,
-                    false,
-                    null,
-                    "You card has changed!\nA Prince Arnaud was played on you.\n"
-            );
-            pcToDiscard.AddToDiscardedCards(pcToDiscard.GetCardInHand());
-            pcToDiscard.SetNewPlayerHandWithDeckOrHiddenCard();
-
-            return 0;
+            return Card.RC_OK;
         }
 
-        if (PC.GetProtectedByHandmaid()) {
-            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
-            return 1;
+        if (PC.getProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
+            return Card.RC_ERR;
         }
 
-        PC.SetMessageForPlayerWhenPlayEffectWasForced(MessageForPlayerWhenForced);
-        return 0;
+        PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
+        return Card.RC_OK;
     }
 }

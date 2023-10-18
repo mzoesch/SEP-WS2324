@@ -3,6 +3,8 @@ package App.Cards;
 import App.PlayerController;
 import App.App;
 
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -23,39 +25,52 @@ public class PriestTomas extends Card {
     }
 
     @Override
-    public int PlayEffect(
+    public int playEffect(
             Scanner scanner,
             PlayerController PC,
             boolean bPlayedManually,
-            Card pickedCardFromDeck,
-            String MessageForPlayerWhenForced
+            Boolean bIsHandCard,
+            String messageForPlayerWhenForced
     ) {
         if (bPlayedManually) {
-            // TODO: Maybe protect with Handmaid.
-
             System.out.printf("%s has been played by you.\n", this.name);
 
-            System.out.print("\nChoose a player to look at their hand:\n");
-            String choice = App.WaitForInput(scanner, PC.GetActiveGameMode().GetRemainingPlayersAsStringArray());
+            ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();
+            for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
+                if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
+                    continue;
+                if (tPC.getProtectedByHandmaid())
+                    continue;
 
-            if (PC.GetPlayerName().equals(choice)) {
-                System.out.print("You have chosen to look at your own hand.\n");
-                System.out.printf("Your hand is: %s\n", PC.GetCardInHand().GetName());
-                return 0;
+                targetablePCs.add(tPC);
+                continue;
             }
 
-            PlayerController target = PC.GetActiveGameMode().GetPlayerControllerFromName(choice);
-            System.out.printf("The hand of %s is: %s\n", target.GetPlayerName(), target.GetCardInHand().GetAsString());
+            if (targetablePCs.isEmpty()) {
+                System.out.print("All players are unavailable for comparison.\n");
+                System.out.print("The effect is cancelled.\n");
+                return Card.RC_OK;
+            }
 
-            return 0;
+            String choice = App.waitForInputStringWithValidation_V2(
+                    scanner,
+                    targetablePCs.stream().map(PlayerController::getPlayerName).toArray(String[]::new),
+                    "Choose a player you want to see the hand of"
+                );
+
+            PlayerController targetPC = PC.getActiveGameMode().getPlayerControllerByName(choice);
+            System.out.printf("The hand of %s is: %s\n",
+                    targetPC.getPlayerName(), targetPC.getCardInHand().getAsString());
+
+            return Card.RC_OK;
         }
 
-        if (PC.GetProtectedByHandmaid()) {
-            System.out.printf("%s is protected by the Handmaid.\n", PC.GetPlayerName());
-            return 1;
+        if (PC.getProtectedByHandmaid()) {
+            System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
+            return Card.RC_ERR;
         }
 
-        PC.SetMessageForPlayerWhenPlayEffectWasForced(MessageForPlayerWhenForced);
-        return 0;
+        PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
+        return Card.RC_OK;
     }
 }
