@@ -1,6 +1,6 @@
-package App;
+package app;
 
-import App.Cards.*;
+import app.cards.*;
 
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class PlayerController {
         scanner.nextLine();
 
         if (this.bProtectedByHandmaid)
-            System.out.println("WARNING: You are no longer protected by the handmaid. Watch out!");
+            System.out.println("WARNING: You are no longer protected by the Handmaid. Watch out!");
 
         if (this.bKnockedOut && this.bSignalPlayerNextTurnAboutKnockout) {
             this.bSignalPlayerNextTurnAboutKnockout = false;
@@ -449,6 +449,18 @@ public class PlayerController {
             sum += card.getAffection();
 
         return sum;
+    }
+
+    public Card getLatestCardOfDiscardedPile() {
+        if (this.discardedCards.isEmpty())
+            throw new RuntimeException("Something went horrilby wrong.");
+        return this.discardedCards.get(this.discardedCards.size() - 1);
+    }
+
+    public int getAffectionOfLatestDiscardedCard() {
+        if (this.discardedCards.isEmpty())
+            return 0;
+        return this.discardedCards.get(this.discardedCards.size() - 1).getAffection();
     }
 
     public void resetForNewRound() {

@@ -1,4 +1,4 @@
-package App;
+package app;
 
 import java.util.Scanner;
 import java.io.IOException;
@@ -120,7 +120,24 @@ public class App {
 *
 *
 *
-******************** - * - ********************
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+********************* - * - ********************
 """
         );
 

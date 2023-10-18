@@ -1,6 +1,6 @@
-package App;
+package app;
 
-import App.Cards.*;
+import app.cards.*;
 
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -125,7 +125,15 @@ public class GameMode {
         ArrayList<PlayerController> playersWithHighestAffection = new ArrayList<PlayerController>(0);
         int highestAffection = -1;
         for (PlayerController PC : this.players) {
-            int currentAffection = PC.getCardInHand().getAffection();
+            if (PC.getKnockedOut())
+                continue;
+
+            int currentAffection;
+            if (PC.getCardInHand() == null)
+                currentAffection = PC.getAffectionOfLatestDiscardedCard();
+            else
+                currentAffection = PC.getCardInHand().getAffection();
+
             highestAffection = updateRoundWinnersListBasedOnAffection(
                     playersWithHighestAffection, highestAffection, PC, currentAffection);
             continue;
@@ -135,8 +143,13 @@ public class GameMode {
             playersWithHighestAffection.get(0).increaseAffection();
 
             App.clearStdOut();
-            System.out.printf("The following player has won the round with %s!\n",
-                    playersWithHighestAffection.get(0).getCardInHand().getAsString());
+            if (playersWithHighestAffection.get(0).getCardInHand() == null)
+                System.out.printf("The following player has won the round with %s!\n",
+                        playersWithHighestAffection.get(0).getLatestCardOfDiscardedPile().getAsString());
+            else
+                System.out.printf("The following player has won the round with %s!\n",
+                        playersWithHighestAffection.get(0).getCardInHand().getAsString());
+
             return;
         }
 
@@ -214,7 +227,7 @@ public class GameMode {
                     winners.get(0).getPlayerName()
             );
 
-            System.out.print("But don't worry. All player played pretty well:\n");
+            System.out.print("But don't worry. Everyone played pretty well!\n");
             this.printAffectionOfPlayers(false);
             System.out.print("\ngg\n");
 
@@ -227,7 +240,7 @@ public class GameMode {
             App.printArray_V2(
                     winners.stream().map(PlayerController::getPlayerName).toArray(String[]::new), ", ", "!\n");
 
-            System.out.print("But the others also played pretty well:\n");
+            System.out.print("But the others also played pretty well!\n");
             this.printAffectionOfPlayers(false);
             System.out.print("\ngg\n");
 

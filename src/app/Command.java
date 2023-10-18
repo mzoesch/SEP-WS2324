@@ -1,4 +1,4 @@
-package App;
+package app;
 
 public record Command(String name, String shortName, String description) {
 

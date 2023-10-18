@@ -1,6 +1,6 @@
-package App.Cards;
+package app.cards;
 
-import App.PlayerController;
+import app.PlayerController;
 
 import java.util.Scanner;
 

@@ -1,7 +1,7 @@
-package App.Cards;
+package app.cards;
 
-import App.PlayerController;
-import App.App;
+import app.PlayerController;
+import app.App;
 
 import java.util.ArrayList;
 import java.util.Objects;

@@ -1,7 +1,18 @@
-# Java commands
+# Softwareentwicklungspraktikum (SEP) 2023 / 2024
 
-Compile to different dir.
+## @mzoesch (Magnus Zoeschinger)
+
+### Setup
+
+Run app with:
 
 ```
-javac App.java -d ../bin
+cd src/ && javac app/App.java -d ../bin && cd ../bin && java app.App && cd ..
 ```
+
+Requires Java 19 or higher.
+
+### Links
+
+GitLab: https://gitlab2.cip.ifi.lmu.de/zoeschinger/sep-ws2324 <br />
+GitHub: https://github.com/mzoesch/SEP-WS2324
