@@ -56,12 +56,8 @@ public class GameMode {
     }
 
     // region Game helper functions
-
-    /**
-     * Sorts the players by their affection in descending order. <p>
-     * Then prints the players in the order they are in the list. <p>
-     */
-    public void printAffectionOfPlayers(boolean bNewLine) {
+    
+    public void printAffectionOfPlayersDSC(boolean bNewLine) {
         ArrayList<PlayerController> playersSortedByAffection = new ArrayList<PlayerController>(0);
         for (PlayerController PC : this.players) {
             int i = 0;
@@ -228,7 +224,7 @@ public class GameMode {
             );
 
             System.out.print("But don't worry. Everyone played pretty well!\n");
-            this.printAffectionOfPlayers(false);
+            this.printAffectionOfPlayersDSC(false);
             System.out.print("\ngg\n");
 
             return true;
@@ -241,7 +237,7 @@ public class GameMode {
                     winners.stream().map(PlayerController::getPlayerName).toArray(String[]::new), ", ", "!\n");
 
             System.out.print("But the others also played pretty well!\n");
-            this.printAffectionOfPlayers(false);
+            this.printAffectionOfPlayersDSC(false);
             System.out.print("\ngg\n");
 
             return true;
@@ -278,7 +274,7 @@ public class GameMode {
                 break;
 
             this.resetForNewRound();
-            this.printAffectionOfPlayers(true);
+            this.printAffectionOfPlayersDSC(true);
 
             System.out.println("Press enter to start the next round: ");
             scanner.nextLine();
