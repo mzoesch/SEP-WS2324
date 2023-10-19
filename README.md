@@ -112,7 +112,7 @@ When you discard King Arnaud IV, trade the card in your hand with the card held 
 #### 5: Prince Arnaud
 
 As a social gadfly, Prince Arnaud was not as distressed over his mother's arrest as one would suppose. Since many women clamor for his attention, he hopes to help his sister find the same banal happiness by playing matchmaker. <p>
-When you discard Prince Arnaud, choose one player still in the round (including yourself). That player discards his or her hand (but doesn't apply its effect, unless it is the Princess, see [above](#### 8: Princess Annette) and draws a new one. If the deck is empty and the player cannot draw a card, that player draws the card that was removed at the start of the round. If all other players are protected by the Handmaid, you must choose yourself. <p>
+When you discard Prince Arnaud, choose one player still in the round (including yourself). That player discards his or her hand (but doesn't apply its effect, unless it is the Princess, see [ above ](#8: Princess Annette) and draws a new one. If the deck is empty and the player cannot draw a card, that player draws the card that was removed at the start of the round. If all other players are protected by the Handmaid, you must choose yourself. <p>
 
 #### 4: Handmaid Susannah
 
