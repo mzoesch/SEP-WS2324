@@ -94,8 +94,6 @@ of Affection based on the number of players: <br />
 
 ### About the People
 
-<!-- No decoration -->
-
 <a name="princess-annette"></a>
 
 #### 8: Princess Annette
