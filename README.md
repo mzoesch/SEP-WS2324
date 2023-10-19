@@ -19,7 +19,7 @@ Find the official rules [here](http://alderac.com/wp-content/uploads/2017/11/Lov
 
 ### Prolog
 
-The guard looked Bartolemew Kaiss up and down for a moment, then frowned. "I'm sorry, Master Kaiss," she said, " but the princess is not seeing visitors at this time. She is, of course, in despair over the arrest of her mother." <p>
+The guard looked Bartolemew Kaiss up and down for a moment, then frowned. "I'm sorry, Master Kaiss," she said, "but the princess is not seeing visitors at this time. She is, of course, in despair over the arrest of her mother." <p>
 "Of course," the young composer said, nodding and looking appropriately sympathetic. "But I am not just visiting, you see. Her Highness requested my instruction. We are to practice her singing." <p>
 "The princess already has a vocal maestro," the gruff woman replied, raising an eyebrow. <br />
 "I'm sure he knows that, Odette," said a kind voice echoing down the hall that connected the residence to the palace. The two turned to see Susannah, one of Princess Annette's handmaids, walking toward them. "What the good composer means to say is that the Princess requested his work for their practice." The young woman smiled at the dour guard, then turned to give Bartolemew a conspiratorial wink. <p>
