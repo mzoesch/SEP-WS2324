@@ -162,14 +162,6 @@ public class PlayerController {
             System.out.println("You have been knocked out of this round.");
             System.out.println("You may only end your turn now.");
 
-            if (this.cardInHand != null)
-                this.discardedCards.add(this.cardInHand);
-            if (this.pickedCardFromDeck != null)
-                this.discardedCards.add(this.pickedCardFromDeck);
-
-            this.cardInHand = null;
-            this.pickedCardFromDeck = null;
-
             return;
         }
 
@@ -400,10 +392,15 @@ public class PlayerController {
         // As written in the rules, the player must discard his hand faced-up when he is knocked out.
         // The effect of the card is not applied.
         if (bKnockedOut) {
-            if (this.cardInHand != null)
+            if (this.cardInHand != null) {
                 this.discardedCards.add(this.cardInHand);
-            if (this.pickedCardFromDeck != null)
+                this.cardInHand = null;
+            }
+
+            if (this.pickedCardFromDeck != null) {
                 this.discardedCards.add(this.pickedCardFromDeck);
+                this.pickedCardFromDeck = null;
+            }
 
             return;
         }
