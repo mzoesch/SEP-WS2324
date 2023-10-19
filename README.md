@@ -35,7 +35,7 @@ During the game, you hold one secret card in your hand. This is who currently ca
 
 ### Game Cards
 
-The game has 32 cards, 16 of which are used when playing with 2 to 4 players. The other 16 are added to the game when playing with 5 to 8 players. Each different card name represents someone at the royal residence. Each card has a number in the upper left corner—the higher the number, the closer that person is to the Princess. At the bottom of each card, a text box describes the effect that occurs when the card is discarded. <p>
+The game has 32 cards, 16 of which are used when playing with 2 to 4 players. The other 16 are added to the game when playing with 5 to 8 players. Each different card name represents someone at the royal residence. Each card has a number in the upper left corner — the higher the number, the closer that person is to the Princess. At the bottom of each card, a text box describes the effect that occurs when the card is discarded. <p>
 
 ### Tokens of Affection
 
