@@ -134,7 +134,7 @@ When you discard the Priest, you can look at another player's hand. Do not revea
 #### 1: Guard Odette
 
 Charged with seeing to the security of the royal family, Odette follows her orders with persistence and diligence… even though her mentor is said to have drowned while fleeing arrest for complicity in the Queen's treason. <p>
-When you discard the Guard, choose a player and name a number (other than 1). If that player has that number in their hand, that player is knocked out of the round. If all other players still in the round cannot be chosen (eg. due to Handmaid or Sycophant), this card is discarded without effect. <p>
+When you discard the Guard, choose a player and name a number (other than one). If that player has that number in their hand, that player is knocked out of the round. If all other players still in the round cannot be chosen (eg. due to Handmaid or Sycophant), this card is discarded without effect. <p>
 
 ## Links
 
