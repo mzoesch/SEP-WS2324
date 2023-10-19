@@ -1,5 +1,7 @@
 package app;
 
+import java.io.IOException;
+import java.nio.channels.ScatteringByteChannel;
 import java.util.Scanner;
 
 
@@ -15,6 +17,7 @@ public final class GameInstance {
             new Command("help", "h", "Shows this help message."),
             new Command("clear", "c", "Clears the screen."),
             new Command("start", "s", "Starts a new game."),
+            new Command("rules", "r", "Shows the rules of the game."),
             new Command("quit", "q", "Shutdown application.")
     };
 
@@ -29,13 +32,13 @@ public final class GameInstance {
                 for (Command cmd : GameInstance.ValidCommands)
                     System.out.printf("%s\n", cmd.toString());
 
-                return false;
+                break;
             }
 
             case "c":
             case "clear": {
                 App.clearStdOut();
-                return false;
+                break;
             }
 
             case "s":
@@ -47,7 +50,22 @@ public final class GameInstance {
                 GameInstance.gameMode.startGame();
 
                 System.out.print("\nThe game has ended.\n");
-                return false;
+                break;
+            }
+
+            case "r":
+            case "rules": {
+                System.out.print("\n******************** - * - ********************\n");
+                System.out.print("Love Letter Premium Edition by Seiji Kanai.\n");
+                System.out.print("Java implementation by Magnus Zoeschinger.\n");
+                System.out.print("******************** - * - ********************\n\n");
+                try {
+                    System.out.print(App.readFile("README.md"));
+                } catch (IOException e) {
+                    System.out.printf("Something went wrong while reading the rules.\n%s", e.getMessage());
+                }
+
+                break;
             }
 
             case "q":
@@ -62,6 +80,8 @@ public final class GameInstance {
                 System.out.printf("Something went wrong with your command \"%s\".\n", command);
                 return false;
         }
+
+        return false;
     }
 
     private static void resetGame() {

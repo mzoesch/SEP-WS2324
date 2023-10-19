@@ -1,7 +1,12 @@
 package app;
 
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Scanner;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 
 public class App {
@@ -269,6 +274,32 @@ public class App {
 
             System.out.printf("Input \"%s\" not recognized. Retrying.\n\n", input);
             continue;
+        }
+    }
+
+    public static String readFile(String path) throws IOException {
+        // We need this to get to the root directory of the project.
+        // IntelliJ and manual execution have different working directories.
+        Path rootDir;
+        Path currentAbsolutePath = Path.of("").toAbsolutePath();
+        if (currentAbsolutePath.toString().endsWith("SEP-WS2324"))
+            rootDir = currentAbsolutePath;
+        else
+            rootDir = currentAbsolutePath.getParent();
+
+        Path pathToFile = Path.of(rootDir.toString(), path);
+        try (BufferedReader br = new BufferedReader(new java.io.FileReader(pathToFile.toString()))) {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+                continue;
+            }
+
+            return sb.toString();
         }
     }
 }
