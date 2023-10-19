@@ -94,7 +94,10 @@ of Affection based on the number of players: <br />
 
 ### About the People
 
-<a name="princess-annette" />
+<!-- No decoration -->
+
+<a name="princess-annette"></a>
+
 #### 8: Princess Annette
 
 Hampered only by the naïveté of youth, Princess Annette is elegant, charming, and beautiful. Obviously, you want the princess to carry your letter. However, she is self-conscious about matters of the heart, and if confronted, will toss your letter in the fire and deny looking at any correspondence. <p>
