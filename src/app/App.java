@@ -1,12 +1,9 @@
 package app;
 
-import java.awt.*;
 import java.io.BufferedReader;
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Scanner;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 
 public class App {
@@ -296,6 +293,7 @@ public class App {
                 sb.append(line);
                 sb.append("\n");
                 line = br.readLine();
+
                 continue;
             }
 

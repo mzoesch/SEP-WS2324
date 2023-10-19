@@ -1,7 +1,6 @@
 package app;
 
 import java.io.IOException;
-import java.nio.channels.ScatteringByteChannel;
 import java.util.Scanner;
 
 
