@@ -1,6 +1,8 @@
 # Used by IntelliJ IDEA
 
-*
-*.*
+production/*
+!production/.gitkeep
+
 !.gitkeep
 !.gitignore
+!artifacts/*
