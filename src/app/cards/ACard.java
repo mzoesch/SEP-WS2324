@@ -78,7 +78,7 @@ public abstract class Card {
         for (PlayerController tPC : PC.getActiveGameMode().getRemainingPlayers()) {
             if (Objects.equals(PC.getPlayerName(), tPC.getPlayerName()))
                 continue;
-            if (tPC.getProtectedByHandmaid())
+            if (tPC.isProtectedByHandmaid())
                 continue;
 
             targetablePCs.add(tPC);
