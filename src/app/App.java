@@ -27,6 +27,7 @@ public class App {
                 if (input.equals("y") || input.equals("Y"))
                     continue;
 
+                scanner.close();
                 break;
             }
         }
