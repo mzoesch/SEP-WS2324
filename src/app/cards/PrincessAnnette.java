@@ -5,11 +5,21 @@ import app.PlayerController;
 import java.util.Scanner;
 
 
-public class PrincessAnnette extends Card {
+/**
+ * Princess Annette Card. <p>
+ * @see ACard <p>
+ */
+public class PrincessAnnette extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "Princess Annette";
     private static final int CARD_AFFECTION = 8;
 
+    /**
+     * Constructor. <p>
+     */
     public PrincessAnnette() {
         super(
             PrincessAnnette.NAME,
@@ -28,6 +38,13 @@ public class PrincessAnnette extends Card {
         return;
     }
 
+    /**
+     * <b>Special Effect:</b> <p>
+     * As written in the rules. If the player discards this card, they are knocked out
+     * of the round regardless if the play was forced or not. <p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
     public int playEffect(
             Scanner scanner,
@@ -38,15 +55,15 @@ public class PrincessAnnette extends Card {
     ) {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
-            return Card.RC_OK_PLAYER_KNOCKED_OUT;
+            return ACard.RC_OK_PLAYER_KNOCKED_OUT;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setIsKnockedOut(true, true, "While you were away, someone discarded your Princess Annette Card.");
-        return Card.RC_OK_PLAYER_KNOCKED_OUT;
+        return ACard.RC_OK_PLAYER_KNOCKED_OUT;
     }
 }

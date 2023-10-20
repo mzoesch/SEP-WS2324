@@ -7,6 +7,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
+/**
+ * The rules of the game are implemented here. It is a high-level manager object for
+ * the game and controls the overall flow of the game. <p>
+ * Is spawned at the beginning of the application and not destroyed until the
+ * application is killed or a completely new game is started. <p>
+ *
+ * On the most basic level, these rules include: <p>
+ * - The number of players present in the game. <p>
+ * - The order of all valid players and calling their turns. <p>
+ * - The amount of cards and the order them in the deck . <p>
+ * - Investigating the game winner. <p>
+ * @see app.GameInstance#run() <p>
+ */
 public class GameMode {
 
     private static final int CARD_AMOUNT_IN_DECK = 16;
@@ -24,26 +37,36 @@ public class GameMode {
      * As written in the rules. <p>
      * These cards are not in the deck and are removed at the beginning of each round
      * and placed faced-up on the table to be examined by everyone (Applies only to 2-player games). <p>
-     * <b>Warning:</b> This may be empty.
+     * <b>Warning:</b> This may be empty. <p>
      */
-    private final ArrayList<Card> examiningCards;
+    private final ArrayList<ACard> examiningCards;
     /**
      * As written in the rules. <p>
      * This card is removed from the top of the deck and placed faced-down on the table at the
      * beginning of each round. <p>
-     * <b>Warning:</b> This may be null.
+     * <b>Warning:</b> This may be null. <p>
      */
-    private Card hiddenCard;
-    private final ArrayList<Card> deckOnTable;
+    private ACard hiddenCard;
+    private final ArrayList<ACard> deckOnTable;
 
+    /**
+     * The ID of the player who played the last turn. <p>
+     */
     private int mostRecentPlayerID;
     private final PlayerController[] players;
 
+    /**
+     * Constructor. <p>
+     *
+     * @param scanner Scanner object to inherit to other objects.
+     * @param playerCount The amount of players in this game.
+     * @param playerNames The names of all players in the game.
+     */
     public GameMode(Scanner scanner, int playerCount, String[] playerNames) {
         this.scanner = scanner;
         this.playerCount = playerCount;
-        this.deckOnTable = new ArrayList<Card>(0);
-        this.examiningCards = new ArrayList<Card>(0);
+        this.deckOnTable = new ArrayList<ACard>(0);
+        this.examiningCards = new ArrayList<ACard>(0);
 
         this.players = new PlayerController[this.playerCount];
         for (int i = 0; i < this.playerCount; i++) {
@@ -56,7 +79,12 @@ public class GameMode {
     }
 
     // region Game helper functions
-
+    
+    /**
+     * Prints the affection of all players in descending order. <p>
+     *
+     * @param bNewLine If true, a new line will be printed after each player's affection.
+     */
     public void printAffectionOfPlayersDSC(boolean bNewLine) {
         ArrayList<PlayerController> playersSortedByAffection = new ArrayList<PlayerController>(0);
         for (PlayerController PC : this.players) {
@@ -92,6 +120,15 @@ public class GameMode {
         return;
     }
 
+    /**
+     * Updates the list of winners based on the current highest affection. <p>
+     *
+     * @param winners Current players with the highest affection.
+     * @param highestAffection Current highest affection.
+     * @param PC Player to check and compare with the current highest affection.
+     * @param currentAffection Current affection of the provided player to check.
+     * @return The updated highest affection.
+     */
     private int updateRoundWinnersListBasedOnAffection(
             ArrayList<PlayerController> winners, int highestAffection, PlayerController PC, int currentAffection
     ) {
@@ -116,12 +153,13 @@ public class GameMode {
      * The player with the highest affection on their hand wins the round. <p>
      * If there is a tie, the player with the highest sum of affection in their discard pile wins the round. <p>
      * If there is still a tie, all tied players win the round and get their affection increased by one. <p>
+     * @link GameMode#applyRoundWinBonusToPlayers() <p>
      */
     private void applyRoundWinBonusToPlayers() {
         ArrayList<PlayerController> playersWithHighestAffection = new ArrayList<PlayerController>(0);
         int highestAffection = -1;
         for (PlayerController PC : this.players) {
-            if (PC.getKnockedOut())
+            if (PC.isKnockedOut())
                 continue;
 
             int currentAffection;
@@ -138,7 +176,7 @@ public class GameMode {
         if (playersWithHighestAffection.size() == 1) {
             playersWithHighestAffection.get(0).increaseAffection();
 
-            App.clearStdOut();
+            App.flushStdOut();
             if (playersWithHighestAffection.get(0).getCardInHand() == null)
                 System.out.printf("The following player has won the round with %s!\n",
                         playersWithHighestAffection.get(0).getLatestCardOfDiscardedPile().getAsString());
@@ -163,7 +201,7 @@ public class GameMode {
         for (PlayerController PC : playerWithHighestAffectionInDiscardPile)
             PC.increaseAffection();
 
-        App.clearStdOut();
+        App.flushStdOut();
         if (playerWithHighestAffectionInDiscardPile.size() == 1) {
             System.out.printf("The following player has won the round with their discard pile of %d: %s\n",
                     playerWithHighestAffectionInDiscardPile.get(0).getSumOfAffectionInDiscardPile(),
@@ -259,6 +297,9 @@ public class GameMode {
 
     // endregion Game helper functions
 
+    /**
+     * Game loop for one single game. <p>
+     */
     public void startGame() {
         this.resetForNewRound();
 
@@ -323,6 +364,9 @@ public class GameMode {
         this.deckOnTable.add(new GuardOdette());
 
         Collections.shuffle(this.deckOnTable);
+        if (this.deckOnTable.size() != GameMode.CARD_AMOUNT_IN_DECK)
+            throw new RuntimeException("The deck does not contain the correct amount of cards.");
+
         this.hiddenCard = this.deckOnTable.remove(0);
         if (this.playerCount == GameMode.AMOUNT_OF_PLAYER_REQUIRED_FOR_EXAMINING_CARDS) {
             this.examiningCards.add(this.deckOnTable.remove(0));
@@ -336,8 +380,8 @@ public class GameMode {
     private void selectNextValidPlayer() {
         this.mostRecentPlayerID = (this.mostRecentPlayerID + 1) % this.playerCount;
 
-        if (this.players[this.mostRecentPlayerID].getKnockedOut()) {
-            if (this.players[this.mostRecentPlayerID].getSignalPlayerNextTurnAboutKnockout())
+        if (this.players[this.mostRecentPlayerID].isKnockedOut()) {
+            if (this.players[this.mostRecentPlayerID].isSignalPlayerNextTurnAboutKnockout())
                 return;
 
             this.selectNextValidPlayer();
@@ -379,12 +423,18 @@ public class GameMode {
 
     // region Turn helper functions
 
-    public Card drawCard() {
+    /**
+     * Draws a card from the deck. <p>
+     * If the deck is empty, the hidden card will be returned. <p>
+     *
+     * @return The drawn card. <p>
+     */
+    public ACard drawCard() {
         if (this.deckOnTable.isEmpty()) {
             if (this.hiddenCard == null)
                 throw new RuntimeException("There are no cards left in the deck.");
 
-            Card card = this.hiddenCard;
+            ACard card = this.hiddenCard;
             this.hiddenCard = null;
 
             return card;
@@ -396,7 +446,7 @@ public class GameMode {
     // endregion Turn helper functions
 
     private void startNewTurn() {
-        if (this.players[this.mostRecentPlayerID].getKnockedOut()) {
+        if (this.players[this.mostRecentPlayerID].isKnockedOut()) {
             this.players[this.mostRecentPlayerID].playTurn(this.scanner, null);
 
             return;
@@ -408,51 +458,78 @@ public class GameMode {
 
     // region Utility functions
 
+
+    /**
+     * @return The amount of players in this game. <p>
+     */
     public int getPlayerCount() {
         return this.playerCount;
     }
 
+    /**
+     * @return The amount of all remaining players in a round. <p>
+     */
     public int getRemainingPlayerCount() {
         int remainingPlayerCount = 0;
         for (PlayerController PC : this.players)
-            if (!PC.getKnockedOut())
+            if (!PC.isKnockedOut())
                 remainingPlayerCount++;
 
         return remainingPlayerCount;
     }
 
+    /**
+     * @return The names of all remaining players in a round. <p>
+     */
     public String[] getRemainingPlayerNames() {
         String[] remainingPlayerNames = new String[this.getRemainingPlayerCount()];
         int i = 0;
         for (PlayerController PC : this.players)
-            if (!PC.getKnockedOut())
+            if (!PC.isKnockedOut())
                 remainingPlayerNames[i++] = PC.getPlayerName();
 
         return remainingPlayerNames;
     }
 
+    /**
+     * @return The PlayerControllers of all remaining players in a round. <p>
+     */
     public PlayerController[] getRemainingPlayers() {
         PlayerController[] remainingPlayers = new PlayerController[this.getRemainingPlayerCount()];
         int i = 0;
         for (PlayerController PC : this.players)
-            if (!PC.getKnockedOut())
+            if (!PC.isKnockedOut())
                 remainingPlayers[i++] = PC;
 
         return remainingPlayers;
     }
 
+    /**
+     * @return The current size of the deck (does not include the hidden card). <p>
+     */
     public int getCurrentDeckSize() {
         return this.deckOnTable.size();
     }
 
-    public Card getHiddenCard() {
+    /**
+     * @return The current hidden card (maybe null). <p>
+     */
+    public ACard getHiddenCard() {
         return this.hiddenCard;
     }
 
-    public Card[] getExaminingCards() {
-        return this.examiningCards.toArray(new Card[0]);
+    /**
+     * @return The current 3 faced-up lying cards on the
+     * table (only relevant in 2-player games - maybe empty). <p>
+     */
+    public ACard[] getExaminingCards() {
+        return this.examiningCards.toArray(new ACard[0]);
     }
 
+    /**
+     * @return The current 3 faced-up lying cards on the table as
+     * Strings (only relevant in 2-player games - maybe empty). <p>
+     */
     public String[] getExaminingCardsAsString() {
         String[] examiningCards = new String[this.examiningCards.size()];
         for (int i = 0; i < this.examiningCards.size(); i++)
@@ -461,14 +538,21 @@ public class GameMode {
         return examiningCards;
     }
 
+    /**
+     * @return The current 3 faced-up lying cards on the table as one
+     * String (only relevant in 2-player games - maybe empty). <p>
+     */
     public String getExaminingCardsAsOneString() {
         StringBuilder examiningCardsAsString = new StringBuilder();
-        for (Card card : this.examiningCards)
+        for (ACard card : this.examiningCards)
             examiningCardsAsString.append(card.getAsString()).append(" | ");
 
         return examiningCardsAsString.toString();
     }
 
+    /**
+     * @return The affection of all players in this game as Strings. <p>
+     */
     public String[] getAffectionOfAllPlayerAsString() {
         String[] affectionOfAllPlayer = new String[this.playerCount];
         for (int i = 0; i < this.playerCount; i++)
@@ -478,10 +562,18 @@ public class GameMode {
         return affectionOfAllPlayer;
     }
 
+    /**
+     * @param playerID The ID of the player to get the PlayerController of. <p>
+     * @return The PlayerController of the player with the provided ID. <p>
+     */
     public PlayerController getPlayerControllerByID(int playerID) {
         return this.players[playerID];
     }
 
+    /**
+     * @param playerName The name of the player to get the PlayerController of. <p>
+     * @return The PlayerController of the player with the provided name. <p>
+     */
     public PlayerController getPlayerControllerByName(String playerName) {
         for (PlayerController PC : this.players)
             if (PC.getPlayerName().equals(playerName))
@@ -490,9 +582,15 @@ public class GameMode {
         throw new IllegalArgumentException("Invalid player name.");
     }
 
+    /**
+     * Swaps the cards in hand of two players. <p>
+     *
+     * @param PC1 Player 1. <p>
+     * @param PC2 Player 2. <p>
+     */
     public void swapHands(PlayerController PC1, PlayerController PC2) {
-        Card cardInHandPC1 = PC1.getCardInHand();
-        Card cardInHandPC2 = PC2.getCardInHand();
+        ACard cardInHandPC1 = PC1.getCardInHand();
+        ACard cardInHandPC2 = PC2.getCardInHand();
 
         PC1.setCardInHand(cardInHandPC2);
         PC2.setCardInHand(cardInHandPC1);

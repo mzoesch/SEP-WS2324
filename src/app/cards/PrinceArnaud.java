@@ -7,11 +7,21 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
-public class PrinceArnaud extends Card {
+/**
+ * Prince Arnaud card. <p>
+ * @see ACard <p>
+ */
+public class PrinceArnaud extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "Prince Arnaud";
     private static final int CARD_AFFECTION = 5;
 
+    /**
+     * Constructor. <p>
+     */
     public PrinceArnaud() {
         super(
             PrinceArnaud.NAME,
@@ -30,8 +40,13 @@ public class PrinceArnaud extends Card {
     }
 
     /**
-     * As written in the rules. <p>
-     * If the owner has the Countess Wilhelmina in their hand, they must discard the Countess and take the Prince. <p>
+     * <b>Special Effect:</b> <p>
+     * As written in the rules. If the owner has the Countess in their hand,
+     * they must discard the Countess and take the Prince. <p>
+     * When discarded the player must choose another player to discard their
+     * hand and draw a new one (self included). <p>
+     * <br />
+     * {@inheritDoc}
      */
     @Override
     public int playEffect(
@@ -44,7 +59,7 @@ public class PrinceArnaud extends Card {
         if (bPlayedManually) {
             if (PC.hasCountessWilhelminaInHand()) {
                 System.out.print("You must discard the Countess Wilhelmina.\n");
-                return Card.RC_ERR;
+                return ACard.RC_ERR;
             }
 
             System.out.printf("%s has been played by you.\n", this.name);
@@ -67,7 +82,7 @@ public class PrinceArnaud extends Card {
                     System.out.printf("You have discarded your hand and drawn %s.\n",
                             PC.getCardInHand().getAsString());
 
-                    return Card.RC_OK_HANDS_UPDATED;
+                    return ACard.RC_OK_HANDS_UPDATED;
                 }
 
                 PlayerController pcToDiscard = PC.getActiveGameMode().getPlayerControllerByName(choice);
@@ -82,33 +97,33 @@ public class PrinceArnaud extends Card {
                         "You card has changed!\nA Prince Arnaud was played on you.\n"
                 );
 
-                if (RC == Card.RC_OK) {
+                if (RC == ACard.RC_OK) {
                     pcToDiscard.addCardToDiscardedCards(pcToDiscard.getCardInHand());
                     pcToDiscard.overwriteCurrentHandCardWithNewDeckCard();
                     System.out.printf("%s has discarded their hand and drawn a new one.\n", choice);
-                    return Card.RC_OK;
+                    return ACard.RC_OK;
                 }
 
-                if (RC == Card.RC_ERR)
+                if (RC == ACard.RC_ERR)
                     continue;
 
-                if (RC == Card.RC_OK_PLAYER_KNOCKED_OUT) {
+                if (RC == ACard.RC_OK_PLAYER_KNOCKED_OUT) {
                     System.out.printf("You have knocked out %s.\n", choice);
-                    return Card.RC_OK;
+                    return ACard.RC_OK;
                 }
 
                 break;
             }
 
-            return Card.RC_OK;
+            return ACard.RC_OK;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
-        return Card.RC_OK;
+        return ACard.RC_OK;
     }
 }

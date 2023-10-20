@@ -7,11 +7,21 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 
-public class BaronTalus extends Card {
+/**
+ * Baron Talus card. <p>
+ * @see ACard <p>
+ */
+public class BaronTalus extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "Baron Talus";
     private static final int CARD_AFFECTION = 3;
 
+    /**
+     * Constructor. <p>
+     */
     public BaronTalus() {
         super(
             BaronTalus.NAME,
@@ -27,6 +37,14 @@ public class BaronTalus extends Card {
         return;
     }
 
+    /**
+     * <b>Special Effect:</b> <p>
+     * When discarded the player can compare his hand with another player. The player with the
+     * lower affection of his card is knocked out of the round. If all players are
+     * protected (e.g. by the Handmaid) the effect is being cancelled. <p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
     public int playEffect(
             Scanner scanner,
@@ -37,12 +55,12 @@ public class BaronTalus extends Card {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            PlayerController[] targetablePCs = Card.getAllRemainingPlayersTargetableByCardEffects(PC);
+            PlayerController[] targetablePCs = ACard.getAllRemainingPlayersTargetableByCardEffects(PC);
             if (targetablePCs.length == 0) {
                 System.out.print(
                         "There are no other players to compare hands with or they are protected by Handmaids.\n");
                 System.out.print("The effect is cancelled.\n");
-                return Card.RC_OK;
+                return ACard.RC_OK;
             }
 
             String choice = App.waitForInputStringWithValidation_V2(
@@ -53,7 +71,7 @@ public class BaronTalus extends Card {
                 );
 
             PlayerController targetPC = PC.getActiveGameMode().getPlayerControllerByName(choice);
-            Card ownCardToCompare = null;
+            ACard ownCardToCompare = null;
             if (bIsHandCard)
                 ownCardToCompare = PC.getPickedCardFromDeck();
             else
@@ -65,29 +83,29 @@ public class BaronTalus extends Card {
 
             if (ownCardToCompare.getAffection() == targetPC.getCardInHand().getAffection()) {
                 System.out.print("You have the same card affection. Nothing happens.\n");
-                return Card.RC_OK;
+                return ACard.RC_OK;
             }
 
             if (ownCardToCompare.getAffection() > targetPC.getCardInHand().getAffection()) {
                 System.out.printf("You have won the comparison. %s is knocked out of the round.\n", choice);
                 targetPC.setIsKnockedOut(true, true, "A Baron was played. You lost the comparison.\n");
-                return Card.RC_OK;
+                return ACard.RC_OK;
             }
 
             if (ownCardToCompare.getAffection() < targetPC.getCardInHand().getAffection()) {
                 System.out.print("You have lost the comparison.\n");
-                return Card.RC_OK_PLAYER_KNOCKED_OUT;
+                return ACard.RC_OK_PLAYER_KNOCKED_OUT;
             }
 
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
-        return Card.RC_OK;
+        return ACard.RC_OK;
     }
 }

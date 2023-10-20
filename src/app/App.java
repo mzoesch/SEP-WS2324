@@ -6,8 +6,19 @@ import java.util.Scanner;
 import java.io.IOException;
 
 
+/**
+ * Love Letter Premium Edition by Seiji Kanai. <p>
+ * Java implementation by Magnus Zoeschinger. <p>
+ *
+ * @author mzoesch
+ * @version 1.0
+ */
 public class App {
 
+    /**
+     * Entry point of this application. <p>
+     * Master Game Loop is implemented here. <p>
+     */
     public static void main(String[] args) {
 
         System.out.print("\n******************** - * - ********************\n");
@@ -17,7 +28,7 @@ public class App {
 
         while (true) {
             try {
-                GameInstance.runGame();
+                GameInstance.run();
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -37,10 +48,11 @@ public class App {
     }
 
     /**
-     * This will not work in an IDE out-console.
-     * Therefore, we print starts.
+     * Flushes the standard output stream. <p>
+     * This will not work in an IDE out-console. Therefore, we print starts. <p>
+     * Flushes ANSI compatible terminals and clears Windows CMD. <p>
      */
-    public static void clearStdOut() {
+    public static void flushStdOut() {
         System.out.print(
 """
 *
@@ -156,6 +168,13 @@ public class App {
         return;
     }
 
+    /**
+     * Prints an array on the standard output stream. <p>
+     *
+     * @param arr The array to render on the standard output stream. <p>
+     * @param sep The separator between the array elements. <p>
+     * @param end The end character to print after the array (Will always print a new line). <p>
+     */
     public static void printArray_V2(String[] arr, String sep, String end) {
         for (int i = 0; i < arr.length; i++) {
             System.out.printf("%s", arr[i]);
@@ -169,6 +188,12 @@ public class App {
         return;
     }
 
+    /**
+     * Gets and validates a command from the user. Will only return valid Strings. <p>
+     *
+     * @param scanner The scanner to read the input from. <p>
+     * @param validCommands The valid commands to check against. <p>
+     */
     public static String waitForCommand_V2(Scanner scanner, Command[] validCommands) {
         while (true) {
             System.out.print("\nWhat do you want to do?: ");
@@ -209,6 +234,14 @@ public class App {
         }
     }
 
+    /**
+     * Gets and validates an integer from the user. Will only return valid integers. <p>
+     *
+     * @param scanner The scanner to read the input from. <p>
+     * @param min The minimum value of the integer. <p>
+     * @param max The maximum value of the integer. <p>
+     * @param prompt The prompt to display to the user what information to supply. <p>
+     */
     public static int waitForInputInteger_V2(Scanner scanner, int min, int max, String prompt) {
         while (true) {
             if (prompt == null)
@@ -238,6 +271,13 @@ public class App {
         }
     }
 
+    /**
+     * Gets and validates a string from the user. Will only return valid strings. <p>
+     *
+     * @param scanner The scanner to read the input from. <p>
+     * @param minLength The minimum length of the string. <p>
+     * @param prompt The prompt to display to the user what information to supply. <p>
+     */
     public static String waitForInputString_V2(Scanner scanner, int minLength, String prompt) {
         while (true) {
             if (prompt == null)
@@ -255,6 +295,13 @@ public class App {
         }
     }
 
+    /**
+     * Gets and validates a string from the user from given valid inputs. Will only return valid strings. <p>
+     *
+     * @param scanner The scanner to read the input from. <p>
+     * @param validInputs The valid inputs to check against. <p>
+     * @param prompt The prompt to display to the user what information to supply. <p>
+     */
     public static String waitForInputStringWithValidation_V2(Scanner scanner, String[] validInputs, String prompt) {
         while (true) {
             if (prompt == null)
@@ -275,6 +322,12 @@ public class App {
         }
     }
 
+    /**
+     * Reads a file from the file system. The path is relative to the root directory
+     * of the project (Not the source directory). <p>
+     *
+     * @param path The relative path to the file. <p>
+     */
     public static String readFile(String path) throws IOException {
         // We need this to get to the root directory of the project.
         // IntelliJ and manual execution have different working directories.

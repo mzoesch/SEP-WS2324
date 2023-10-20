@@ -5,11 +5,21 @@ import app.PlayerController;
 import java.util.Scanner;
 
 
-public class CountessWilhelmina extends Card {
+/**
+ * Countess Wilhelmina card. <p>
+ * @see ACard <p>
+ */
+public class CountessWilhelmina extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "Countess Wilhelmina";
     private static final int CARD_AFFECTION = 7;
 
+    /**
+     * Constructor. <p>
+     */
     public CountessWilhelmina() {
         super(
             CountessWilhelmina.NAME,
@@ -29,8 +39,11 @@ public class CountessWilhelmina extends Card {
     }
 
     /**
-     * As written in the rules. <p>
-     * If the owner has a King or Prince in their hand, they must discard the Countess. <p>
+     * <b>Special Effect:</b> <p>
+     * As written in the rules. If the owner has a King or Prince in their hand, they must discard this card. <p>
+     * The card does not have any effect when discarded. <p>
+     * <br />
+     * {@inheritDoc}
      */
     @Override
     public int playEffect(
@@ -42,15 +55,15 @@ public class CountessWilhelmina extends Card {
     ) {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
-            return Card.RC_OK;
+            return ACard.RC_OK;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
-        return Card.RC_OK;
+        return ACard.RC_OK;
     }
 }

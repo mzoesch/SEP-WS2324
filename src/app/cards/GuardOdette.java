@@ -7,14 +7,30 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 
-public class GuardOdette extends Card {
+/**
+ * Guard Odette card. <p>
+ * @see ACard <p>
+ */
+public class GuardOdette extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "Guard Odette";
     private static final int CARD_AFFECTION = 1;
 
+    /**
+     * Minimum value when guessing the affection of a hand. <p>
+     */
     private static final int MIN_AFFECTION_WHEN_GUESSING = 2;
+    /**
+     * Maximum value when guessing the affection of a hand. <p>
+     */
     private static final int MAX_AFFECTION_WHEN_GUESSING = 8;
 
+    /**
+     * Constructor. <p>
+     */
     public GuardOdette() {
         super(
                 GuardOdette.NAME,
@@ -31,6 +47,14 @@ public class GuardOdette extends Card {
         return;
     }
 
+    /**
+     * <b>Special Effect:</b> <p>
+     * When discarded the player must guess the affection of another player's card in hand.
+     * If they guess correctly, that player will be knocked out. If all players are
+     * protected (e.g. by the Handmaid) the effect is being cancelled. <p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
     public int playEffect(
             Scanner scanner,
@@ -42,11 +66,11 @@ public class GuardOdette extends Card {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            PlayerController[] targetablePCs = Card.getAllRemainingPlayersTargetableByCardEffects(PC);
+            PlayerController[] targetablePCs = ACard.getAllRemainingPlayersTargetableByCardEffects(PC);
             if (targetablePCs.length == 0) {
                 System.out.print("All players are protected for comparison.\n");
                 System.out.print("The effect is cancelled.\n");
-                return Card.RC_OK;
+                return ACard.RC_OK;
             }
 
             String choice = App.waitForInputStringWithValidation_V2(
@@ -70,20 +94,20 @@ public class GuardOdette extends Card {
                 targetPC.setIsKnockedOut(
                         true, true, "A Guard was played on you.\n");
 
-                return Card.RC_OK;
+                return ACard.RC_OK;
             }
 
             System.out.printf("You guessed wrong. %s does not have a card with affection %d.\n",
                     targetPC.getPlayerName(), guess);
-            return Card.RC_OK;
+            return ACard.RC_OK;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
-        return Card.RC_OK;
+        return ACard.RC_OK;
     }
 }

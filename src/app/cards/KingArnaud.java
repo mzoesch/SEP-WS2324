@@ -7,11 +7,21 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
-public class KingArnaud extends Card{
+/**
+ * King Arnaud IV card. <p>
+ * @see ACard <p>
+ */
+public class KingArnaud extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "King Arnaud IV";
     private static final int CARD_AFFECTION = 6;
 
+    /**
+     * Constructor. <p>
+     */
     public KingArnaud() {
         super(
             KingArnaud.NAME,
@@ -26,6 +36,13 @@ public class KingArnaud extends Card{
         return;
     }
 
+    /**
+     * Special one time use to update the hand of the players after the King was played. <p>
+     *
+     * @param PC The player controller who invoked the effect. <p>
+     * @param TargetPC The player controller who was chosen to swap hands with. <p>
+     * @param bIsHandCard Whether the card was in the hand of the player or just picked up from the deck. <p>
+     */
     private void updateHands(PlayerController PC, PlayerController TargetPC, Boolean bIsHandCard) {
         PC.addCardToDiscardedCards(this);
 
@@ -40,8 +57,12 @@ public class KingArnaud extends Card{
     }
 
     /**
-     * As written in the rules. <p>
-     * If the owner has the Countess Wilhelmina in their hand, they must discard the Countess and take the King. <p>
+     * <b>Special Effect:</b> <p>
+     * As written in the rules. If the owner has the Countess in their hand,
+     * they must discard the Countess and take the King. <p>
+     * When discarded the player must choose another player to swap hands with (self included). <p>
+     * <br />
+     * {@inheritDoc}
      */
     @Override
     public int playEffect(
@@ -54,7 +75,7 @@ public class KingArnaud extends Card{
         if (bPlayedManually) {
             if (PC.hasCountessWilhelminaInHand()) {
                 System.out.print("You must discard the Countess Wilhelmina.\n");
-                return Card.RC_ERR;
+                return ACard.RC_ERR;
             }
 
             System.out.printf("%s has been played by you.\n", this.name);
@@ -69,10 +90,11 @@ public class KingArnaud extends Card{
 
                 if (Objects.equals(PC.getPlayerName(), choice)) {
                     System.out.print("You have chosen to swap hands with yourself.\n");
-                    return Card.RC_OK;
+                    System.out.print("Nothing happened.\n");
+                    return ACard.RC_OK;
                 }
 
-                if (PC.getActiveGameMode().getPlayerControllerByName(choice).getProtectedByHandmaid()) {
+                if (PC.getActiveGameMode().getPlayerControllerByName(choice).isProtectedByHandmaid()) {
                     System.out.printf("%s is protected by the Handmaid.\n", choice);
                     System.out.print("If all other players are protected by the Handmaid, you must choose yourself.\n");
 
@@ -83,15 +105,15 @@ public class KingArnaud extends Card{
             }
 
             this.updateHands(PC, PC.getActiveGameMode().getPlayerControllerByName(choice), bIsHandCard);
-            return Card.RC_OK_HANDS_UPDATED;
+            return ACard.RC_OK_HANDS_UPDATED;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
-        return Card.RC_OK;
+        return ACard.RC_OK;
     }
 }

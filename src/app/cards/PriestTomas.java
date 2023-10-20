@@ -7,11 +7,21 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 
-public class PriestTomas extends Card {
+/**
+ * Priest Tomas card. <p>
+ * @see ACard <p>
+ */
+public class PriestTomas extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "Priest Tomas";
     private static final int CARD_AFFECTION = 2;
 
+    /**
+     * Constructor. <p>
+     */
     public PriestTomas() {
         super(
             PriestTomas.NAME,
@@ -26,6 +36,13 @@ public class PriestTomas extends Card {
         return;
     }
 
+    /**
+     * <b>Special Effect:</b> <p>
+     * When discarded the player can look at another player's hand. If all players are
+     * protected (e.g. by the Handmaid) the effect is being cancelled. <p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
     public int playEffect(
             Scanner scanner,
@@ -37,11 +54,11 @@ public class PriestTomas extends Card {
         if (bPlayedManually) {
             System.out.printf("%s has been played by you.\n", this.name);
 
-            PlayerController[] targetablePCs = Card.getAllRemainingPlayersTargetableByCardEffects(PC);
+            PlayerController[] targetablePCs = ACard.getAllRemainingPlayersTargetableByCardEffects(PC);
             if (targetablePCs.length == 0) {
                 System.out.print("All players are Protected. You are not able to see any other card.\n");
                 System.out.print("The effect is cancelled.\n");
-                return Card.RC_OK;
+                return ACard.RC_OK;
             }
 
             String choice = App.waitForInputStringWithValidation_V2(
@@ -54,15 +71,15 @@ public class PriestTomas extends Card {
             System.out.printf("The hand of %s is: %s\n",
                     targetPC.getPlayerName(), targetPC.getCardInHand().getAsString());
 
-            return Card.RC_OK;
+            return ACard.RC_OK;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
-        return Card.RC_OK;
+        return ACard.RC_OK;
     }
 }

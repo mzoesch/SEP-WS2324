@@ -5,11 +5,21 @@ import app.PlayerController;
 import java.util.Scanner;
 
 
-public class HandmaidSusannah extends Card {
+/**
+ * Handmaid Susannah card. <p>
+ * @see ACard <p>
+ */
+public class HandmaidSusannah extends ACard {
 
+    /**
+     * Name of the card. <p>
+     */
     public static final String NAME = "Handmaid Susannah";
     private static final int CARD_AFFECTION = 4;
 
+    /**
+     * Constructor. <p>
+     */
     public HandmaidSusannah() {
         super(
             HandmaidSusannah.NAME,
@@ -27,6 +37,13 @@ public class HandmaidSusannah extends Card {
         return;
     }
 
+    /**
+     * <b>Special Effect:</b> <p>
+     * When discarded the player is protected until his next turn by any card
+     * effects from other players. <p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
     public int playEffect(
             Scanner scanner,
@@ -40,15 +57,15 @@ public class HandmaidSusannah extends Card {
             System.out.print("You are now protected until the start of your next turn.\n");
             PC.setProtectedByHandmaid(true);
 
-            return Card.RC_OK;
+            return ACard.RC_OK;
         }
 
-        if (PC.getProtectedByHandmaid()) {
+        if (PC.isProtectedByHandmaid()) {
             System.out.printf("%s is protected by the Handmaid.\n", PC.getPlayerName());
-            return Card.RC_ERR;
+            return ACard.RC_ERR;
         }
 
         PC.setMessageForPlayerWhenPlayEffectWasForced(messageForPlayerWhenForced);
-        return Card.RC_OK;
+        return ACard.RC_OK;
     }
 }

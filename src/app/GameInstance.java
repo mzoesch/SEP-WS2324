@@ -4,14 +4,20 @@ import java.io.IOException;
 import java.util.Scanner;
 
 
-public final class GameInstance {
+/**
+ * High-level manager for an instance of the running application. <p>
+ * Is valid throughout the entire application runtime and not destroyed until the application is killed. <p>
+ */
+ public final class GameInstance {
 
-    /** Only one Game Mode can be active at a time. */
     static private GameMode gameMode;
 
     private static final int minPlayerCount = 2;
     private static final int maxPlayerCount = 4;
 
+    /**
+     * Valid commands for the main menu.
+     */
     private static final Command[] ValidCommands = new Command[]{
             new Command("help", "h", "Shows this help message."),
             new Command("clear", "c", "Clears the screen."),
@@ -20,10 +26,21 @@ public final class GameInstance {
             new Command("quit", "q", "Shutdown application.")
     };
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private GameInstance() {
         throw new IllegalStateException("GameInstance class");
     }
 
+    /**
+     * Executes a command from the main menu.
+     *
+     * @param scanner Scanner object to inherit to other objects.
+     * @param command Command to execute.
+     *
+     * @return True if the application should be killed, false otherwise.
+     */
     private static boolean executeCommand(Scanner scanner, String command) {
         switch (command) {
             case "h":
@@ -36,7 +53,7 @@ public final class GameInstance {
 
             case "c":
             case "clear": {
-                App.clearStdOut();
+                App.flushStdOut();
                 break;
             }
 
@@ -83,12 +100,19 @@ public final class GameInstance {
         return false;
     }
 
+    /**
+     * Kills the current game instance. <p>
+     */
     private static void resetGame() {
         GameInstance.gameMode = null;
         return;
     }
 
-    public static void runGame() {
+    /**
+     * Called at the beginning of the application runtime. <p>
+     * Holds the game loop and manages the game state. <p>
+     */
+    public static void run() {
         GameInstance.resetGame();
 
         System.out.print("Running game setup.\n");
@@ -110,7 +134,13 @@ public final class GameInstance {
         return;
     }
 
-    static int getPlayerCount(Scanner scanner) {
+    /**
+     * Prompts the user for a valid player count. <p>
+     * 
+     * @param scanner The scanner to read the input from.
+     * @return The valid player count.
+     */
+    static private int getPlayerCount(Scanner scanner) {
         return App.waitForInputInteger_V2(
                 scanner,
                 GameInstance.minPlayerCount,
@@ -119,7 +149,14 @@ public final class GameInstance {
         );
     }
 
-    static String[] getPlayerNames(Scanner scanner, int playerCount) {
+    /**
+     * Gets and validates the name of all players. Will only return a valid amount of player names. <p>
+     *
+     * @param scanner The scanner to read the input from.
+     * @param playerCount The amount of players.
+     * @return An array of player names.
+     */
+    static private String[] getPlayerNames(Scanner scanner, int playerCount) {
         String[] playerNames = new String[playerCount];
         for (int i = 0; i < playerCount; i++) {
             playerNames[i] =
@@ -130,7 +167,12 @@ public final class GameInstance {
         return playerNames;
     }
 
-    static GameMode getActiveGameMode() {
+    /**
+     * Global getter for the active game mode. Must be valid throughout the entire application lifetime. <p>
+     *
+     * @return The active game mode.
+     */
+    static public GameMode getActiveGameMode() {
         return GameInstance.gameMode;
     }
 }

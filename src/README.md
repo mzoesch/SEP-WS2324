@@ -1,6 +1,6 @@
 # SEP WiSe 2023/2024 Whitelist für Libraries, Tools, etc.
 
-Folgende Libraries und Tools dürfen für das Vor- und das Hauptprojekt genutzt werden.
+The following libraries and tools may be used for the pre- and main project.
 
 ## Libraries
 
