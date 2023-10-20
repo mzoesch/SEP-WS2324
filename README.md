@@ -2,9 +2,17 @@
 
 ## @mzoesch (Magnus Zoeschinger)
 
-## Setup
+## Setup and run
 
-Run app with the batch file `run.bat` or with the following command:
+Run the application's jar file with:
+
+```
+java -jar out/artifacts/SEP_WS2324_jar/SEP-WS2324.jar
+```
+
+### Compile from source
+
+Compile and run the app from source with the batch file `run.bat` or with the following command:
 
 ```
 cd src/ && javac app/App.java -d ../bin && cd ../bin && java app.App && cd ..
