@@ -7,17 +7,30 @@ import java.io.IOException;
 
 
 /**
- * Love Letter Premium Edition by Seiji Kanai. <p>
- * Java implementation by Magnus Zoeschinger. <p>
+ * <p>This is the entry point of this application.</p>
+ *
+ * <p>Love Letter Premium Edition by Seiji Kanai.<br />
+ * Java implementation by Magnus Zoeschinger.</p>
  *
  * @author mzoesch
  * @version 1.0
  */
-public class App {
+public final class App {
 
     /**
-     * Entry point of this application. <p>
-     * Master Game Loop is implemented here. <p>
+     * <p>Utility class. No instances allowed.</p>
+     *
+     * @throws IllegalStateException If an instance of this class is created.
+     */
+    public App() throws IllegalStateException {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * <p>Entry point of this application.<br />
+     * Master Game Loop is implemented here.</p>
+     *
+     * @param args CMD Arguments (Not used).
      */
     public static void main(String[] args) {
 
@@ -48,9 +61,9 @@ public class App {
     }
 
     /**
-     * Flushes the standard output stream. <p>
-     * This will not work in an IDE out-console. Therefore, we print starts. <p>
-     * Flushes ANSI compatible terminals and clears Windows CMD. <p>
+     * <p>Flushes the standard output stream.<br />
+     * This will not work in an IDE out-console. Therefore, we print starts.<br />
+     * Flushes ANSI compatible terminals and clears Windows CMD.</p>
      */
     public static void flushStdOut() {
         System.out.print(
@@ -169,11 +182,11 @@ public class App {
     }
 
     /**
-     * Prints an array on the standard output stream. <p>
+     * <p>Prints an array on the standard output stream.</p>
      *
-     * @param arr The array to render on the standard output stream. <p>
-     * @param sep The separator between the array elements. <p>
-     * @param end The end character to print after the array (Will always print a new line). <p>
+     * @param arr The array to render on the standard output stream.
+     * @param sep The separator between the array elements.
+     * @param end The end character to print after the array (Will always print a new line).
      */
     public static void printArray_V2(String[] arr, String sep, String end) {
         for (int i = 0; i < arr.length; i++) {
@@ -189,10 +202,11 @@ public class App {
     }
 
     /**
-     * Gets and validates a command from the user. Will only return valid Strings. <p>
+     * <p>Gets and validates a command from the user. Will only return valid Strings.</p>
      *
-     * @param scanner The scanner to read the input from. <p>
-     * @param validCommands The valid commands to check against. <p>
+     * @param scanner The scanner to read the input from.
+     * @param validCommands The valid commands to check against.
+     * @return The validated input.
      */
     public static String waitForCommand_V2(Scanner scanner, Command[] validCommands) {
         while (true) {
@@ -235,12 +249,13 @@ public class App {
     }
 
     /**
-     * Gets and validates an integer from the user. Will only return valid integers. <p>
+     * <p>Gets and validates an integer from the user. Will only return valid integers.</p>>
      *
-     * @param scanner The scanner to read the input from. <p>
-     * @param min The minimum value of the integer. <p>
-     * @param max The maximum value of the integer. <p>
-     * @param prompt The prompt to display to the user what information to supply. <p>
+     * @param scanner The scanner to read the input from.
+     * @param min The minimum value of the integer.
+     * @param max The maximum value of the integer.
+     * @param prompt The prompt to display to the user what information to supply.
+     * @return The validated input.
      */
     public static int waitForInputInteger_V2(Scanner scanner, int min, int max, String prompt) {
         while (true) {
@@ -272,11 +287,12 @@ public class App {
     }
 
     /**
-     * Gets and validates a string from the user. Will only return valid strings. <p>
+     * <p>Gets and validates a string from the user. Will only return valid strings.</p>
      *
-     * @param scanner The scanner to read the input from. <p>
-     * @param minLength The minimum length of the string. <p>
-     * @param prompt The prompt to display to the user what information to supply. <p>
+     * @param scanner The scanner to read the input from.
+     * @param minLength The minimum length of the string.
+     * @param prompt The prompt to display to the user what information to supply.
+     * @return The validated input.
      */
     public static String waitForInputString_V2(Scanner scanner, int minLength, String prompt) {
         while (true) {
@@ -296,11 +312,12 @@ public class App {
     }
 
     /**
-     * Gets and validates a string from the user from given valid inputs. Will only return valid strings. <p>
+     * <p>Gets and validates a string from the user from given valid inputs. Will only return valid strings.</p>
      *
-     * @param scanner The scanner to read the input from. <p>
-     * @param validInputs The valid inputs to check against. <p>
-     * @param prompt The prompt to display to the user what information to supply. <p>
+     * @param scanner The scanner to read the input from.
+     * @param validInputs The valid inputs to check against.
+     * @param prompt The prompt to display to the user what information to supply.
+     * @return The validated input.
      */
     public static String waitForInputStringWithValidation_V2(Scanner scanner, String[] validInputs, String prompt) {
         while (true) {
@@ -323,10 +340,12 @@ public class App {
     }
 
     /**
-     * Reads a file from the file system. The path is relative to the root directory
-     * of the project (Not the source directory). <p>
+     * <p>Reads a file from the file system. The path is relative to the root directory
+     * of the project (Not the source directory).</p>
      *
-     * @param path The relative path to the file. <p>
+     * @param path The relative path to the file.
+     * @throws IOException If the file could not be read.
+     * @return The content of the file as one String.
      */
     public static String readFile(String path) throws IOException {
         // We need this to get to the root directory of the project.

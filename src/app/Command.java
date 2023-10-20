@@ -2,6 +2,8 @@ package app;
 
 
 /**
+ * <p>Application wide record for commands that can be utilized by the player.</p>
+ *
  * @param name Name of the command.
  * @param shortName Abbreviation of this command.
  * @param description Description about this command.
@@ -11,6 +13,8 @@ public record Command(String name, String shortName, String description) {
     public static final char EscapeCharacter = '\\';
 
     /**
+     * <p>Constructor.</p>
+     *
      * @param name Name of the command.
      * @param shortName Abbreviation of this command.
      * @param description Description about this command.

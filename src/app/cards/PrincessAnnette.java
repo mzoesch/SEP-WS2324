@@ -6,19 +6,19 @@ import java.util.Scanner;
 
 
 /**
- * Princess Annette Card. <p>
- * @see ACard <p>
+ * <p>Princess Annette Card.</p>
+ * @see ACard
  */
 public class PrincessAnnette extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "Princess Annette";
     private static final int CARD_AFFECTION = 8;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public PrincessAnnette() {
         super(
@@ -39,9 +39,9 @@ public class PrincessAnnette extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
+     * <p><b>Special Effect:</b> <br />
      * As written in the rules. If the player discards this card, they are knocked out
-     * of the round regardless if the play was forced or not. <p>
+     * of the round regardless if the play was forced or not.</p>
      * <br />
      * {@inheritDoc}
      */

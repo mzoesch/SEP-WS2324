@@ -8,28 +8,28 @@ import java.util.Scanner;
 
 
 /**
- * Guard Odette card. <p>
- * @see ACard <p>
+ * <p>Guard Odette card.</p>
+ * @see ACard
  */
 public class GuardOdette extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "Guard Odette";
     private static final int CARD_AFFECTION = 1;
 
     /**
-     * Minimum value when guessing the affection of a hand. <p>
+     * <p>Minimum value when guessing the affection of a hand.</p>
      */
     private static final int MIN_AFFECTION_WHEN_GUESSING = 2;
     /**
-     * Maximum value when guessing the affection of a hand. <p>
+     * <p>Maximum value when guessing the affection of a hand.</p>
      */
     private static final int MAX_AFFECTION_WHEN_GUESSING = 8;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public GuardOdette() {
         super(
@@ -48,10 +48,10 @@ public class GuardOdette extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
+     * <p><b>Special Effect:</b> <br />
      * When discarded the player must guess the affection of another player's card in hand.
      * If they guess correctly, that player will be knocked out. If all players are
-     * protected (e.g. by the Handmaid) the effect is being cancelled. <p>
+     * protected (e.g. by the Handmaid) the effect is being cancelled. </p>
      * <br />
      * {@inheritDoc}
      */

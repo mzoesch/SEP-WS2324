@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 
 /**
- * Abstract super class for a card. <p>
+ * <p>Abstract super class for a card.</p>
  */
 public abstract class ACard {
 
@@ -19,25 +19,25 @@ public abstract class ACard {
     private final int affection;
 
     /**
-     * Return code if the card was played successfully. <p>
+     * <p>Return code if the card was played successfully.</p>
      */
     public static final int RC_OK = 0;
     /**
-     * Return code if the card was not played successfully (e.g. blocked by the Handmaid). <p>
+     * <p>Return code if the card was not played successfully (e.g. blocked by the Handmaid).</p>
      */
     public static final int RC_ERR = 1;
     /**
-     * Return code if the card was played successfully and the players hands have
-     * been already updated. The caller must not update the hands again. <p>
+     * <p>Return code if the card was played successfully and the players hands have
+     * been already updated. The caller must not update the hands again.</p>
      */
     public static final int RC_OK_HANDS_UPDATED = 2;
     /**
-     * Return code if the card was played successfully and the player has been knocked out. <p>
+     * <p>Return code if the card was played successfully and the player has been knocked out.</p>
      */
     public static final int RC_OK_PLAYER_KNOCKED_OUT = 3;
 
     /**
-     * Super constructor. <p>
+     * <p>Super constructor.</p>
      *
      * @param name Name of the card.
      * @param backgroundStory Background story of the card.
@@ -100,22 +100,25 @@ public abstract class ACard {
     // endregion Getters
 
     /**
-     * Is called if a player should discard this card. <p>
+     * <p>Is called if a player should discard this card (manual or forced by an other player).</p>
      *
-     * Return codes: <p>
-     * - RC_OK: The card was played successfully. <p>
-     * - RC_ERR: The card was not played successfully. <p>
-     * - RC_OK_HANDS_UPDATED: The card was played successfully and players hands have been already updated. <p>
-     * - RC_OK_PLAYER_KNOCKED_OUT: The card was played successfully and the player has been knocked out. <p>
+     * <p>Return codes:</p>
+     * <ul>
+     *  <li>RC_OK: The card was played successfully.
+     *  <li>RC_ERR: The card was not played successfully.
+     *  <li>RC_OK_HANDS_UPDATED: The card was played successfully and players hands have been already updated.
+     *  <li>RC_OK_PLAYER_KNOCKED_OUT: The card was played successfully and the player has been knocked out.
+     * </ul>
      *
      * @param scanner The scanner to read the input from. This is only used if the
-     *                card is played manually (if not manually, null is safe to pass). <p>
-     * @param PC The player controller to play the card for. <p>
-     * @param bPlayedManually True if the card is played manually, false otherwise. <p>
+     *                card is played manually (if not manually, null is safe to pass).
+     * @param PC The player controller to play the card for.
+     * @param bPlayedManually True if the card is played manually, false otherwise.
      * @param bIsHandCard True if the card is a hand card, false otherwise.
-     *                    Null is safe to pass if not played manually. <p>
+     *                    Null is safe to pass if not played manually.
      * @param messageForPlayerWhenForced Message to display to the player if the card is forced to be
-     *                                   played. Null is safe to pass if played manually. <p>
+     *                                   played. Null is safe to pass if played manually.
+     * @return Return code.
      */
     public abstract int playEffect(
             Scanner scanner,
@@ -126,8 +129,11 @@ public abstract class ACard {
     );
 
     /**
-     * @param PC Provided to exclude the current active player from the list of targetable players. <p>
-     * @return Return all players which are targetable by a card effect by the provided player controller. <p>
+     * <p>Gives all valid player's from the point of view from the given PC that
+     * are targetable by any card effects.</p>
+     *
+     * @param PC Provided to exclude the current active player from the list of targetable players.
+     * @return All valid Players.
      */
     public static PlayerController[] getAllRemainingPlayersTargetableByCardEffects(PlayerController PC) {
         ArrayList<PlayerController> targetablePCs = new ArrayList<PlayerController>();

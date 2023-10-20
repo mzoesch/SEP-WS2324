@@ -8,19 +8,19 @@ import java.util.Scanner;
 
 
 /**
- * Baron Talus card. <p>
- * @see ACard <p>
+ * <p>Baron Talus card.</p>
+ * @see ACard
  */
 public class BaronTalus extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "Baron Talus";
     private static final int CARD_AFFECTION = 3;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public BaronTalus() {
         super(
@@ -38,10 +38,10 @@ public class BaronTalus extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
+     * <p><b>Special Effect:</b> <br />
      * When discarded the player can compare his hand with another player. The player with the
      * lower affection of his card is knocked out of the round. If all players are
-     * protected (e.g. by the Handmaid) the effect is being cancelled. <p>
+     * protected (e.g. by the Handmaid) the effect is being cancelled.</p>
      * <br />
      * {@inheritDoc}
      */

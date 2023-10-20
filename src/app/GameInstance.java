@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 
 /**
- * High-level manager for an instance of the running application. <p>
- * Is valid throughout the entire application runtime and not destroyed until the application is killed. <p>
+ * <p>High-level manager for an instance of the running application.<br />
+ * Is valid throughout the entire application runtime and not destroyed until the application is killed.</p>
  */
  public final class GameInstance {
 
@@ -16,7 +16,7 @@ import java.util.Scanner;
     private static final int maxPlayerCount = 4;
 
     /**
-     * Valid commands for the main menu.
+     * <p>Valid commands for the main menu.</p>
      */
     private static final Command[] ValidCommands = new Command[]{
             new Command("help", "h", "Shows this help message."),
@@ -27,14 +27,14 @@ import java.util.Scanner;
     };
 
     /**
-     * Private constructor to prevent instantiation.
+     * <p>Private constructor to prevent instantiation.</p>
      */
     private GameInstance() {
         throw new IllegalStateException("GameInstance class");
     }
 
     /**
-     * Executes a command from the main menu.
+     * <p>Executes a command from the main menu.</p>
      *
      * @param scanner Scanner object to inherit to other objects.
      * @param command Command to execute.
@@ -101,7 +101,7 @@ import java.util.Scanner;
     }
 
     /**
-     * Kills the current game instance. <p>
+     * <p>Kills the current game instance.</p>
      */
     private static void resetGame() {
         GameInstance.gameMode = null;
@@ -109,8 +109,8 @@ import java.util.Scanner;
     }
 
     /**
-     * Called at the beginning of the application runtime. <p>
-     * Holds the game loop and manages the game state. <p>
+     * <p>Called at the beginning of the application runtime.<br />
+     * Holds the game loop and manages the game state.</p>
      */
     public static void run() {
         GameInstance.resetGame();
@@ -135,7 +135,7 @@ import java.util.Scanner;
     }
 
     /**
-     * Prompts the user for a valid player count. <p>
+     * <p>Prompts the user for a valid player count.</p>
      * 
      * @param scanner The scanner to read the input from.
      * @return The valid player count.
@@ -150,7 +150,7 @@ import java.util.Scanner;
     }
 
     /**
-     * Gets and validates the name of all players. Will only return a valid amount of player names. <p>
+     * <p>Gets and validates the name of all players. Will only return a valid amount of player names.</p>
      *
      * @param scanner The scanner to read the input from.
      * @param playerCount The amount of players.
@@ -168,7 +168,7 @@ import java.util.Scanner;
     }
 
     /**
-     * Global getter for the active game mode. Must be valid throughout the entire application lifetime. <p>
+     * <p>Global getter for the active game mode. Must be valid throughout the entire application lifetime.</p>
      *
      * @return The active game mode.
      */

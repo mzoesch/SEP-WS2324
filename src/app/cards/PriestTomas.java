@@ -8,19 +8,19 @@ import java.util.Scanner;
 
 
 /**
- * Priest Tomas card. <p>
- * @see ACard <p>
+ * <p>Priest Tomas card.</p>
+ * @see ACard
  */
 public class PriestTomas extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "Priest Tomas";
     private static final int CARD_AFFECTION = 2;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public PriestTomas() {
         super(
@@ -37,9 +37,9 @@ public class PriestTomas extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
+     * <p><b>Special Effect:</b> <br />
      * When discarded the player can look at another player's hand. If all players are
-     * protected (e.g. by the Handmaid) the effect is being cancelled. <p>
+     * protected (e.g. by the Handmaid) the effect is being cancelled. </p>
      * <br />
      * {@inheritDoc}
      */

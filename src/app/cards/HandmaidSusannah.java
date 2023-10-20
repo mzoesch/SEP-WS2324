@@ -6,19 +6,19 @@ import java.util.Scanner;
 
 
 /**
- * Handmaid Susannah card. <p>
- * @see ACard <p>
+ * <p>Handmaid Susannah card.</p>
+ * @see ACard
  */
 public class HandmaidSusannah extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "Handmaid Susannah";
     private static final int CARD_AFFECTION = 4;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public HandmaidSusannah() {
         super(
@@ -38,9 +38,9 @@ public class HandmaidSusannah extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
+     * <p><b>Special Effect:</b> <br />
      * When discarded the player is protected until his next turn by any card
-     * effects from other players. <p>
+     * effects from other players.</p>
      * <br />
      * {@inheritDoc}
      */

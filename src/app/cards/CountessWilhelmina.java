@@ -6,19 +6,19 @@ import java.util.Scanner;
 
 
 /**
- * Countess Wilhelmina card. <p>
- * @see ACard <p>
+ * <p>Countess Wilhelmina card.</p>
+ * @see ACard
  */
 public class CountessWilhelmina extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "Countess Wilhelmina";
     private static final int CARD_AFFECTION = 7;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public CountessWilhelmina() {
         super(
@@ -39,9 +39,9 @@ public class CountessWilhelmina extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
-     * As written in the rules. If the owner has a King or Prince in their hand, they must discard this card. <p>
-     * The card does not have any effect when discarded. <p>
+     * <p><b>Special Effect:</b> <br />
+     * As written in the rules. If the owner has a King or Prince in their hand, they must discard this card. <br />
+     * The card does not have any effect when discarded. </p>
      * <br />
      * {@inheritDoc}
      */

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 
 /**
- * Represents the will of the human player. All input and output for one player is handled here. <p>
- * Also holds relevant information about the player, such as his name, his affection, his cards, etc. <p>
+ * <p>Represents the will of the human player. All input and output for one player is handled here.<br />
+ * Also holds relevant information about the player, such as his name, his affection, his cards, etc.</p>
  */
 public class PlayerController {
 
@@ -18,11 +18,11 @@ public class PlayerController {
     private int affection;
 
     /**
-     * The card in the player's hand (maybe null). <p>
+     * <p>The card in the player's hand (maybe null).</p>
      */
     ACard cardInHand;
     /**
-     * The card that was just picked up from the deck this round (maybe null). <p>
+     * <p>The card that was just picked up from the deck this round (maybe null).</p>
      */
     ACard pickedCardFromDeck;
     private ArrayList<ACard> discardedCards;
@@ -30,7 +30,7 @@ public class PlayerController {
     private boolean bPlayedTurn;
     private boolean bKnockedOut;
     /**
-     * If True, the player will be notified about his knockout at the beginning of his next turn. <p>
+     * <p>If True, the player will be notified about his knockout at the beginning of his next turn.</p>
      */
     private boolean bSignalPlayerNextTurnAboutKnockout;
     private String messageForPlayerWhenPlayEffectWasForced;
@@ -38,7 +38,7 @@ public class PlayerController {
     private boolean bProtectedByHandmaid;
 
     /**
-     * Valid commands for the player if he plays a turn. <p>
+     * <p>Valid commands for the player if he plays a turn.</p>
      */
     private static final Command[] ValidCommands = new Command[] {
         new Command("help", "h", "Shows this help message."),
@@ -55,10 +55,10 @@ public class PlayerController {
     };
 
     /**
-     * Creates a new player. <p>
+     * <p>Creates a new player.</p>
      *
-     * @param playerID The ID of the player. <p>
-     * @param playerName The name of the player. <p>
+     * @param playerID The ID of the player.
+     * @param playerName The name of the player.
      */
     public PlayerController(int playerID, String playerName) {
         this.playerID = playerID;
@@ -191,12 +191,11 @@ public class PlayerController {
     }
 
     /**
-     * Executes a command that is valid in a player's turn. <p>
+     * <p>Executes a command that is valid in a player's turn.</p>
      *
      * @param scanner Scanner object to inherit to other objects.
      * @param command Command to execute.
-     *
-     * @return True if the player has ended his turn, false otherwise. <p>
+     * @return True if the player has ended his turn, false otherwise.
      */
     private boolean executeCommand(Scanner scanner, String command) {
         switch (command) {
@@ -354,11 +353,11 @@ public class PlayerController {
     // endregion Turn helper functions
 
     /**
-     * Loop for a player's turn. <p>
+     * <p>Loop for a player's turn.</p>
      *
-     * @param scanner Scanner object to inherit to other objects. <p>
+     * @param scanner Scanner object to inherit to other objects.
      * @param pickedCardFromDeck The card that was just picked up from the deck
-     *                           this round (is null if the player is knocked out). <p>
+     *                           this round (is null if the player is knocked out).
      */
     public void playTurn(Scanner scanner, ACard pickedCardFromDeck) {
         this.pickedCardFromDeck = pickedCardFromDeck;
@@ -383,28 +382,28 @@ public class PlayerController {
     // region Getters and Setters
 
     /**
-     * @return The ID of the player. <p>
+     * @return The ID of the player.
      */
     public int getPlayerID() {
         return this.playerID;
     }
 
     /**
-     * @return The name of the player. <p>
+     * @return The name of the player.
      */
     public String getPlayerName() {
         return this.playerName;
     }
 
     /**
-     * @return The affection of the player. <p>
+     * @return The affection of the player.
      */
     public int getAffection() {
         return this.affection;
     }
 
     /**
-     * Increases the affection of the player by one. <p>
+     * Increases the affection of the player by one.
      */
     public void increaseAffection() {
         this.affection++;
@@ -412,14 +411,14 @@ public class PlayerController {
     }
 
     /**
-     * @return The card in the player's hand (maybe null). <p>
+     * @return The card in the player's hand (maybe null).
      */
     public ACard getCardInHand() {
         return this.cardInHand;
     }
 
     /**
-     * @param cardInHand The card in the player's hand (setting to null is safe). <p>
+     * @param cardInHand The card in the player's hand (setting to null is safe).
      */
     public void setCardInHand(ACard cardInHand) {
         this.cardInHand = cardInHand;
@@ -427,7 +426,7 @@ public class PlayerController {
     }
 
     /**
-     * @return The card that was just picked up from the deck this round (maybe null). <p>
+     * @return The card that was just picked up from the deck this round (maybe null).
      */
     public ACard getPickedCardFromDeck() {
         return this.pickedCardFromDeck;
@@ -435,7 +434,7 @@ public class PlayerController {
 
     /**
      * @param pickedCardFromDeck The card that was just picked up from the
-     *                           deck this round (setting to null is safe). <p>
+     *                           deck this round (setting to null is safe).
      */
     public void setPickedCardFromDeck(ACard pickedCardFromDeck) {
         this.pickedCardFromDeck = pickedCardFromDeck;
@@ -443,21 +442,21 @@ public class PlayerController {
     }
 
     /**
-     * @return True if the player is knocked out, false otherwise. <p>
+     * @return True if the player is knocked out, false otherwise.
      */
     public boolean isKnockedOut() {
         return this.bKnockedOut;
     }
 
     /**
-     * If bIsKnockedOut is True, we will automatically discard all the player's
-     * cards as it is stated in the rules. <p>
+     * <p>If bIsKnockedOut is True, we will automatically discard all the player's
+     * cards as it is stated in the rules.</p>
      *
-     * @param bIsKnockedOut True if the player is knocked out, false otherwise. <p>
+     * @param bIsKnockedOut True if the player is knocked out, false otherwise.
      * @param bSignalPlayerNextTurn True if the player should be notified about his knockout
-     *                              at the beginning of his next turn, false otherwise. <p>
+     *                              at the beginning of his next turn, false otherwise.
      * @param messageForPlayer The message that should be displayed to the player at the beginning
-     *                         of his next turn (requires bSignalPlayerNextTurn to be True). <p>
+     *                         of his next turn (requires bSignalPlayerNextTurn to be True).
      */
     public void setIsKnockedOut(boolean bIsKnockedOut, boolean bSignalPlayerNextTurn, String messageForPlayer) {
         this.bKnockedOut = bIsKnockedOut;
@@ -484,7 +483,7 @@ public class PlayerController {
     }
 
     /**
-     * @return If the player should be notified about his knockout at the beginning of his next turn. <p>
+     * @return If the player should be notified about his knockout at the beginning of his next turn.
      */
     public boolean isSignalPlayerNextTurnAboutKnockout() {
         return this.bSignalPlayerNextTurnAboutKnockout;
@@ -493,8 +492,8 @@ public class PlayerController {
     /**
      * @param messageForPlayerWhenPlayEffectWasForced The message that should be displayed to the player
      *                                                at the beginning of his next turn if his card changed
-     *                                                (requires bSignalPlayerNextTurn to be True). <p>
-     * @see #setIsKnockedOut(boolean bIsKnockedOut, boolean bSignalPlayerNextTurn, String messageForPlayer) <p>
+     *                                                (requires bSignalPlayerNextTurn to be True).
+     * @see #setIsKnockedOut(boolean bIsKnockedOut, boolean bSignalPlayerNextTurn, String messageForPlayer)
      */
     public void setMessageForPlayerWhenPlayEffectWasForced(String messageForPlayerWhenPlayEffectWasForced) {
         this.messageForPlayerWhenPlayEffectWasForced = messageForPlayerWhenPlayEffectWasForced;
@@ -502,14 +501,14 @@ public class PlayerController {
     }
 
     /**
-     * @return True, if the player is untouchable by any other effect, false otherwise. <p>
+     * @return True, if the player is untouchable by any other effect, false otherwise.
      */
     public boolean isProtectedByHandmaid() {
         return this.bProtectedByHandmaid;
     }
 
     /**
-     * @param bProtectedByHandmaid True, if the player should be untouchable by any other effect, false otherwise. <p>
+     * @param bProtectedByHandmaid True, if the player should be untouchable by any other effect, false otherwise.
      */
     public void setProtectedByHandmaid(boolean bProtectedByHandmaid) {
         this.bProtectedByHandmaid = bProtectedByHandmaid;
@@ -531,8 +530,8 @@ public class PlayerController {
     }
 
     /**
-     * @return The sum of all affection values of the cards in the player's discarded pile. <p>
-     * {@link app.GameMode#applyRoundWinBonusToPlayers()} <p>
+     * @return The sum of all affection values of the cards in the player's discarded pile.
+     * {@link app.GameMode#applyRoundWinBonusToPlayers()}
      */
     public int getSumOfAffectionInDiscardPile() {
         int sum = 0;
@@ -543,7 +542,7 @@ public class PlayerController {
     }
 
     /**
-     * @return The top card of the player's discarded pile. <p>
+     * @return The top card of the player's discarded pile.
      */
     public ACard getLatestCardOfDiscardedPile() {
         if (this.discardedCards.isEmpty())
@@ -552,7 +551,7 @@ public class PlayerController {
     }
 
     /**
-     * @return The affection of the top card of the player's discarded pile. <p>
+     * @return The affection of the top card of the player's discarded pile.
      */
     public int getAffectionOfLatestDiscardedCard() {
         if (this.discardedCards.isEmpty())
@@ -561,7 +560,7 @@ public class PlayerController {
     }
 
     /**
-     * Resets all the player's variables for a new round. <p>
+     * <p>Resets all the player's variables for a new round.</p>
      */
     public void resetForNewRound() {
         this.cardInHand = null;
@@ -579,15 +578,15 @@ public class PlayerController {
     }
 
     /**
-     * Return the current game mode. Must be valid throughout the entire application lifetime. <p>
-     * @return The current game mode. <p>
+     * <p>Return the current game mode. Must be valid throughout the entire application lifetime.</p>
+     * @return The current game mode.
      */
     public GameMode getActiveGameMode() {
         return GameInstance.getActiveGameMode();
     }
 
     /**
-     * @param card The card to add to the player's discarded pile. <p>
+     * @param card The card to add to the player's discarded pile.
      */
     public void addCardToDiscardedCards(ACard card) {
         this.discardedCards.add(card);
@@ -595,8 +594,8 @@ public class PlayerController {
     }
 
     /**
-     * Overwrites the card in the player's hand with a new card from the deck. <p>
-     * @see app.GameMode#drawCard() <p>
+     * <p>Overwrites the card in the player's hand with a new card from the deck.</p>
+     * @see app.GameMode#drawCard()
      */
     public void overwriteCurrentHandCardWithNewDeckCard() {
         this.cardInHand = GameInstance.getActiveGameMode().drawCard();
@@ -605,7 +604,7 @@ public class PlayerController {
 
     /**
      * @return True if the player has the Countess Wilhelmina in his hand or
-     * as his picked card from the deck, false otherwise. <p>
+     * as his picked card from the deck, false otherwise.
      */
     public boolean hasCountessWilhelminaInHand() {
         return this.cardInHand instanceof CountessWilhelmina || this.pickedCardFromDeck instanceof CountessWilhelmina;

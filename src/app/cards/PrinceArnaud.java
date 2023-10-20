@@ -8,19 +8,19 @@ import java.util.Scanner;
 
 
 /**
- * Prince Arnaud card. <p>
- * @see ACard <p>
+ * <p>Prince Arnaud card.</p>
+ * @see ACard
  */
 public class PrinceArnaud extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "Prince Arnaud";
     private static final int CARD_AFFECTION = 5;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public PrinceArnaud() {
         super(
@@ -40,11 +40,11 @@ public class PrinceArnaud extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
+     * <p><b>Special Effect:</b> <br />
      * As written in the rules. If the owner has the Countess in their hand,
-     * they must discard the Countess and take the Prince. <p>
+     * they must discard the Countess and take the Prince.<br />
      * When discarded the player must choose another player to discard their
-     * hand and draw a new one (self included). <p>
+     * hand and draw a new one (self included).</p>
      * <br />
      * {@inheritDoc}
      */

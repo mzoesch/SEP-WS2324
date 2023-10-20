@@ -8,19 +8,19 @@ import java.util.Scanner;
 
 
 /**
- * King Arnaud IV card. <p>
- * @see ACard <p>
+ * <p>King Arnaud IV card.</p>
+ * @see ACard
  */
 public class KingArnaud extends ACard {
 
     /**
-     * Name of the card. <p>
+     * <p>Name of the card.</p>
      */
     public static final String NAME = "King Arnaud IV";
     private static final int CARD_AFFECTION = 6;
 
     /**
-     * Constructor. <p>
+     * <p>Constructor.</p>
      */
     public KingArnaud() {
         super(
@@ -37,11 +37,11 @@ public class KingArnaud extends ACard {
     }
 
     /**
-     * Special one time use to update the hand of the players after the King was played. <p>
+     * <p>Special one time use to update the hand of the players after the King was played.</p>
      *
-     * @param PC The player controller who invoked the effect. <p>
-     * @param TargetPC The player controller who was chosen to swap hands with. <p>
-     * @param bIsHandCard Whether the card was in the hand of the player or just picked up from the deck. <p>
+     * @param PC The player controller who invoked the effect.
+     * @param TargetPC The player controller who was chosen to swap hands with.
+     * @param bIsHandCard Whether the card was in the hand of the player or just picked up from the deck.
      */
     private void updateHands(PlayerController PC, PlayerController TargetPC, Boolean bIsHandCard) {
         PC.addCardToDiscardedCards(this);
@@ -57,10 +57,10 @@ public class KingArnaud extends ACard {
     }
 
     /**
-     * <b>Special Effect:</b> <p>
+     * <p><b>Special Effect:</b> <br />
      * As written in the rules. If the owner has the Countess in their hand,
-     * they must discard the Countess and take the King. <p>
-     * When discarded the player must choose another player to swap hands with (self included). <p>
+     * they must discard the Countess and take the King.<br />
+     * When discarded the player must choose another player to swap hands with (self included).</p>
      * <br />
      * {@inheritDoc}
      */
