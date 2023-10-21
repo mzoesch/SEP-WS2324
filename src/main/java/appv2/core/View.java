@@ -1,6 +1,6 @@
 package appv2.core;
 
-import appv2.core.view.ScreenController;
+import appv2.core.view.MasterController;
 
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -10,12 +10,15 @@ import javafx.fxml.FXMLLoader;
 
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 public class View extends Application {
 
+    public static final String PATH_TO_RULES = "view/rules.fxml";
+    public static final String PATH_TO_MAIN_MENU = "view/mainmenu.fxml";
 
-    public static ScreenController screenController;
+    private static MasterController masterController;
 
     public View() {
         super();
@@ -24,18 +27,15 @@ public class View extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(new Parent(){}, 1280, 720);
+        Scene scene = new Scene(new Parent(){}, MasterController.PREF_HEIGHT, MasterController.PREF_WIDTH);
+        View.masterController = new MasterController(scene);
+
         stage.setScene(scene);
-        stage.setTitle("Love Letter @mzoesch");
+        stage.setTitle(MasterController.WIN_TITLE);
 
-        View.screenController = new ScreenController(scene);
-        View.screenController.addScreen("main", FXMLLoader.load(getClass().getResource( "view/master.fxml" )));
-        View.screenController.addScreen("rules", FXMLLoader.load(getClass().getResource( "view/rules.fxml" )));
-
-        View.screenController.activate("main");
-
-
+        View.renderNewScreen(MasterController.MAIN_MENU, View.PATH_TO_MAIN_MENU);
         stage.show();
+
         return;
     }
 
@@ -44,5 +44,39 @@ public class View extends Application {
 
         return;
     }
+
+    // region Utility methods
+
+    private static <T> T loadFXML(String path) {
+        try {
+            return FXMLLoader.load(Objects.requireNonNull(View.class.getResource(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+            return null;
+        }
+    }
+
+    // endregion Utility methods
+
+    // Controller interaction methods
+
+    public static void renderExistingScreen(String identifier) {
+        View.masterController.activate(identifier);
+        return;
+    }
+
+    public static void renderNewScreen(String identifier, String path) {
+        View.masterController.addScreen(identifier, View.loadFXML(path));
+        View.masterController.activate(identifier);
+        return;
+    }
+
+    public static void killScreen(String identifier) {
+        View.masterController.removeScreen(identifier);
+        return;
+    }
+
+    // endregion Controller interaction methods
 
 }

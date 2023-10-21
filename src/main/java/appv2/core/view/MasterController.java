@@ -1,48 +1,45 @@
 package appv2.core.view;
 
-import appv2.core.View;
-
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.Parent;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
-import javafx.scene.Node;
-import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 
+// TODO: Add class for screens. Add ability to auto remove screens when they are no longer needed.
 public class MasterController {
 
-    @FXML
-    private Label subtitle;
+    public static final String WIN_TITLE = "Love Letter @mzoesch";
 
-    @FXML
-    protected void onHelloButtonClick() {
-        this.subtitle.setText("Welcome to JavaFX Application!");
-        View.screenController.activate("rules");
-    }
+    public static final int PREF_HEIGHT = 1_280;
+    public static final int PREF_WIDTH = 720;
 
-    @FXML
-    protected void onExitButtonClick() {
-        Platform.exit();
+    public static final String MAIN_MENU = "main";
+    public static final String RULES = "rules";
+
+    private final Scene master;
+    private final HashMap<String, Pane> screens;
+
+    public MasterController(Scene master) {
+        this.master = master;
+        this.screens = new HashMap<String, Pane>();
 
         return;
     }
 
-//    public void switchToRules(ActionEvent event) throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("rules.fxml"));
-//        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//        Scene scene = new Scene(root, stage.getWidth() - 50, stage.getHeight() - 10);
-//        stage.setScene(scene);
-//        stage.show();
-//
-//        return;
-//    }
+    public void addScreen(String identifier, Pane pane) {
+        this.screens.put(identifier, pane);
+        return;
+    }
+
+    public void removeScreen(String identifier) {
+        this.screens.remove(identifier);
+        return;
+    }
+
+    public void activate(String identifier) {
+        this.master.setRoot(this.screens.get(identifier));
+        return;
+    }
 
 }

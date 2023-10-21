@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@rules.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="appv2.core.view.RulesController">
    <children>
       <Label id="title" alignment="CENTER" stylesheets="@rules.css" text="Rules for Love Letter Premium Edition" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -18,14 +17,14 @@
                <children>
                   <VBox alignment="TOP_CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label text="asdf" wrapText="true" />
+                        <Label text="To be added" wrapText="true" />
                      </children>
                   </VBox>
                </children>
             </AnchorPane>
          </content>
       </ScrollPane>
-      <Button id="continue-btn" mnemonicParsing="false" stylesheets="@rules.css" text="Continue" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" onAction="#switchToMaster"/>
+      <Button id="continue-btn" mnemonicParsing="false" onAction="#onContinueBtn" stylesheets="@rules.css" text="Continue" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
