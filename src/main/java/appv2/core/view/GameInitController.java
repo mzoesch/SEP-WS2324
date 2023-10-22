@@ -3,22 +3,12 @@ package appv2.core.view;
 import appv2.core.View;
 import appv2.core.GameState;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.application.Application;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Label;
-
-import java.io.IOException;
-import java.util.Objects;
 
 
 public class GameInitController {
@@ -165,8 +155,7 @@ public class GameInitController {
             playerNames[3] = ((TextField) ((HBox) this.playernamescontainer.getChildren().get(3)).getChildren().get(1)).getText();
 
         GameState.initializeNewGame(playerCount, playerNames);
-        View.renderNewScreen(MasterController.GAME, View.PATH_TO_GAME);
-        View.killScreen(MasterController.GAME_INIT);
+        View.renderNewScreen(new GameScene(MasterController.getUniqueIdentifier(String.format("%s-player%s", MasterController.GAME, GameState.getActiveGameMode().getMostRecentPlayerController().getPlayerName())), View.loadFXML(View.PATH_TO_GAME), true, null), false);
         return;
     }
 

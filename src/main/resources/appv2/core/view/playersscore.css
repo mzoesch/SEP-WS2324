@@ -1,0 +1,25 @@
+#container {
+    -fx-background-color: #2b2a33;
+}
+
+#close-btn {
+    -fx-background-color: red;
+
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 10px 50px 10px 50px;
+
+    -fx-border-radius: 0px;
+}
+
+#close-btn:hover {
+    -fx-background-color: #a30000;
+}
+
+#basic-text {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}

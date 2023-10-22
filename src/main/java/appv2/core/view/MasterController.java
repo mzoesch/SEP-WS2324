@@ -1,9 +1,10 @@
 package appv2.core.view;
 
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.UUID;
+import java.util.Objects;
 
 
 // TODO: Add class for screens. Add ability to auto remove screens when they are no longer needed.
@@ -18,36 +19,97 @@ public class MasterController {
     public static final String RULES = "rules";
     public static final String GAME_INIT = "gameinit";
     public static final String GAME = "game";
+    public static final String ROUND_ENDED = "roundended";
+    public static final String GAME_ENDED = "gameended";
+    public static final String PLAYERS_SCORE = "playersscore";
 
     private final Scene master;
-    private final HashMap<String, Pane> screens;
+    private final ArrayList<GameScene> screens;
+
+    private String currentScreen;
 
     public MasterController(Scene master) {
         this.master = master;
-        this.screens = new HashMap<String, Pane>();
+        this.screens = new ArrayList<GameScene>();
+        this.currentScreen = "";
 
         return;
     }
 
-    public void addScreen(String identifier, Pane pane) {
-        this.screens.put(identifier, pane);
+    public void addScreen(GameScene gameScene) {
+        this.screens.add(gameScene);
         return;
     }
 
     public void removeScreen(String identifier) {
-        this.screens.remove(identifier);
+        for (GameScene screen : this.screens) {
+            if (screen.getIdentifier().equals(identifier)) {
+                this.screens.remove(screen);
+                return;
+            }
+        }
         return;
     }
 
-    public void activate(String identifier) {
-        this.master.setRoot(this.screens.get(identifier));
-        return;
+    public String activate(String identifier, boolean bKeepOldAlive) {
+        String oldIdentifier = this.currentScreen;
+
+        this.screens.forEach(gameScene -> {
+            if (gameScene.getIdentifier().equals(identifier)) {
+                this.master.setRoot(gameScene.getPane());
+                this.currentScreen = identifier;
+            }
+        });
+
+        if (Objects.equals(this.currentScreen, oldIdentifier))
+            return "";
+
+        for (GameScene screen : this.screens) {
+            if (screen.getIdentifier().equals(oldIdentifier) && screen.isKillAfterUse()) {
+                if (bKeepOldAlive) {
+                    this.screens.forEach(gameScene -> {
+                        System.out.printf("Screen: %s, Kill: %b%n", gameScene.getIdentifier(), gameScene.isKillAfterUse());
+                    });
+                    return oldIdentifier;
+                }
+
+                this.removeScreen(oldIdentifier);
+                break;
+            }
+            continue;
+        }
+
+        this.screens.forEach(gameScene -> {
+            System.out.printf("Screen: %s, Kill: %b%n", gameScene.getIdentifier(), gameScene.isKillAfterUse());
+        });
+        return "";
     }
+
+    // region Utility methods
+
+    public static String getUniqueIdentifier(String prefix) {
+        return String.format("%s-%s", prefix, UUID.randomUUID().toString());
+    }
+
+    // endregion Utility methods
 
     // region Getters and setters
 
     public Scene getScene() {
         return this.master;
+    }
+
+    public ArrayList<GameScene> getGameScenes() {
+        return this.screens;
+    }
+
+    public GameScene getActiveGameScene() {
+        for (GameScene screen : this.screens) {
+            if (screen.getIdentifier().equals(this.currentScreen))
+                return screen;
+        }
+
+        throw new RuntimeException("No active screen found.");
     }
 
     // endregion Getters and setters

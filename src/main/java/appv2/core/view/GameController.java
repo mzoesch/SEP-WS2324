@@ -4,14 +4,13 @@ import appv2.core.View;
 import appv2.core.GameState;
 import appv2.core.PlayerController;
 import appv2.core.ECardResponse;
+import appv2.core.EGameModeState;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.paint.Color;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
@@ -84,26 +83,20 @@ public class GameController {
     }
 
     private void renderGameStateOverviewAreaScreen() {
-        Label remainingPlayersLabel = new Label();
-        Text remainingPlayerText = new Text("4/4 remaining players.");
-        remainingPlayerText.setFill(Color.WHITE);
-        remainingPlayersLabel.setText(remainingPlayerText.getText());
-        remainingPlayersLabel.setTextFill(remainingPlayerText.getFill());
-        Font font = new Font(20.0);
-        remainingPlayersLabel.setFont(font);
+        Label remainingPlayersLabel = new Label(String.format("%d/%d", GameState.getActiveGameMode().getRemainingPlayerCount(), GameState.getActiveGameMode().getPlayerCount()));
+        remainingPlayersLabel.setId("basic-text");
 
-        Button showScoreButton = new Button();
-        Text btnText = new Text("Show score of all players.");
-        btnText.setFill(Color.BLACK);
-        showScoreButton.setText(btnText.getText());
-        showScoreButton.setTextFill(btnText.getFill());
+        Button showScoreButton = new Button("Show Score Of All Players");
+        showScoreButton.setId("show-score-btn");
+        showScoreButton.setOnAction(actionEvent -> {
+            GameScene gameScene = new GameScene(MasterController.PLAYERS_SCORE, View.loadFXML(View.PATH_TO_PLAYERS_SCORE), true, null);
+            String fallback = View.renderNewScreen(gameScene, true);
+            gameScene.setArgs(fallback);
+            return;
+        });
 
-        Label remainingCardsLabel = new Label();
-        Text remainingCardsText = new Text("10 (+1) cards remaining.");
-        remainingCardsText.setFill(Color.WHITE);
-        remainingCardsLabel.setText(remainingCardsText.getText());
-        remainingCardsLabel.setTextFill(remainingCardsText.getFill());
-        remainingCardsLabel.setFont(font);
+        Label remainingCardsLabel = new Label(String.format("%d %s cards remaining", GameState.getActiveGameMode().getRemainingTableCardsCount(), GameState.getActiveGameMode().isHiddenCardAvailable() ? "(+1)" : ""));
+        remainingCardsLabel.setId("basic-text");
 
         VBox vbox = new VBox(remainingPlayersLabel, showScoreButton, remainingCardsLabel);
         this.rightarea.getChildren().add(vbox);
@@ -148,7 +141,16 @@ public class GameController {
             Button endTurn = new Button("End Your Turn");
             endTurn.setId("end-turn-btn");
             endTurn.setOnAction(actionEvent -> {
-                GameState.getActiveGameMode().selectNextValidPlayer();
+                EGameModeState state = GameState.getActiveGameMode().selectNextValidPlayer();
+
+                if (state == EGameModeState.ROUND_ENDED) {
+                    View.renderNewScreen(new GameScene(MasterController.ROUND_ENDED, View.loadFXML(View.PATH_TO_ROUND_ENDED), true, null), false);
+                    return;
+                }
+
+                // TODO: Game ended
+
+                View.renderNewScreen(new GameScene(MasterController.getUniqueIdentifier(String.format("%s-player%s", MasterController.GAME, GameState.getActiveGameMode().getMostRecentPlayerController().getPlayerName())), View.loadFXML(View.PATH_TO_GAME), true, null), false);
                 return;
             });
 

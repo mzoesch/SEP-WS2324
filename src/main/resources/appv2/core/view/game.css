@@ -77,3 +77,25 @@
     -fx-alignment: center;
     -fx-spacing: 100px;
 }
+
+#basic-text {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+#show-score-btn {
+    -fx-background-color: rgba(0, 0, 255, 0.6);
+
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 10px 50px 10px 50px;
+
+    -fx-border-radius: 0px;
+}
+
+#show-score-btn:hover {
+    -fx-background-color: rgba(0, 0, 255, 0.8);
+}

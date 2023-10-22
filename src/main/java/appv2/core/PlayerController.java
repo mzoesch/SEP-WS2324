@@ -16,7 +16,9 @@ public class PlayerController {
     ACard tableCard;
     private final ArrayList<ACard> discardedCardsPile;
 
-    private boolean hasPlayedCard;
+    private boolean bPlayedCard;
+    private boolean bProtected;
+    private boolean bKnockedOut;
 
     public PlayerController(int playerID, String playerName) {
         super();
@@ -27,7 +29,9 @@ public class PlayerController {
         this.affectionTokens = 0;
         this.discardedCardsPile = new ArrayList<ACard>();
 
-        this.hasPlayedCard = false;
+        this.bPlayedCard = false;
+        this.bProtected = false;
+        this.bKnockedOut = false;
 
         return;
     }
@@ -46,16 +50,16 @@ public class PlayerController {
     }
 
     public void prepareForNextTurn() {
-        this.hasPlayedCard = false;
+        this.bPlayedCard = false;
 
         this.tableCard = GameState.getActiveGameMode().drawCard();
         return;
     }
 
     public ECardResponse playCard(boolean bHandCard) {
-        if (this.hasPlayedCard)
+        if (this.bPlayedCard)
             throw new RuntimeException("Player has already played a card this turn.");
-        this.hasPlayedCard = true;
+        this.bPlayedCard = true;
 
         if (bHandCard) {
             this.discardedCardsPile.add(this.handCard);
@@ -66,6 +70,11 @@ public class PlayerController {
         this.tableCard = null;
 
         return ECardResponse.OK;
+    }
+
+    public void increaseAffection() {
+        this.affectionTokens++;
+        return;
     }
 
     // region Getters and setters
@@ -91,7 +100,29 @@ public class PlayerController {
     }
 
     public boolean hasPlayedCard() {
-        return this.hasPlayedCard;
+        return this.bPlayedCard;
+    }
+
+    public boolean isProtected() {
+        return this.bProtected;
+    }
+
+    public boolean isKnockedOut() {
+        return this.bKnockedOut;
+    }
+
+    public int getAffectionOfLatestDiscardedCard() {
+        return this.discardedCardsPile.get(this.discardedCardsPile.size() - 1).getAffection();
+    }
+
+    public int getSumOfAffectionInDiscardPile() {
+        return this.discardedCardsPile.stream()
+                .mapToInt(ACard::getAffection)
+                .sum();
+    }
+
+    public int getAffectionTokens() {
+        return this.affectionTokens;
     }
 
     // endregion Getters and setters

@@ -9,7 +9,6 @@ public class RulesController {
 
     public void onContinueBtn(ActionEvent event) {
         View.renderExistingScreen(MasterController.MAIN_MENU);
-        View.killScreen(MasterController.RULES);
         return;
     }
 

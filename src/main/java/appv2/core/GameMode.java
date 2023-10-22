@@ -25,6 +25,7 @@ public class GameMode {
 
     public static final int AMOUNT_OF_PLAYER_REQUIRED_FOR_EXAMINING_CARDS = 2;
 
+    private ArrayList<PlayerController> mostRecentRoundWinners;
     private final PlayerController[] playerControllers;
     private int mostRecentPlayerID;
 
@@ -39,6 +40,7 @@ public class GameMode {
         this.examiningCards = new ArrayList<ACard>();
         this.hiddenCard = null;
 
+        this.mostRecentRoundWinners = null;
         this.playerControllers = new PlayerController[playerCount];
         for (int i = 0; i < playerCount; i++) {
             this.playerControllers[i] = new PlayerController(i, playerNames[i]);
@@ -52,14 +54,84 @@ public class GameMode {
 
     // region Game Core methods
 
+    // TODO: Static?
+    private int updateRoundWinnersListBasedOnAffection(
+            ArrayList<PlayerController> winners, int highestAffection, PlayerController PC, int currentAffection
+    ) {
+        if (currentAffection > highestAffection) {
+            highestAffection = currentAffection;
+            winners.clear();
+            winners.add(PC);
+            return highestAffection;
+        }
 
-    public void selectNextValidPlayer() {
+        if (currentAffection == highestAffection) {
+            winners.add(PC);
+            return highestAffection;
+        }
+
+        return highestAffection;
+    }
+
+    // TODO: Give feedback who won the round.
+    private void applyRoundWinBonusToPlayers() {
+        ArrayList<PlayerController> playersWithHighestAffection = new ArrayList<PlayerController>(0);
+        int highestAffection = -1;
+        for (PlayerController PC : this.playerControllers) {
+            if (PC.isKnockedOut())
+                continue;
+
+            int currentAffection;
+            if (PC.handCard == null)
+                currentAffection = PC.getAffectionOfLatestDiscardedCard();
+            else
+                currentAffection = PC.handCard.getAffection();
+
+            highestAffection = this.updateRoundWinnersListBasedOnAffection(
+                    playersWithHighestAffection, highestAffection, PC, currentAffection);
+            continue;
+        }
+
+        if (playersWithHighestAffection.isEmpty())
+            throw new RuntimeException("No players with highest affection found.");
+
+        if (playersWithHighestAffection.size() == 1) {
+            playersWithHighestAffection.get(0).increaseAffection();
+            this.mostRecentRoundWinners = playersWithHighestAffection;
+            return;
+        }
+
+        ArrayList<PlayerController> playerWithHighestAffectionInDiscardPile = new ArrayList<PlayerController>(0);
+        int highestDiscardPileAffection = -1;
+        for (PlayerController PC : playersWithHighestAffection) {
+            int currentAffection = PC.getSumOfAffectionInDiscardPile();
+            highestDiscardPileAffection =
+                    updateRoundWinnersListBasedOnAffection(
+                            playerWithHighestAffectionInDiscardPile, highestDiscardPileAffection, PC, currentAffection
+                    );
+            continue;
+        }
+
+        for (PlayerController PC : playerWithHighestAffectionInDiscardPile)
+            PC.increaseAffection();
+
+        this.mostRecentRoundWinners = playerWithHighestAffectionInDiscardPile;
+
+        return;
+    }
+
+    public EGameModeState selectNextValidPlayer() {
+        if (this.tableCardsPile.isEmpty() || this.getRemainingPlayerCount() < 2) {
+            this.applyRoundWinBonusToPlayers();
+            return EGameModeState.ROUND_ENDED;
+        }
+
         int nextPlayerID = this.mostRecentPlayerID + 1;
         if (nextPlayerID >= this.getPlayerCount())
             nextPlayerID = 0;
 
         this.mostRecentPlayerID = nextPlayerID;
-        return;
+        return EGameModeState.GAME_RUNNING;
     }
 
     /**
@@ -71,8 +143,12 @@ public class GameMode {
      */
     public void prepareForNextRound() {
         this.prepareTableCardsPile();
+
         for (PlayerController PC : this.playerControllers)
             PC.prepareForNextRound();
+
+        this.mostRecentPlayerID = 0;
+        this.mostRecentRoundWinners = null;
 
         return;
     }
@@ -193,6 +269,32 @@ public class GameMode {
 
     public ACard getHiddenCard() {
         return this.hiddenCard;
+    }
+
+    public PlayerController[] getRemainingPlayerControllers() {
+        return Arrays.stream(this.playerControllers)
+                .filter(PC -> !PC.isKnockedOut())
+                .toArray(PlayerController[]::new);
+    }
+
+    public int getRemainingPlayerCount() {
+        return this.getRemainingPlayerControllers().length;
+    }
+
+    public int getRemainingTableCardsCount() {
+        return this.tableCardsPile.size();
+    }
+
+    public boolean isHiddenCardAvailable() {
+        return this.hiddenCard != null;
+    }
+
+    public PlayerController[] getPlayerControllers() {
+        return this.playerControllers;
+    }
+
+    public ArrayList<PlayerController> getMostRecentRoundWinners() {
+        return this.mostRecentRoundWinners;
     }
 
     // endregion Getters and setters
