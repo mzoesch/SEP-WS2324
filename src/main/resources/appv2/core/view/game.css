@@ -1,0 +1,79 @@
+#container {
+    -fx-background-color: #2b2a33;
+}
+
+#title {
+    -fx-text-fill: white;
+    -fx-font-size: 50px;
+    -fx-font-weight: bolder;
+}
+
+#discarded-pile-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bolder;
+}
+
+#discarded-pile-cards {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bolder;
+}
+
+#show-discarded-pile-btn {
+    -fx-text-fill: black;
+    -fx-font-size: 20px;
+    -fx-font-weight: bolder;
+}
+
+#ex-title {
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-weight: bolder;
+}
+
+#ex-hbox {
+    -fx-spacing: 50px;
+}
+
+#ex-card-label {
+    -fx-text-fill: white;
+    -fx-font-size: 50px;
+}
+
+#play-card-btn {
+    -fx-background-color: rgba(0, 255, 0, 0.6);
+
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 10px 50px 10px 50px;
+
+    -fx-border-radius: 0px;
+}
+
+#play-card-btn:hover {
+    -fx-background-color: rgba(0, 255, 0, 0.8);
+}
+
+#end-turn-btn {
+    -fx-background-color: rgba(255, 0, 0, 0.6);
+
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 10px 50px 10px 50px;
+
+    -fx-border-radius: 0px;
+}
+
+#end-turn-btn:hover {
+    -fx-background-color: rgba(255, 0, 0, 0.8);
+}
+
+#choice-btn-area {
+    -fx-alignment: center;
+    -fx-spacing: 100px;
+}

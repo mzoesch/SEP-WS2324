@@ -19,4 +19,11 @@ public class MainMenuController {
         return;
     }
 
+    @FXML
+
+    protected void onPlayBtn() {
+        View.renderNewScreen(MasterController.GAME_INIT, View.PATH_TO_GAME_INIT);
+        return;
+    }
+
 }

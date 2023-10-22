@@ -17,6 +17,8 @@ public class View extends Application {
 
     public static final String PATH_TO_RULES = "view/rules.fxml";
     public static final String PATH_TO_MAIN_MENU = "view/mainmenu.fxml";
+    public static final String PATH_TO_GAME_INIT = "view/gameinit.fxml";
+    public static final String PATH_TO_GAME = "view/game.fxml";
 
     private static MasterController masterController;
 
@@ -27,10 +29,13 @@ public class View extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(new Parent(){}, MasterController.PREF_HEIGHT, MasterController.PREF_WIDTH);
-        View.masterController = new MasterController(scene);
+        View.masterController = new MasterController(
+                new Scene(
+                        new Parent(){}, MasterController.PREF_HEIGHT, MasterController.PREF_WIDTH
+                )
+        );
 
-        stage.setScene(scene);
+        stage.setScene(View.masterController.getScene());
         stage.setTitle(MasterController.WIN_TITLE);
 
         View.renderNewScreen(MasterController.MAIN_MENU, View.PATH_TO_MAIN_MENU);

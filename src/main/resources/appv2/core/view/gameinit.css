@@ -1,0 +1,47 @@
+#container {
+    -fx-background-color: #2b2a33;
+}
+
+#title {
+    -fx-text-fill: white;
+    -fx-font-size: 50px;
+    -fx-font-weight: bolder;
+}
+
+.button {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 10px 50px 10px 50px;
+
+    -fx-border-radius: 0px;
+}
+
+.button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+
+#primary-btn {
+    -fx-background-color: rgba(0, 75, 255, 0.8);
+
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+    -fx-padding: 10px 50px 10px 50px;
+
+    -fx-border-radius: 0px;
+}
+
+#primary-btn:hover {
+    -fx-background-color: rgba(0, 31, 255, 0.9);
+}
+
+#error-msg {
+    -fx-text-fill: red;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}

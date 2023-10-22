@@ -7,6 +7,7 @@ public class GameInstance {
 
     public GameInstance() {
         super();
+
         appv2.core.View.run();
         return;
     }
@@ -15,5 +16,9 @@ public class GameInstance {
         Platform.exit();
         return;
     }
+
+    // region Getters and Setters
+
+    // endregion Getters and Setters
 
 }

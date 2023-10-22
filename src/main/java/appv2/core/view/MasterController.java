@@ -16,6 +16,8 @@ public class MasterController {
 
     public static final String MAIN_MENU = "main";
     public static final String RULES = "rules";
+    public static final String GAME_INIT = "gameinit";
+    public static final String GAME = "game";
 
     private final Scene master;
     private final HashMap<String, Pane> screens;
@@ -41,5 +43,13 @@ public class MasterController {
         this.master.setRoot(this.screens.get(identifier));
         return;
     }
+
+    // region Getters and setters
+
+    public Scene getScene() {
+        return this.master;
+    }
+
+    // endregion Getters and setters
 
 }

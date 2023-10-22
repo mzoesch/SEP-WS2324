@@ -28,7 +28,7 @@
          <children>
             <Button id="exit-btn" mnemonicParsing="false" onAction="#onExitBtn" stylesheets="@mainmenu.css" text="Exit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
             <Button id="rules-btn" layoutX="518.0" layoutY="78.0" mnemonicParsing="false" stylesheets="@mainmenu.css" text="Rules" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="200.0" onAction="#onRulesBtn" />
-            <Button id="play-btn" mnemonicParsing="false" stylesheets="@mainmenu.css" text="Play" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Button id="play-btn" mnemonicParsing="false" stylesheets="@mainmenu.css" text="Play" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" onAction="#onPlayBtn"/>
          </children>
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
