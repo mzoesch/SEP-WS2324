@@ -13,6 +13,7 @@ public final class GameState {
     }
 
     public static void initializeNewGame(int playerCount, String[] playerNames) {
+        GameState.gameMode = null;
         GameState.gameMode = new GameMode(playerCount, playerNames);
         GameState.gameMode.prepareForNextRound();
 

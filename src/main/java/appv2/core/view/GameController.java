@@ -148,6 +148,11 @@ public class GameController {
                     return;
                 }
 
+                if (state == EGameModeState.GAME_ENDED) {
+                    View.renderNewScreen((new GameScene(MasterController.GAME_ENDED, View.loadFXML(View.PATH_TO_GAME_ENDED), true, null)), false);
+                    return;
+                }
+
                 // TODO: Game ended
 
                 View.renderNewScreen(new GameScene(MasterController.getUniqueIdentifier(String.format("%s-player%s", MasterController.GAME, GameState.getActiveGameMode().getMostRecentPlayerController().getPlayerName())), View.loadFXML(View.PATH_TO_GAME), true, null), false);

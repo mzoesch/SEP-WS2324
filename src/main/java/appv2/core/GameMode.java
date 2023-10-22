@@ -13,19 +13,21 @@ import appv2.cards.GuardOdette;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 
 public class GameMode {
 
     private static final int CARD_AMOUNT_IN_DECK = 16;
 
-    private static final int PLAYER_COUNT_TWO_TOKENS_TO_WIN = 7;
+    private static final int PLAYER_COUNT_TWO_TOKENS_TO_WIN = 1; // 7
     private static final int PLAYER_COUNT_THREE_TOKENS_TO_WIN = 5;
-    private static final int PLAYER_COUNT_FOUR_TOKENS_TO_WIN = 4;
+    private static final int PLAYER_COUNT_FOUR_TOKENS_TO_WIN = 3; // 4
 
     public static final int AMOUNT_OF_PLAYER_REQUIRED_FOR_EXAMINING_CARDS = 2;
 
     private ArrayList<PlayerController> mostRecentRoundWinners;
+    private ArrayList<PlayerController> gameWinners;
     private final PlayerController[] playerControllers;
     private int mostRecentPlayerID;
 
@@ -35,12 +37,14 @@ public class GameMode {
 
     public GameMode(int playerCount, String[] playerNames) {
         super();
+        System.out.println("GameMode constructor called.");
 
         this.tableCardsPile = new ArrayList<ACard>();
         this.examiningCards = new ArrayList<ACard>();
         this.hiddenCard = null;
 
         this.mostRecentRoundWinners = null;
+        this.gameWinners = null;
         this.playerControllers = new PlayerController[playerCount];
         for (int i = 0; i < playerCount; i++) {
             this.playerControllers[i] = new PlayerController(i, playerNames[i]);
@@ -73,7 +77,6 @@ public class GameMode {
         return highestAffection;
     }
 
-    // TODO: Give feedback who won the round.
     private void applyRoundWinBonusToPlayers() {
         ArrayList<PlayerController> playersWithHighestAffection = new ArrayList<PlayerController>(0);
         int highestAffection = -1;
@@ -120,9 +123,47 @@ public class GameMode {
         return;
     }
 
+    private boolean hasAPlayerWonGame() {
+        this.gameWinners = new ArrayList<PlayerController>(0);
+        for (PlayerController PC : this.playerControllers) {
+
+            if (this.getPlayerCount() == 2) {
+                if (PC.getAffectionTokens() >= GameMode.PLAYER_COUNT_TWO_TOKENS_TO_WIN)
+                    this.gameWinners.add(PC);
+
+                continue;
+            }
+
+            if (this.getPlayerCount() == 3) {
+                if (PC.getAffectionTokens() >= GameMode.PLAYER_COUNT_THREE_TOKENS_TO_WIN)
+                    this.gameWinners.add(PC);
+
+                continue;
+            }
+
+            if (this.getPlayerCount() == 4) {
+                if (PC.getAffectionTokens() >= GameMode.PLAYER_COUNT_FOUR_TOKENS_TO_WIN)
+                    this.gameWinners.add(PC);
+
+                continue;
+            }
+
+            throw new IllegalArgumentException("Invalid player count.");
+        }
+
+        if (this.gameWinners.isEmpty()) {
+            this.gameWinners = null;
+            return false;
+        }
+
+        return true;
+    }
+
     public EGameModeState selectNextValidPlayer() {
         if (this.tableCardsPile.isEmpty() || this.getRemainingPlayerCount() < 2) {
             this.applyRoundWinBonusToPlayers();
+            if (this.hasAPlayerWonGame())
+                return EGameModeState.GAME_ENDED;
             return EGameModeState.ROUND_ENDED;
         }
 
@@ -295,6 +336,14 @@ public class GameMode {
 
     public ArrayList<PlayerController> getMostRecentRoundWinners() {
         return this.mostRecentRoundWinners;
+    }
+
+    // TODO: This does not work.
+    public PlayerController[] getPlayerControllerByDSCAffection() {
+        PlayerController[] sortedPlayersByAffection = new PlayerController[this.getPlayerCount()];
+        System.arraycopy(this.playerControllers, 0, sortedPlayersByAffection, 0, this.getPlayerCount());
+        Arrays.sort(sortedPlayersByAffection, Comparator.comparingInt(PlayerController::getAffectionTokens));
+        return sortedPlayersByAffection;
     }
 
     // endregion Getters and setters
