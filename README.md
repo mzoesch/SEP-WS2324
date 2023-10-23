@@ -51,8 +51,7 @@ The red, heart-shaped tokens are used to track Princess Annette's ever-growing a
 
 ### Setup (two to four players)
 
-If you are playing the game with 5 to 8 players, consult the setup and play rules on page 7. For 2 to 4 players, assemble
-the following cards into a deck and place the others aside, as they won't be used in the game: <p>
+If you are playing the game with 5 to 8 players, consult the setup and play rules on page 7. For 2 to 4 players, assemble the following cards into a deck and place the others aside, as they won't be used in the game: <p>
 
 - Princess <br />
 - Countess <br />
@@ -91,10 +90,9 @@ A round ends if the deck is empty at the end of a player's turn. The royal resid
 A round also ends if all players but one are out of the round, in which case the remaining player wins. <p>
 After a round ends, the winner (or winners, if there was a tie at the end of the round) receives a Token of Affection. Shuffle all 16 cards together, and play a new round following all of the setup rules above. The winner of the previous round goes first, because the Princess speaks kindly of him or her at breakfast. If there was more than one winner from the previous round as a result of a tie, then whichever of the tied players was most recently on a date goes first. <br />
 
-#### Game End and How to Win (2 to 4 Players)
+#### Game End and How to Win (two to four Players)
 
-A player wins the game after winning a number of Tokens
-of Affection based on the number of players: <br />
+A player wins the game after winning a number of Tokens of Affection based on the number of players: <br />
 
 - 2 players: 7 tokens <br />
 - 3 players: 5 tokens <br />

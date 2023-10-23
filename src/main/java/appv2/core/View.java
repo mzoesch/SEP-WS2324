@@ -102,6 +102,10 @@ public class View extends Application {
         return View.masterController.getActiveGameScene();
     }
 
+    public static Scene getScene() {
+        return View.masterController.getScene();
+    }
+
     // endregion Controller interaction methods
 
 }

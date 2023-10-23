@@ -15,13 +15,21 @@ public class MainMenuController {
 
     @FXML
     protected void onRulesBtn() {
-        View.renderNewScreen(new GameScene(MasterController.RULES, View.loadFXML(View.PATH_TO_RULES), true, null), false);
+        View.renderNewScreen(
+                new GameScene(MasterController.RULES, View.loadFXML(View.PATH_TO_RULES), true, null),
+                false
+        );
+
         return;
     }
 
     @FXML
     protected void onPlayBtn() {
-        View.renderNewScreen(new GameScene(MasterController.GAME_INIT, View.loadFXML(View.PATH_TO_GAME_INIT), true, null), false);
+        View.renderNewScreen(
+                new GameScene(MasterController.GAME_INIT, View.loadFXML(View.PATH_TO_GAME_INIT), true, null),
+                false
+        );
+
         return;
     }
 

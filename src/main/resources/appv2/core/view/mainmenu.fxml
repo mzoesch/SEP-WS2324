@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <BorderPane
-        id="master-container"
-        stylesheets="@globals.css"
+        id="master-container" stylesheets="@globals.css"
         fx:controller="appv2.core.view.MainMenuController"
         xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
 >
@@ -17,13 +16,13 @@
             <Label
                     text="Love Letter"
                     styleClass="text-2xl"
-                    alignment="CENTER" contentDisplay="CENTER"
+                    alignment="CENTER"
                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
             />
             <Label
                     text="\@Magnus Zoeschinger"
                     id="author-title" styleClass="text-xl" stylesheets="@mainmenu.css"
-                    alignment="CENTER" contentDisplay="CENTER"
+                    alignment="CENTER"
                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
             />
          </children>
@@ -32,9 +31,22 @@
    <bottom>
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
-            <Button text="Exit" styleClass="danger-btn" onAction="#onExitBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
-            <Button text="Rules" styleClass="secondary-btn" onAction="#onRulesBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="160.0" />
-            <Button text="Play"  styleClass="primary-btn" onAction="#onPlayBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Button
+                    text="Exit"
+                    styleClass="danger-btn"
+                    onAction="#onExitBtn"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            />
+            <Button
+                    text="Rules"
+                    styleClass="secondary-btn"
+                    onAction="#onRulesBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="160.0"
+            />
+            <Button
+                    text="Play"
+                    styleClass="primary-btn"
+                    onAction="#onPlayBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"
+            />
          </children>
       </AnchorPane>
    </bottom>
