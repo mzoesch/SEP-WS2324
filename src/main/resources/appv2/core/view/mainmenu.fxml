@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="582.0" stylesheets="@mainmenu.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="appv2.core.view.MainMenuController">
+<BorderPane
+        id="master-container"
+        stylesheets="@globals.css"
+        fx:controller="appv2.core.view.MainMenuController"
+        xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+>
    <top>
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
-            <Label id="title" alignment="CENTER" contentDisplay="CENTER" layoutY="27.0" stylesheets="@mainmenu.css" text="Love Letter" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Label id="subtitle" fx:id="subtitle" alignment="CENTER" contentDisplay="CENTER" layoutY="86.0" stylesheets="@mainmenu.css" text="\@Magnus Zoeschinger" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
+            <Label
+                    text="Love Letter"
+                    styleClass="text-2xl"
+                    alignment="CENTER" contentDisplay="CENTER"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+            />
+            <Label
+                    text="\@Magnus Zoeschinger"
+                    id="author-title" styleClass="text-xl" stylesheets="@mainmenu.css"
+                    alignment="CENTER" contentDisplay="CENTER"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+            />
          </children>
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
       </AnchorPane>
    </top>
    <bottom>
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
-            <Button id="exit-btn" mnemonicParsing="false" onAction="#onExitBtn" stylesheets="@mainmenu.css" text="Exit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
-            <Button id="rules-btn" layoutX="518.0" layoutY="78.0" mnemonicParsing="false" stylesheets="@mainmenu.css" text="Rules" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="200.0" onAction="#onRulesBtn" />
-            <Button id="play-btn" mnemonicParsing="false" stylesheets="@mainmenu.css" text="Play" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" onAction="#onPlayBtn"/>
+            <Button text="Exit" styleClass="danger-btn" onAction="#onExitBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+            <Button text="Rules" styleClass="secondary-btn" onAction="#onRulesBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="160.0" />
+            <Button text="Play"  styleClass="primary-btn" onAction="#onPlayBtn" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
-         <BorderPane.margin>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </BorderPane.margin>
       </AnchorPane>
    </bottom>
 </BorderPane>
