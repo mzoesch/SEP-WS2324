@@ -5,10 +5,7 @@ import appv2.core.View;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.text.Text;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 
 public class RulesController {
