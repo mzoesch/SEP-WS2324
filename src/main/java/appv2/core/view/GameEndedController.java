@@ -6,22 +6,25 @@ import appv2.core.PlayerController;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 
 public class GameEndedController {
 
     @FXML private Label winnersubtitlelabel;
-    @FXML private HBox playersscorecontainer;
+    @FXML private VBox playersscorecontainer;
 
     @FXML
     private void initialize() {
-        this.winnersubtitlelabel.setText(String.format("%s won the game!", GameState.getActiveGameMode().getMostRecentRoundWinners().get(0).getPlayerName()));
+        if (GameState.getActiveGameMode().getMostRecentRoundWinners().isEmpty())
+            throw new RuntimeException("No winners were found in the most recent round!");
+        this.winnersubtitlelabel.setText(String.format("%s won the game!",
+                GameState.getActiveGameMode().getMostRecentRoundWinnersAsString()));
 
         this.playersscorecontainer.getChildren().clear();
         for (PlayerController PC : GameState.getActiveGameMode().getPlayerControllerByDSCAffection()) {
             Label label = new Label(String.format("%s: %s", PC.getPlayerName(), PC.getAffectionTokens()));
-            label.setId("basic-text");
+            label.getStyleClass().add("text-lg");
 
             this.playersscorecontainer.getChildren().add(label);
             continue;

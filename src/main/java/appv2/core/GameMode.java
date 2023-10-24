@@ -343,6 +343,26 @@ public class GameMode {
         return this.mostRecentRoundWinners;
     }
 
+    public String getMostRecentRoundWinnersAsString() {
+        if (this.mostRecentRoundWinners == null)
+            return "NONE";
+
+        if (this.mostRecentRoundWinners.size() == 1)
+            return String.format("%s",
+                    this.mostRecentRoundWinners.get(0).getPlayerName());
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < this.mostRecentRoundWinners.size(); i++) {
+            if (i == this.mostRecentRoundWinners.size() - 1)
+                sb.append("and ");
+            sb.append(this.mostRecentRoundWinners.get(i).getPlayerName());
+            if (i != this.mostRecentRoundWinners.size() - 1)
+                sb.append(", ");
+        }
+
+        return sb.toString();
+    }
+
     // TODO: This does not work.
     public PlayerController[] getPlayerControllerByDSCAffection() {
         PlayerController[] sortedPlayersByAffection = new PlayerController[this.getPlayerCount()];

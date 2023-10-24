@@ -1,22 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
 
-<AnchorPane id="container" prefHeight="493.0" prefWidth="800.0" stylesheets="@gameended.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="appv2.core.view.GameEndedController">
+<?import javafx.scene.layout.VBox?>
+<AnchorPane
+        id="master-container"
+        stylesheets="@globals.css"
+        fx:controller="appv2.core.view.GameEndedController"
+        xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+>
    <children>
-      <Label id="title" alignment="CENTER" stylesheets="@gameended.css" text="The Game Has Ended" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <Label id="subtitle" fx:id="winnersubtitlelabel" alignment="CENTER" stylesheets="@gameended.css" text="Label" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
-      <Label id="subtitle" layoutX="30.0" layoutY="130.0" stylesheets="@gameended.css" text="Label" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="140.0" />
-      <HBox fx:id="playersscorecontainer" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="170.0" />
-      <Button onAction="#onExitBtn" id="exit-btn" layoutX="516.0" layoutY="365.0" mnemonicParsing="false" stylesheets="@roundended.css" text="Exit App" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="250.0" />
-      <Button onAction="#onMainMenuBtn" id="mainmenu-btn" mnemonicParsing="false" stylesheets="@roundended.css" text="MainMenu" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Label
+              text="The Game Has Ended"
+              id="title" styleClass="text-2xl" stylesheets="@gameended.css"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+      />
+      <Label
+              id="subtitle" styleClass="text-xl" stylesheets="@gameended.css"
+              fx:id="winnersubtitlelabel"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="130.0"
+      />
+      <Label
+              text="The Tokens Of Affection From All Players:"
+              id="subtitle" styleClass="text-lg" stylesheets="@gameended.css"
+              AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="260.0"
+      />
+      <VBox
+              id="vbox" stylesheets="@gameended.css"
+              fx:id="playersscorecontainer"
+              AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="320.0"
+      />
+      <Button
+              text="Exit App"
+              styleClass="danger-btn"
+              onAction="#onExitBtn"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="250.0"
+      />
+      <Button
+              text="Main Menu"
+              styleClass="primary-btn"
+              onAction="#onMainMenuBtn"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"
+      />
    </children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
 </AnchorPane>
