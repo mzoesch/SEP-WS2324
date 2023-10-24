@@ -7,7 +7,6 @@ import java.util.UUID;
 import java.util.Objects;
 
 
-// TODO: Add class for screens. Add ability to auto remove screens when they are no longer needed.
 public class MasterController {
 
     public static final String WIN_TITLE = "Love Letter @mzoesch";
