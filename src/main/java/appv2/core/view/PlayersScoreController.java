@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 
 public class PlayersScoreController {
 
-    @FXML private Button closeBtn;
+    @FXML private Button closebtn;
     @FXML private VBox vbox;
     @FXML private Label tokenstowinlabel;
 
@@ -29,7 +29,7 @@ public class PlayersScoreController {
             continue;
         }
 
-        this.closeBtn.setOnAction(actionEvent -> {
+        this.closebtn.setOnAction(actionEvent -> {
             View.renderExistingScreen(View.getActiveGameScene().getFallback());
             return;
         });

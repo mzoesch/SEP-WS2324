@@ -362,7 +362,7 @@ public class GameMode {
 
     public PlayerController[] getPlayerControllerByDSCAffection() {
         PlayerController[] pcs = this.playerControllers.clone();
-        Arrays.sort(this.playerControllers.clone(), (a, b) -> b.getAffectionTokens() - a.getAffectionTokens());
+        Arrays.sort(pcs, (a, b) -> b.getAffectionTokens() - a.getAffectionTokens());
 
         return pcs;
 

@@ -95,7 +95,14 @@ public class GameController {
         Button button = new Button("Show discarded pile of all players.");
         button.getStyleClass().add("secondary-mini-btn");
         button.setOnAction(actionEvent -> {
-            System.out.println("Show discarded pile of all players.");
+            GameScene gameScene = new GameScene(
+                    MasterController.DISCARDED_PILE,
+                    View.loadFXML(View.PATH_TO_DISCARDED_PILE),
+                    true,
+                    null
+            );
+            gameScene.setFallback(View.renderNewScreen(gameScene, true));
+
             return;
         });
         vbox.getChildren().add(button);

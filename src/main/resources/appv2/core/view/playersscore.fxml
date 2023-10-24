@@ -24,7 +24,7 @@
       <Button
               text="Close"
               styleClass="danger-btn"
-              fx:id="closeBtn"
+              fx:id="closebtn"
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
       />
       <Label

@@ -21,6 +21,7 @@ public class MasterController {
     public static final String ROUND_ENDED = "roundended";
     public static final String GAME_ENDED = "gameended";
     public static final String PLAYERS_SCORE = "playersscore";
+    public static final String DISCARDED_PILE = "discardedpile";
 
     private final Scene master;
     private final ArrayList<GameScene> screens;

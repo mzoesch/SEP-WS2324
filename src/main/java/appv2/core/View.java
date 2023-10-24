@@ -22,6 +22,7 @@ public class View extends Application {
     public static final String PATH_TO_ROUND_ENDED = "view/roundended.fxml";
     public static final String PATH_TO_GAME_ENDED = "view/gameended.fxml";
     public static final String PATH_TO_PLAYERS_SCORE = "view/playersscore.fxml";
+    public static final String PATH_TO_DISCARDED_PILE = "view/discardedpile.fxml";
 
     private static MasterController masterController;
 

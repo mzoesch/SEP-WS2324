@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane
+        id="master-container" stylesheets="@globals.css"
+        xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="appv2.core.view.DiscardedPileController"
+>
+    <children>
+        <Label
+                text="The Current Discarded Piles Of Al Players"
+                styleClass="text-xl, title" stylesheets="@game.css"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+        />
+        <HBox
+                id="discarded-pile-container" stylesheets="@discardedpile.css"
+                fx:id="discardedpilecontainer"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0"
+        />
+        <Button
+                text="Close"
+                styleClass="danger-btn"
+                fx:id="closebtn"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+        />
+    </children>
+</AnchorPane>
