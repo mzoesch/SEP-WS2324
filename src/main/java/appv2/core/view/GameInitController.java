@@ -60,6 +60,8 @@ public class GameInitController {
         TextField textField = new TextField();
         textField.setPromptText("Enter Player Name");
         textField.getStyleClass().add("player-name-text-field");
+        // TODO: Remove this. just for faster testing.
+        textField.setText("Player " + (this.getPlayerCount() + 1));
 
         Button button = new Button("X");
         button.getStyleClass().add("danger-btn");
@@ -200,7 +202,7 @@ public class GameInitController {
                                 String.format("%s-player%s",
                                         MasterController.GAME,
                                         GameState.getActiveGameMode()
-                                        .getMostRecentPlayerController().getPlayerName()
+                                            .getMostRecentPlayerController().getPlayerName()
                                 )
                         ),
                         View.loadFXML(View.PATH_TO_GAME),

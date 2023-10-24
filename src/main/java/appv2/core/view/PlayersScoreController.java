@@ -29,7 +29,7 @@ public class PlayersScoreController {
         this.closeBtn.setOnAction(actionEvent -> {
             System.out.println("Closing PlayersScoreController");
             GameScene active = View.getActiveGameScene();
-            View.renderExistingScreen(active.getArgs());
+            View.renderExistingScreen(active.getFallback());
             return;
         });
 

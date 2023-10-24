@@ -9,11 +9,11 @@ public class GameScene {
     private final boolean killAfterUse;
     private String args;
 
-    public GameScene(String identifier, Pane pane, boolean killAfterUse, String args) {
+    public GameScene(String identifier, Pane pane, boolean killAfterUse, String fallback) {
         this.identifier = identifier;
         this.pane = pane;
         this.killAfterUse = killAfterUse;
-        this.args = args;
+        this.args = fallback;
 
         return;
     }
@@ -30,11 +30,11 @@ public class GameScene {
         return this.killAfterUse;
     }
 
-    public String getArgs() {
+    public String getFallback() {
         return this.args;
     }
 
-    public void setArgs(String args) {
+    public void setFallback(String args) {
         this.args = args;
         return;
     }

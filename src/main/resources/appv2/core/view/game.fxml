@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 
-<AnchorPane id="container" prefHeight="593.0" prefWidth="827.0" stylesheets="@game.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="appv2.core.view.GameController">
+<AnchorPane
+        id="master-container" stylesheets="@globals.css"
+        fx:controller="appv2.core.view.GameController"
+        xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+>
    <children>
-      <Label id="title" fx:id="turntitle" alignment="CENTER" stylesheets="@game.css" text="Player's XYZ Turn" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Label
+              styleClass="text-xl, title" stylesheets="@game.css"
+              fx:id="turntitle"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+      />
+      <BorderPane
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+      >
          <center>
-            <AnchorPane fx:id="mainarea" maxHeight="400.0" maxWidth="500.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0" BorderPane.alignment="CENTER" />
+            <AnchorPane
+                    fx:id="mainarea"
+                    BorderPane.alignment="CENTER"
+                    maxHeight="400.0" maxWidth="500.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0"
+            />
          </center>
-         <bottom>
-            <AnchorPane fx:id="bottomarea" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox alignment="CENTER" spacing="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                     <children>
-                        <Button id="play-card-btn" mnemonicParsing="false" stylesheets="@game.css" text="Button" />
-                        <Button id="play-card-btn" mnemonicParsing="false" text="Button">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                        </Button>
-                     </children>
-                  </HBox>
-               </children></AnchorPane>
-         </bottom>
          <left>
-            <AnchorPane fx:id="leftarea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <AnchorPane
+                    fx:id="leftarea"
+                    BorderPane.alignment="CENTER"
+                    prefHeight="200.0" prefWidth="200.0"
+            />
          </left>
          <right>
-            <AnchorPane fx:id="rightarea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <AnchorPane
+                    fx:id="rightarea"
+                    BorderPane.alignment="CENTER"
+                    prefHeight="200.0" prefWidth="200.0"
+            />
          </right>
+         <bottom>
+            <AnchorPane
+                    stylesheets="@game.css"
+                    fx:id="bottomarea"
+                    BorderPane.alignment="CENTER"
+            />
+            </bottom>
       </BorderPane>
    </children>
-   <opaqueInsets>
-      <Insets />
-   </opaqueInsets>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
 </AnchorPane>

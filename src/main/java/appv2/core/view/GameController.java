@@ -10,9 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
-import javafx.scene.text.Font;
 import javafx.scene.layout.VBox;
-import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 
 
@@ -32,6 +30,18 @@ public class GameController {
         return;
     }
 
+    // region Utility Methods
+    
+    private static boolean hasHandCard(PlayerController PC) {
+        return !PC.hasPlayedCard() && PC.getHandCard() != null;
+    }
+
+    private static boolean hasTableCard(PlayerController PC) {
+        return !PC.hasPlayedCard() && PC.getTableCard() != null;
+    }
+    
+    // endregion Utility Methods
+    
     // region Render Utils
 
     private void clearScreen() {
@@ -44,7 +54,7 @@ public class GameController {
     }
 
     private void setTurnTitle(String playerName) {
-        this.turntitle.setText(playerName + "'s turn");
+        this.turntitle.setText(String.format("%s's Turn", playerName));
         return;
     }
 
@@ -55,25 +65,39 @@ public class GameController {
 
     private void renderDiscardedPileAreaScreen() {
         Label label = new Label("Your discarded cards pile.");
-        label.setId("discarded-pile-title");
+        label.getStyleClass().add("text-base");
         VBox vbox = new VBox(label);
 
         if (GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile().length == 0) {
             Label discardedCard = new Label("You have not discarded any cards");
-            discardedCard.setId("discarded-pile-cards");
+            discardedCard.getStyleClass().add("text-base");
 
             vbox.getChildren().add(discardedCard);
         }
-        else for (int i = 0; i < GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile().length; i++) {
-            Label discardedCard = new Label(String.format("-> %s", GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile()[i].getAsString()));
-            discardedCard.setId("discarded-pile-cards");
+        else for (
+                int i = 0;
+                i < GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile().length;
+                i++
+        ) {
+            Label discardedCard = new Label(
+                    String.format(
+                            "-> %s",
+                            GameState.getActiveGameMode()
+                                    .getMostRecentPlayerController().getDiscardedCardsPile()[i].getAsString()
+                    )
+            );
+            discardedCard.getStyleClass().add("text-base");
 
             vbox.getChildren().add(discardedCard);
             continue;
         }
 
         Button button = new Button("Show discarded pile of all players.");
-        button.setId("show-discarded-pile-btn");
+        button.getStyleClass().add("secondary-mini-btn");
+        button.setOnAction(actionEvent -> {
+            System.out.println("Show discarded pile of all players.");
+            return;
+        });
         vbox.getChildren().add(button);
 
         this.leftarea.getChildren().clear();
@@ -83,90 +107,147 @@ public class GameController {
     }
 
     private void renderGameStateOverviewAreaScreen() {
-        Label remainingPlayersLabel = new Label(String.format("%d/%d", GameState.getActiveGameMode().getRemainingPlayerCount(), GameState.getActiveGameMode().getPlayerCount()));
-        remainingPlayersLabel.setId("basic-text");
+        Label remainingPlayersLabel = new Label(
+                String.format(
+                        "%d/%d player remaining",
+                        GameState.getActiveGameMode().getRemainingPlayerCount(),
+                        GameState.getActiveGameMode().getPlayerCount()
+                )
+        );
+        remainingPlayersLabel.getStyleClass().add("text-base");
 
         Button showScoreButton = new Button("Show Score Of All Players");
-        showScoreButton.setId("show-score-btn");
+        showScoreButton.getStyleClass().add("secondary-mini-btn");
         showScoreButton.setOnAction(actionEvent -> {
-            GameScene gameScene = new GameScene(MasterController.PLAYERS_SCORE, View.loadFXML(View.PATH_TO_PLAYERS_SCORE), true, null);
-            String fallback = View.renderNewScreen(gameScene, true);
-            gameScene.setArgs(fallback);
+            GameScene gameScene = new GameScene(
+                    MasterController.PLAYERS_SCORE,
+                    View.loadFXML(View.PATH_TO_PLAYERS_SCORE),
+                    true,
+                    null
+            );
+            gameScene.setFallback(View.renderNewScreen(gameScene, true));
             return;
         });
 
-        Label remainingCardsLabel = new Label(String.format("%d %s cards remaining", GameState.getActiveGameMode().getRemainingTableCardsCount(), GameState.getActiveGameMode().isHiddenCardAvailable() ? "(+1)" : ""));
-        remainingCardsLabel.setId("basic-text");
+        Label remainingCardsLabel = new Label(
+                String.format(
+                        "%d %s cards remaining",
+                        GameState.getActiveGameMode().getRemainingTableCardsCount(),
+                        GameState.getActiveGameMode().isHiddenCardAvailable() ? "(+1)" : ""
+                )
+        );
+        remainingCardsLabel.getStyleClass().add("text-base");
 
         VBox vbox = new VBox(remainingPlayersLabel, showScoreButton, remainingCardsLabel);
         this.rightarea.getChildren().add(vbox);
+
         return;
     }
 
     private void renderChoiceAreaScreen() {
         VBox vbox = new VBox();
+        vbox.setId("vbox-bottom-area");
+
         AnchorPane.setBottomAnchor(vbox, 0.0);
         AnchorPane.setLeftAnchor(vbox, 0.0);
         AnchorPane.setRightAnchor(vbox, 0.0);
 
         if (!GameState.getActiveGameMode().getExaminingCards().isEmpty()) {
-            Label exTitle = new Label("The current examining cards are:");
-            exTitle.setId("ex-title");
+            Label examiningTitle = new Label("The current examining cards are:");
+            examiningTitle.getStyleClass().add("text-lg");
 
             HBox hbox = new HBox();
-            hbox.setId("ex-hbox");
+            hbox.setId("examining-hbox");
+
             AnchorPane.setBottomAnchor(hbox, 0.0);
             AnchorPane.setLeftAnchor(hbox, 0.0);
             AnchorPane.setRightAnchor(hbox, 0.0);
 
             for (int i = 0; i < GameState.getActiveGameMode().getExaminingCards().size(); i++) {
-                Label exCardLabel = new Label(GameState.getActiveGameMode().getExaminingCards().get(i).getAsString());
-                exCardLabel.setId("ex-card-label");
+                Label examiningCardLabel = new Label(
+                        GameState.getActiveGameMode().getExaminingCards().get(i).getAsString()
+                );
+                examiningCardLabel.getStyleClass().add("text-lg");
 
-                hbox.getChildren().add(exCardLabel);
+                hbox.getChildren().add(examiningCardLabel);
                 continue;
             }
 
-            vbox.getChildren().addAll(exTitle, hbox);
+            vbox.getChildren().addAll(examiningTitle, hbox);
         }
 
-        HBox hBox = new HBox();
-        hBox.setId("choice-btn-area");
-        AnchorPane.setBottomAnchor(hBox, 0.0);
-        AnchorPane.setLeftAnchor(hBox, 0.0);
-        AnchorPane.setRightAnchor(hBox, 0.0);
-        hBox.setAlignment(Pos.CENTER);
+        HBox btnContainer = new HBox();
+        btnContainer.setId("hbox-btn-container");
+
+        AnchorPane.setBottomAnchor(btnContainer, 0.0);
+        AnchorPane.setLeftAnchor(btnContainer, 0.0);
+        AnchorPane.setRightAnchor(btnContainer, 0.0);
 
         if (GameState.getActiveGameMode().getMostRecentPlayerController().hasPlayedCard()) {
             Button endTurn = new Button("End Your Turn");
-            endTurn.setId("end-turn-btn");
+            endTurn.getStyleClass().add("danger-btn");
+
             endTurn.setOnAction(actionEvent -> {
                 EGameModeState state = GameState.getActiveGameMode().selectNextValidPlayer();
 
                 if (state == EGameModeState.ROUND_ENDED) {
-                    View.renderNewScreen(new GameScene(MasterController.ROUND_ENDED, View.loadFXML(View.PATH_TO_ROUND_ENDED), true, null), false);
+                    View.renderNewScreen(
+                            new GameScene(
+                                    MasterController.ROUND_ENDED,
+                                    View.loadFXML(View.PATH_TO_ROUND_ENDED),
+                                    true,
+                                    null
+                            ),
+                            false
+                    );
+
                     return;
                 }
 
                 if (state == EGameModeState.GAME_ENDED) {
-                    View.renderNewScreen((new GameScene(MasterController.GAME_ENDED, View.loadFXML(View.PATH_TO_GAME_ENDED), true, null)), false);
+                    View.renderNewScreen(new GameScene(
+                            MasterController.GAME_ENDED,
+                                    View.loadFXML(View.PATH_TO_GAME_ENDED),
+                                    true,
+                                    null
+                            ),
+                            false
+                    );
+
                     return;
                 }
 
-                // TODO: Game ended
-
-                View.renderNewScreen(new GameScene(MasterController.getUniqueIdentifier(String.format("%s-player%s", MasterController.GAME, GameState.getActiveGameMode().getMostRecentPlayerController().getPlayerName())), View.loadFXML(View.PATH_TO_GAME), true, null), false);
+                View.renderNewScreen(
+                        new GameScene(
+                                MasterController.getUniqueIdentifier(
+                                        String.format(
+                                                "%s-player%s",
+                                                MasterController.GAME,
+                                                GameState.getActiveGameMode()
+                                                    .getMostRecentPlayerController().getPlayerName()
+                                        )
+                                ),
+                                View.loadFXML(View.PATH_TO_GAME),
+                                true,
+                                null
+                        ),
+                        false
+                );
                 return;
             });
 
-            hBox.getChildren().add(endTurn);
+            btnContainer.getChildren().add(endTurn);
         }
+        if (GameController.hasHandCard(GameState.getActiveGameMode().getMostRecentPlayerController())) {
+            Button handCard = new Button(
+                String.format(
+                    "Play %s",
+                    GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getAsString()
+                )
+            );
+            handCard.getStyleClass().add("primary-btn");
 
-        if (!GameState.getActiveGameMode().getMostRecentPlayerController().hasPlayedCard() && GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard() != null) {
-            Button hCard = new Button(String.format("Play %s",
-                    GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getAsString()));
-            hCard.setId("play-card-btn");
-            hCard.setOnAction(actionEvent -> {
+            handCard.setOnAction(actionEvent -> {
                 this.playCard(true);
                 this.renderDiscardedPileAreaScreen();
                 this.renderChoiceAreaScreen();
@@ -174,14 +255,18 @@ public class GameController {
                 return;
             });
 
-            hBox.getChildren().add(hCard);
+            btnContainer.getChildren().add(handCard);
         }
+        if (GameController.hasTableCard(GameState.getActiveGameMode().getMostRecentPlayerController())) {
+            Button tableCard = new Button(
+                String.format(
+                    "Play %s",
+                    GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getAsString()
+                )
+            );
+            tableCard.getStyleClass().add("primary-btn");
 
-        if (!GameState.getActiveGameMode().getMostRecentPlayerController().hasPlayedCard() && GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard() != null) {
-            Button tCard = new Button(String.format("Play %s",
-                    GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getAsString()));
-            tCard.setId("play-card-btn");
-            tCard.setOnAction(actionEvent -> {
+            tableCard.setOnAction(actionEvent -> {
                 this.playCard(false);
                 this.renderDiscardedPileAreaScreen();
                 this.renderChoiceAreaScreen();
@@ -189,10 +274,10 @@ public class GameController {
                 return;
             });
 
-            hBox.getChildren().add(tCard);
+            btnContainer.getChildren().add(tableCard);
         }
 
-        vbox.getChildren().add(hBox);
+        vbox.getChildren().add(btnContainer);
 
         this.bottomarea.getChildren().clear();
         this.bottomarea.getChildren().add(vbox);
@@ -213,24 +298,21 @@ public class GameController {
     // endregion Render Utils
 
     private void renderFirstPlayerInteraction() {
-        Button button = new Button();
-        button.setText("Press To Play Your Turn");
-        button.setWrapText(true);
-        Font font = new Font(30.0);
-        button.setFont(font);
+        Button button = new Button("Press To Play Your Turn");
+        button.getStyleClass().add("primary-btn");
 
         AnchorPane.setBottomAnchor(button, 160.0);
         AnchorPane.setLeftAnchor(button, 60.0);
         AnchorPane.setRightAnchor(button, 60.0);
         AnchorPane.setTopAnchor(button, 160.0);
 
-        this.clearScreen();
-        this.mainarea.getChildren().add(button);
-
         button.setOnAction(actionEvent -> {
             this.renderPlayTurnScreen();
             return;
         });
+
+        this.clearScreen();
+        this.mainarea.getChildren().add(button);
 
         return;
     }
@@ -248,10 +330,8 @@ public class GameController {
 
     @FXML
     private void initialize() {
-        PlayerController PC = GameState.getActiveGameMode().getMostRecentPlayerController();
-        PC.prepareForNextTurn();
-
-        this.setTurnTitle(PC.getPlayerName());
+        GameState.getActiveGameMode().getMostRecentPlayerController().prepareForNextTurn();
+        this.setTurnTitle(GameState.getActiveGameMode().getMostRecentPlayerController().getPlayerName());
         this.renderFirstPlayerInteraction();
 
         return;

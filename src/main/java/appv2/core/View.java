@@ -88,9 +88,9 @@ public class View extends Application {
         throw new RuntimeException(String.format("No screen with prefix %s found", prefix));
     }
 
-    public static String renderNewScreen(GameScene gameScene, boolean bKeeOldAlive) {
+    public static String renderNewScreen(GameScene gameScene, boolean bKeepOldAlive) {
         View.masterController.addScreen(gameScene);
-        return View.masterController.activate(gameScene.getIdentifier(), bKeeOldAlive);
+        return View.masterController.activate(gameScene.getIdentifier(), bKeepOldAlive);
     }
 
     public static void killScreen(String identifier) {
