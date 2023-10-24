@@ -2,49 +2,67 @@ package appv2.core.view;
 
 import appv2.core.View;
 import appv2.core.GameState;
-import appv2.core.GameMode;
 import appv2.core.PlayerController;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.text.Font;
 import javafx.scene.layout.VBox;
-import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
+
 
 public class RoundEndedController {
 
-    @FXML private VBox playerScoresContainer;
-    @FXML private VBox winnersContainer;
-    @FXML private Button continueBtn;
+    @FXML private Label roundwinnerstitle;
+    @FXML private VBox roundwinnerscontainer;
+    @FXML private VBox playerscorescontainer;
 
     @FXML
-    private void initialize() {
-
-        for (PlayerController PC : GameState.getActiveGameMode().getPlayerControllers()) {
-            Label label = new Label(String.format("%s: %s", PC.getPlayerName(), PC.getAffectionTokens()));
-            label.setId("basic-text");
-
-            this.playerScoresContainer.getChildren().add(label);
-            continue;
-        }
-
-        for (PlayerController PC : GameState.getActiveGameMode().getMostRecentRoundWinners()) {
-            Label label = new Label(String.format("%s", PC.getPlayerName()));
-            label.setId("basic-text");
-
-            this.winnersContainer.getChildren().add(label);
-            continue;
-        }
-
-        this.continueBtn.setOnAction(actionEvent -> {
-            GameState.getActiveGameMode().prepareForNextRound();
-            View.renderNewScreen(new GameScene(MasterController.getUniqueIdentifier(String.format("%s-player%s", MasterController.GAME, GameState.getActiveGameMode().getMostRecentPlayerController().getPlayerName())), View.loadFXML(View.PATH_TO_GAME), true, null), false);
-            return;
-        });
+    protected void onNextRound() {
+        GameState.getActiveGameMode().prepareForNextRound();
+        View.renderNewScreen(
+                new GameScene(
+                        MasterController.getUniqueIdentifier(
+                                String.format(
+                                        "%s-player%s",
+                                        MasterController.GAME,
+                                        GameState.getActiveGameMode()
+                                                .getMostRecentPlayerController().getPlayerName()
+                                )
+                        ),
+                        View.loadFXML(View.PATH_TO_GAME),
+                        true,
+                        null
+                ),
+                false
+        );
 
         return;
     }
+
+    @FXML
+    private void initialize() {
+        for (PlayerController PC : GameState.getActiveGameMode().getPlayerControllers()) {
+            Label label = new Label(String.format("%s: %s", PC.getPlayerName(), PC.getAffectionTokens()));
+            label.getStyleClass().add("text-lg");
+
+            this.playerscorescontainer.getChildren().add(label);
+            continue;
+        }
+
+        this.roundwinnerstitle.setText(
+                String.format("Round %d %s:",
+                        GameState.getActiveGameMode().getCurrentRoundNumber(),
+                        GameState.getActiveGameMode().getMostRecentRoundWinners().size() > 1 ? "Winners" : "Winner"
+                )
+        );
+        for (PlayerController PC : GameState.getActiveGameMode().getMostRecentRoundWinners()) {
+            Label label = new Label(String.format("%s", PC.getPlayerName()));
+            label.getStyleClass().add("text-lg");
+
+            this.roundwinnerscontainer.getChildren().add(label);
+            continue;
+        }
+
+        return;
+    }
+
 }

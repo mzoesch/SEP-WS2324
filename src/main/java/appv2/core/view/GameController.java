@@ -239,15 +239,15 @@ public class GameController {
             btnContainer.getChildren().add(endTurn);
         }
         if (GameController.hasHandCard(GameState.getActiveGameMode().getMostRecentPlayerController())) {
-            Button handCard = new Button(
+            Button handCardButton = new Button(
                 String.format(
                     "Play %s",
                     GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getAsString()
                 )
             );
-            handCard.getStyleClass().add("primary-btn");
+            handCardButton.getStyleClass().add("primary-btn");
 
-            handCard.setOnAction(actionEvent -> {
+            handCardButton.setOnAction(actionEvent -> {
                 this.playCard(true);
                 this.renderDiscardedPileAreaScreen();
                 this.renderChoiceAreaScreen();
@@ -255,18 +255,18 @@ public class GameController {
                 return;
             });
 
-            btnContainer.getChildren().add(handCard);
+            btnContainer.getChildren().add(handCardButton);
         }
         if (GameController.hasTableCard(GameState.getActiveGameMode().getMostRecentPlayerController())) {
-            Button tableCard = new Button(
+            Button tableCardButton = new Button(
                 String.format(
                     "Play %s",
                     GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getAsString()
                 )
             );
-            tableCard.getStyleClass().add("primary-btn");
+            tableCardButton.getStyleClass().add("primary-btn");
 
-            tableCard.setOnAction(actionEvent -> {
+            tableCardButton.setOnAction(actionEvent -> {
                 this.playCard(false);
                 this.renderDiscardedPileAreaScreen();
                 this.renderChoiceAreaScreen();
@@ -274,7 +274,7 @@ public class GameController {
                 return;
             });
 
-            btnContainer.getChildren().add(tableCard);
+            btnContainer.getChildren().add(tableCardButton);
         }
 
         vbox.getChildren().add(btnContainer);

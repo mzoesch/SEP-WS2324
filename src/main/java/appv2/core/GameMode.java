@@ -20,9 +20,9 @@ public class GameMode {
 
     private static final int CARD_AMOUNT_IN_DECK = 16;
 
-    private static final int PLAYER_COUNT_TWO_TOKENS_TO_WIN = 1; // 7
+    private static final int PLAYER_COUNT_TWO_TOKENS_TO_WIN = 2; // 7
     private static final int PLAYER_COUNT_THREE_TOKENS_TO_WIN = 5;
-    private static final int PLAYER_COUNT_FOUR_TOKENS_TO_WIN = 3; // 4
+    private static final int PLAYER_COUNT_FOUR_TOKENS_TO_WIN = 1; // 4
 
     public static final int AMOUNT_OF_PLAYER_REQUIRED_FOR_EXAMINING_CARDS = 2;
 
@@ -35,23 +35,26 @@ public class GameMode {
     private final ArrayList<ACard> examiningCards;
     private ACard hiddenCard;
 
+    private int currentRoundNumber;
+
     public GameMode(int playerCount, String[] playerNames) {
         super();
         System.out.println("GameMode constructor called.");
+
+        this.mostRecentRoundWinners = null;
+        this.gameWinners = null;
+        this.playerControllers = new PlayerController[playerCount];
+        for (int i = 0; i < playerCount; i++)
+            this.playerControllers[i] = new PlayerController(i, playerNames[i]);
+
+        // TODO: Select the starting player as stated in the rules.
+        this.mostRecentPlayerID = 0;
 
         this.tableCardsPile = new ArrayList<ACard>();
         this.examiningCards = new ArrayList<ACard>();
         this.hiddenCard = null;
 
-        this.mostRecentRoundWinners = null;
-        this.gameWinners = null;
-        this.playerControllers = new PlayerController[playerCount];
-        for (int i = 0; i < playerCount; i++) {
-            this.playerControllers[i] = new PlayerController(i, playerNames[i]);
-        }
-
-        // TODO: Select the starting player as stated in the rules.
-        this.mostRecentPlayerID = 0;
+        this.currentRoundNumber = 0;
 
         return;
     }
@@ -191,6 +194,8 @@ public class GameMode {
         this.mostRecentPlayerID = 0;
         this.mostRecentRoundWinners = null;
 
+        this.currentRoundNumber++;
+
         return;
     }
 
@@ -241,22 +246,22 @@ public class GameMode {
 
         this.tableCardsPile.add(new HandmaidSusannah());
         this.tableCardsPile.add(new HandmaidSusannah());
-
-        this.tableCardsPile.add(new BaronTalus());
-        this.tableCardsPile.add(new BaronTalus());
-
-        this.tableCardsPile.add(new PriestTomas());
-        this.tableCardsPile.add(new PriestTomas());
-
-        this.tableCardsPile.add(new GuardOdette());
-        this.tableCardsPile.add(new GuardOdette());
-        this.tableCardsPile.add(new GuardOdette());
-        this.tableCardsPile.add(new GuardOdette());
-        this.tableCardsPile.add(new GuardOdette());
+//
+//        this.tableCardsPile.add(new BaronTalus());
+//        this.tableCardsPile.add(new BaronTalus());
+//
+//        this.tableCardsPile.add(new PriestTomas());
+//        this.tableCardsPile.add(new PriestTomas());
+//
+//        this.tableCardsPile.add(new GuardOdette());
+//        this.tableCardsPile.add(new GuardOdette());
+//        this.tableCardsPile.add(new GuardOdette());
+//        this.tableCardsPile.add(new GuardOdette());
+//        this.tableCardsPile.add(new GuardOdette());
 
         Collections.shuffle(this.tableCardsPile);
-        if (this.tableCardsPile.size() != GameMode.CARD_AMOUNT_IN_DECK)
-            throw new RuntimeException("Table cards pile size is not 16.");
+//        if (this.tableCardsPile.size() != GameMode.CARD_AMOUNT_IN_DECK)
+//            throw new RuntimeException("Table cards pile size is not 16.");
 
         this.hiddenCard = this.tableCardsPile.remove(0);
 
@@ -357,6 +362,10 @@ public class GameMode {
             return GameMode.PLAYER_COUNT_FOUR_TOKENS_TO_WIN;
 
         throw new IllegalArgumentException("Invalid player count.");
+    }
+
+    public int getCurrentRoundNumber() {
+        return this.currentRoundNumber;
     }
 
     // endregion Getters and setters
