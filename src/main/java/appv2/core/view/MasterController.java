@@ -66,12 +66,8 @@ public class MasterController {
 
         for (GameScene screen : this.screens) {
             if (screen.getIdentifier().equals(oldIdentifier) && screen.isKillAfterUse()) {
-                if (bKeepOldAlive) {
-                    this.screens.forEach(gameScene -> {
-                        System.out.printf("Screen: %s, Kill: %b%n", gameScene.getIdentifier(), gameScene.isKillAfterUse());
-                    });
+                if (bKeepOldAlive)
                     return oldIdentifier;
-                }
 
                 this.removeScreen(oldIdentifier);
                 break;
@@ -79,9 +75,6 @@ public class MasterController {
             continue;
         }
 
-        this.screens.forEach(gameScene -> {
-            System.out.printf("Screen: %s, Kill: %b%n", gameScene.getIdentifier(), gameScene.isKillAfterUse());
-        });
         return "";
     }
 

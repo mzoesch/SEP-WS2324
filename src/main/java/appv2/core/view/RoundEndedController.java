@@ -40,7 +40,7 @@ public class RoundEndedController {
 
     @FXML
     private void initialize() {
-        for (PlayerController PC : GameState.getActiveGameMode().getPlayerControllers()) {
+        for (PlayerController PC : GameState.getActiveGameMode().getPlayerControllerByDSCAffection()) {
             Label label = new Label(String.format("%s: %s", PC.getPlayerName(), PC.getAffectionTokens()));
             label.getStyleClass().add("text-lg");
 

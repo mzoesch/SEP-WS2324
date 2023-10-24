@@ -10,10 +10,7 @@ import appv2.cards.BaronTalus;
 import appv2.cards.PriestTomas;
 import appv2.cards.GuardOdette;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 
 public class GameMode {
@@ -22,7 +19,7 @@ public class GameMode {
 
     private static final int PLAYER_COUNT_TWO_TOKENS_TO_WIN = 2; // 7
     private static final int PLAYER_COUNT_THREE_TOKENS_TO_WIN = 5;
-    private static final int PLAYER_COUNT_FOUR_TOKENS_TO_WIN = 1; // 4
+    private static final int PLAYER_COUNT_FOUR_TOKENS_TO_WIN = 4; // 4
 
     public static final int AMOUNT_OF_PLAYER_REQUIRED_FOR_EXAMINING_CARDS = 2;
 
@@ -246,22 +243,22 @@ public class GameMode {
 
         this.tableCardsPile.add(new HandmaidSusannah());
         this.tableCardsPile.add(new HandmaidSusannah());
-//
-//        this.tableCardsPile.add(new BaronTalus());
-//        this.tableCardsPile.add(new BaronTalus());
-//
-//        this.tableCardsPile.add(new PriestTomas());
-//        this.tableCardsPile.add(new PriestTomas());
-//
-//        this.tableCardsPile.add(new GuardOdette());
-//        this.tableCardsPile.add(new GuardOdette());
-//        this.tableCardsPile.add(new GuardOdette());
-//        this.tableCardsPile.add(new GuardOdette());
-//        this.tableCardsPile.add(new GuardOdette());
+
+        this.tableCardsPile.add(new BaronTalus());
+        this.tableCardsPile.add(new BaronTalus());
+
+        this.tableCardsPile.add(new PriestTomas());
+        this.tableCardsPile.add(new PriestTomas());
+
+        this.tableCardsPile.add(new GuardOdette());
+        this.tableCardsPile.add(new GuardOdette());
+        this.tableCardsPile.add(new GuardOdette());
+        this.tableCardsPile.add(new GuardOdette());
+        this.tableCardsPile.add(new GuardOdette());
 
         Collections.shuffle(this.tableCardsPile);
-//        if (this.tableCardsPile.size() != GameMode.CARD_AMOUNT_IN_DECK)
-//            throw new RuntimeException("Table cards pile size is not 16.");
+        if (this.tableCardsPile.size() != GameMode.CARD_AMOUNT_IN_DECK)
+            throw new RuntimeException("Table cards pile size is not 16.");
 
         this.hiddenCard = this.tableCardsPile.remove(0);
 
@@ -363,12 +360,12 @@ public class GameMode {
         return sb.toString();
     }
 
-    // TODO: This does not work.
     public PlayerController[] getPlayerControllerByDSCAffection() {
-        PlayerController[] sortedPlayersByAffection = new PlayerController[this.getPlayerCount()];
-        System.arraycopy(this.playerControllers, 0, sortedPlayersByAffection, 0, this.getPlayerCount());
-        Arrays.sort(sortedPlayersByAffection, Comparator.comparingInt(PlayerController::getAffectionTokens));
-        return sortedPlayersByAffection;
+        PlayerController[] pcs = this.playerControllers.clone();
+        Arrays.sort(this.playerControllers.clone(), (a, b) -> b.getAffectionTokens() - a.getAffectionTokens());
+
+        return pcs;
+
     }
 
     public int getAmountOfTokensOfAffectionToWin() {
