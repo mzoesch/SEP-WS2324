@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane
-        id="master-container" stylesheets="@globals.css, @rules.css"
+        id="master-container" stylesheets="@globals.css"
         fx:controller="appv2.core.view.RulesController"
         xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
    >

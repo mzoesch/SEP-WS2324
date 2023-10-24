@@ -1,47 +1,40 @@
-#container {
-    -fx-background-color: #2b2a33;
-}
-
 #title {
-    -fx-text-fill: white;
-    -fx-font-size: 50px;
-    -fx-font-weight: bolder;
-}
-
-.button {
-    -fx-background-color: rgba(255, 255, 255, 0.5);
-
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-
-    -fx-padding: 10px 50px 10px 50px;
-
-    -fx-border-radius: 0px;
-}
-
-.button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.8);
-}
-
-#primary-btn {
-    -fx-background-color: rgba(0, 75, 255, 0.8);
-
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-
-    -fx-padding: 10px 50px 10px 50px;
-
-    -fx-border-radius: 0px;
-}
-
-#primary-btn:hover {
-    -fx-background-color: rgba(0, 31, 255, 0.9);
+    -fx-alignment: center;
 }
 
 #error-msg {
-    -fx-text-fill: red;
+    -fx-text-fill: rgba(255, 0, 0, 0.7);
     -fx-font-size: 20px;
     -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+#player-names-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+.hbox {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+.add-player-btn {
+    -fx-padding: 10px 20px 10px 20px;
+}
+
+.player-name-text-field {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-text-fill;
+    -fx-background-color: -std-background-color;
+    -fx-border-color: -primary-text-fill;
+    -fx-border-width: 2px;
+    -fx-border-radius: 0px;
+}
+
+.remove-player-btn {
+    -fx-padding: 5px 12px 5px 12px;
 }

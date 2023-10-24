@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 
 public class GameInitController {
 
-    private static int tCount = 0;
+    private static final int INDEX_OF_PLAYER_NAME_INPUT_FIELD = 0;
 
     @FXML private VBox playernamescontainer;
     @FXML private Label errormessagefield;
@@ -22,8 +22,10 @@ public class GameInitController {
         if (this.playernamescontainer.getChildren().isEmpty())
             return;
 
-        if (this.playernamescontainer.getChildren().get(this.playernamescontainer.getChildren().size() - 1)
-                instanceof Button)
+        if (
+                this.playernamescontainer.getChildren().get(this.playernamescontainer.getChildren().size() - 1)
+                        instanceof Button
+        )
             this.playernamescontainer.getChildren().remove(this.playernamescontainer.getChildren().size() - 1);
 
         return;
@@ -32,12 +34,18 @@ public class GameInitController {
     private void addPlayerAddButton() {
         if (this.getPlayerCount() >= GameState.MAX_PLAYERS)
             return;
-        if (!this.playernamescontainer.getChildren().isEmpty() && this.playernamescontainer.getChildren().get(this.playernamescontainer.getChildren().size() - 1)
+
+        if (this.playernamescontainer.getChildren().isEmpty())
+            return;
+
+        if (this.playernamescontainer.getChildren().get(this.playernamescontainer.getChildren().size() - 1)
                 instanceof Button)
             return;
 
-        Button button = new Button();
-        button.setText("Add Player");
+        Button button = new Button("Add Player");
+        button.getStyleClass().add("secondary-btn");
+        button.getStyleClass().add("add-player-btn");
+
         button.setOnAction(actionEvent -> {
             this.addPlayer();
             return;
@@ -49,19 +57,24 @@ public class GameInitController {
     }
 
     private void addPlayerNameInputField() {
-        Button button = new Button();
-        button.setText("X");
         TextField textField = new TextField();
         textField.setPromptText("Enter Player Name");
-        HBox hBox = new HBox(button, textField);
+        textField.getStyleClass().add("player-name-text-field");
 
-        // TODO: TO REMOVE
-        textField.setText(String.valueOf(GameInitController.tCount++));
+        Button button = new Button("X");
+        button.getStyleClass().add("danger-btn");
+        button.getStyleClass().add("remove-player-btn");
+
+        HBox hBox = new HBox(textField, button);
+        hBox.getStyleClass().add("hbox");
 
         button.setOnAction(actionEvent -> {
-            if (this.getPlayerCount() <= GameState.MIN_PLAYERS)
+            if (this.getPlayerCount() <= GameState.MIN_PLAYERS) {
+                this.renderErrorMessage("Can not remove player. Must have at least 2 players.");
                 return;
+            }
             this.playernamescontainer.getChildren().remove(hBox);
+
             this.addPlayerAddButton();
             return;
         });
@@ -84,7 +97,7 @@ public class GameInitController {
 
     @FXML
     private void initialize() {
-        this.errormessagefield.setText("");
+        this.renderErrorMessage("");
 
         for (int i = 0; i < GameState.DEFAULT_PLAYERS; i++)
             this.addPlayer();
@@ -106,20 +119,45 @@ public class GameInitController {
             return false;
 
         for (int i = 0; i < this.playernamescontainer.getChildren().size(); i++) {
-            if (this.playernamescontainer.getChildren().get(i) instanceof Button)
+            if (this.playernamescontainer.getChildren().get(i)
+                    instanceof Button)
                 continue;
 
-            if (((TextField) ((HBox) this.playernamescontainer.getChildren().get(i)).getChildren().get(1)).getText().isEmpty())
+            if (
+                (
+                    (TextField)
+                        ((HBox) this.playernamescontainer.getChildren().get(i))
+                        .getChildren().get(GameInitController.INDEX_OF_PLAYER_NAME_INPUT_FIELD)
+                ).getText().isEmpty()
+            )
                 return false;
 
             for (int j = i + 1; j < this.playernamescontainer.getChildren().size(); j++) {
                 if (this.playernamescontainer.getChildren().get(j) instanceof Button)
                     continue;
 
-                if (((TextField) ((HBox) this.playernamescontainer.getChildren().get(j)).getChildren().get(1)).getText().isEmpty())
+                if (
+                    (
+                        (TextField)
+                            ((HBox) this.playernamescontainer.getChildren().get(j))
+                            .getChildren().get(GameInitController.INDEX_OF_PLAYER_NAME_INPUT_FIELD)
+                    ).getText().isEmpty()
+                )
                     return false;
 
-                if (((TextField) ((HBox) this.playernamescontainer.getChildren().get(i)).getChildren().get(1)).getText().equals(((TextField) ((HBox) this.playernamescontainer.getChildren().get(j)).getChildren().get(1)).getText()))
+                if (
+                    (
+                        (TextField)
+                            ((HBox) this.playernamescontainer.getChildren().get(i))
+                            .getChildren().get(GameInitController.INDEX_OF_PLAYER_NAME_INPUT_FIELD)
+                    ).getText().equals(
+                    (
+                        (TextField)
+                            ((HBox) this.playernamescontainer.getChildren().get(j)
+                            ).getChildren().get(GameInitController.INDEX_OF_PLAYER_NAME_INPUT_FIELD)
+                    ).getText()
+                    )
+                )
                     return false;
 
                 continue;
@@ -143,19 +181,35 @@ public class GameInitController {
             return;
         }
 
-        this.errormessagefield.setText("");
-        int playerCount = this.getPlayerCount();
-        String[] playerNames = new String[playerCount];
-        playerNames[0] = ((TextField) ((HBox) this.playernamescontainer.getChildren().get(0)).getChildren().get(1)).getText();
-        if (playerCount > 1)
-            playerNames[1] = ((TextField) ((HBox) this.playernamescontainer.getChildren().get(1)).getChildren().get(1)).getText();
-        if (playerCount > 2)
-            playerNames[2] = ((TextField) ((HBox) this.playernamescontainer.getChildren().get(2)).getChildren().get(1)).getText();
-        if (playerCount > 3)
-            playerNames[3] = ((TextField) ((HBox) this.playernamescontainer.getChildren().get(3)).getChildren().get(1)).getText();
+        this.renderErrorMessage("");
+        String[] playerNames = new String[this.getPlayerCount()];
+        for (int i = 0; i < this.getPlayerCount(); i++) {
+            playerNames[i] = (
+                    (TextField)
+                            ((HBox) this.playernamescontainer.getChildren().get(i)
+                            ).getChildren().get(GameInitController.INDEX_OF_PLAYER_NAME_INPUT_FIELD)
+            ).getText();
 
-        GameState.initializeNewGame(playerCount, playerNames);
-        View.renderNewScreen(new GameScene(MasterController.getUniqueIdentifier(String.format("%s-player%s", MasterController.GAME, GameState.getActiveGameMode().getMostRecentPlayerController().getPlayerName())), View.loadFXML(View.PATH_TO_GAME), true, null), false);
+            continue;
+        }
+
+        GameState.initializeNewGame(this.getPlayerCount(), playerNames);
+        View.renderNewScreen(
+                new GameScene(
+                        MasterController.getUniqueIdentifier(
+                                String.format("%s-player%s",
+                                        MasterController.GAME,
+                                        GameState.getActiveGameMode()
+                                        .getMostRecentPlayerController().getPlayerName()
+                                )
+                        ),
+                        View.loadFXML(View.PATH_TO_GAME),
+                        true,
+                        null
+                ),
+                false
+        );
+
         return;
     }
 
