@@ -69,7 +69,7 @@ public class GameController {
         VBox vbox = new VBox(label);
 
         if (GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile().length == 0) {
-            Label discardedCard = new Label("You have not discarded any cards");
+            Label discardedCard = new Label("You have not yet discarded any cards");
             discardedCard.getStyleClass().add("text-base");
 
             vbox.getChildren().add(discardedCard);
