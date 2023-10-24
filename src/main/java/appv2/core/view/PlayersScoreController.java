@@ -14,24 +14,32 @@ public class PlayersScoreController {
 
     @FXML private Button closeBtn;
     @FXML private VBox vbox;
+    @FXML private Label tokenstowinlabel;
 
     @FXML
     private void initialize() {
         this.vbox.getChildren().clear();
 
         for (PlayerController PC : GameState.getActiveGameMode().getPlayerControllers()) {
-            Label label = new Label(String.format("%s: %d", PC.getPlayerName(), PC.getAffectionTokens()));
-            label.setId("basic-text");
+            Label label = new Label(
+                    String.format("%s: %d", PC.getPlayerName(), PC.getAffectionTokens()));
+            label.getStyleClass().add("text-lg");
+
             this.vbox.getChildren().add(label);
             continue;
         }
 
         this.closeBtn.setOnAction(actionEvent -> {
-            System.out.println("Closing PlayersScoreController");
-            GameScene active = View.getActiveGameScene();
-            View.renderExistingScreen(active.getFallback());
+            View.renderExistingScreen(View.getActiveGameScene().getFallback());
             return;
         });
+
+        this.tokenstowinlabel.setText(
+                String.format(
+                        "In this game, a player must collect %d tokens to win.",
+                        GameState.getActiveGameMode().getAmountOfTokensOfAffectionToWin()
+                )
+        );
 
         return;
     }

@@ -346,6 +346,19 @@ public class GameMode {
         return sortedPlayersByAffection;
     }
 
+    public int getAmountOfTokensOfAffectionToWin() {
+        if (this.getPlayerCount() == 2)
+            return GameMode.PLAYER_COUNT_TWO_TOKENS_TO_WIN;
+
+        if (this.getPlayerCount() == 3)
+            return GameMode.PLAYER_COUNT_THREE_TOKENS_TO_WIN;
+
+        if (this.getPlayerCount() == 4)
+            return GameMode.PLAYER_COUNT_FOUR_TOKENS_TO_WIN;
+
+        throw new IllegalArgumentException("Invalid player count.");
+    }
+
     // endregion Getters and setters
 
 }
