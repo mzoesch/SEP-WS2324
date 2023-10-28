@@ -63,7 +63,7 @@ public class CountessWilhelmina extends ACard {
     }
 
     @Override
-    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced) {
+    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String[] args) {
         throw new RuntimeException("CountessWilhelmina.callback() should never be called.");
     }
 

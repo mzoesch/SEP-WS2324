@@ -36,7 +36,6 @@ public class GameMode {
 
     public GameMode(int playerCount, String[] playerNames) {
         super();
-        System.out.println("GameMode constructor called.");
 
         this.mostRecentRoundWinners = null;
         this.gameWinners = null;
@@ -250,7 +249,8 @@ public class GameMode {
 //        this.tableCardsPile.add(new CountessWilhelmina());
 //        this.tableCardsPile.add(new HandmaidSusannah());
 //        this.tableCardsPile.add(new BaronTalus());
-        this.tableCardsPile.add(new PriestTomas());
+//        this.tableCardsPile.add(new PriestTomas());
+        this.tableCardsPile.add(new GuardOdette());
 
         this.tableCardsPile.add(new BaronTalus());
         this.tableCardsPile.add(new BaronTalus());

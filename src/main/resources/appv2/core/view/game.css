@@ -28,6 +28,16 @@
     -fx-spacing: 24px;
 }
 
+#main-area-text-field {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-text-fill;
+    -fx-background-color: -std-background-color;
+    -fx-border-color: -primary-text-fill;
+    -fx-border-width: 2px;
+    -fx-border-radius: 0px;
+}
+
 #left-area-container {
     -fx-pref-width: 300.0;
     -fx-pref-height: 200.0;

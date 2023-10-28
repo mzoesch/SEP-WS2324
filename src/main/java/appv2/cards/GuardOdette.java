@@ -2,6 +2,10 @@ package appv2.cards;
 
 
 import appv2.core.PlayerController;
+import appv2.core.GameState;
+
+import java.util.Objects;
+
 
 /**
  * <p>Guard Odette card.</p>
@@ -43,14 +47,96 @@ public class GuardOdette extends ACard {
         return;
     }
 
+    /**
+     * <p><b>Special Effect:</b> <br />
+     * When discarded the player must guess the affection of another player's card in hand.
+     * If they guess correctly, that player will be knocked out. If all players are
+     * protected (e.g. by the Handmaid) the effect is being cancelled. </p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
-    public int playCard(PlayerController PC, boolean bPlayedManually, String messageForPlayerWhenForced, StringBuilder stdoutPipeline, StringBuilder stderrPipeline) {
-        return 0;
+    public int playCard(
+            PlayerController PC,
+            boolean bPlayedManually,
+            String messageForPlayerWhenForced,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline) {
+        if (bPlayedManually) {
+            stdoutPipeline.append("Choose a player to guess the hand of.\n");
+
+            int validTargetPCs = 0;
+            for (PlayerController targetPC : GameState.getActiveGameMode().getPlayerControllers()) {
+                if (targetPC.isKnockedOut()) {
+                    continue;
+                }
+
+                if (targetPC.equals(PC)) {
+                    continue;
+                }
+
+                if (targetPC.isProtected()) {
+                    continue;
+                }
+
+                validTargetPCs++;
+                continue;
+            }
+
+            if (validTargetPCs == 0) {
+                stdoutPipeline.append("There are no valid targets.\n");
+                return ACard.RC_OK;
+            }
+
+            return ACard.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED_WITH_INTEGER;
+        }
+
+        if (PC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        PC.setMessageForPlayerNextTurn(messageForPlayerWhenForced);
+        return ACard.RC_OK;
     }
 
     @Override
-    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced) {
-        return 0;
+    public int callback(
+            PlayerController PC,
+            PlayerController targetPC,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline,
+            String[] args
+    ) {
+        if (targetPC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        if (Objects.equals(PC.getHandCard().getName(), GuardOdette.NAME)) {
+            PC.addToDiscardedCardsPile(PC.getHandCard());
+            PC.setHandCard(PC.getTableCard());
+            PC.setTableCard(null);
+        }
+        else {
+            PC.addToDiscardedCardsPile(PC.getTableCard());
+            PC.setTableCard(null);
+        }
+
+        if (targetPC.getHandCard().getAffection() == Integer.parseInt(args[0])) {
+            targetPC.setKnockedOut(true, true, "A Guard was played on you.\nYou have been knocked out.");
+            stdoutPipeline.append(String.format(
+                    "You have guessed correctly. %s has been knocked out.\n",
+                    targetPC.getPlayerName()
+            ));
+        }
+        else {
+            stdoutPipeline.append(String.format(
+                    "You have guessed incorrectly. %s has not been knocked out.\n",
+                    targetPC.getPlayerName()
+            ));
+        }
+        return ACard.RC_OK_HANDS_UPDATED;
     }
 
 }

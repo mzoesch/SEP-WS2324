@@ -7,12 +7,15 @@ import appv2.core.ECardResponse;
 import appv2.core.EGameModeState;
 import appv2.cards.ACard;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.TextField;
 
 import java.util.Objects;
 
@@ -360,6 +363,205 @@ public class GameController {
 
             return;
         }
+
+        if (res == ECardResponse.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED_WITH_INTEGER) {
+            Label label = new Label(
+                    String.format(
+                            "You played %s.\n%s",
+                            (bHandCard
+                                    ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getName()
+                                    : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getName()
+                            ),
+                            stdoutPipeline.toString()
+                    )
+            );
+            label.getStyleClass().add("text-lg");
+            label.getStyleClass().add("title-wrap");
+
+            AnchorPane.setLeftAnchor(label, 0.0);
+            AnchorPane.setRightAnchor(label, 0.0);
+            AnchorPane.setTopAnchor(label, 0.0);
+            AnchorPane.setBottomAnchor(label, 150.0);
+
+            TextField textField = new TextField();
+            textField.setPromptText("Enter a number (2-8): ");
+            textField.setId("main-area-text-field");
+
+            AnchorPane.setLeftAnchor(textField, 150.0);
+            AnchorPane.setRightAnchor(textField, 150.0);
+            AnchorPane.setBottomAnchor(textField, 150.0);
+
+            textField.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                    if (!t1.matches("\\d*")) {
+                        textField.setText(t1.replaceAll("[^\\d]", ""));
+                    }
+
+                    return;
+                }
+            });
+
+            HBox hbox = new HBox();
+            hbox.setId("main-area-vbox");
+
+            AnchorPane.setLeftAnchor(hbox, 0.0);
+            AnchorPane.setRightAnchor(hbox, 0.0);
+            AnchorPane.setBottomAnchor(hbox, 75.0);
+
+            for (int i = 0; i < GameState.getActiveGameMode().getPlayerCount(); i++) {
+                if (GameState.getActiveGameMode().getPlayerControllerByID(i).isKnockedOut())
+                    continue;
+                if (Objects.equals(
+                        GameState.getActiveGameMode().getPlayerControllerByID(i),
+                        GameState.getActiveGameMode().getMostRecentPlayerController()
+                ))
+                    continue;
+
+                Button button = new Button(
+                        GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
+                );
+                button.getStyleClass().add("primary-mini-btn");
+
+                int finalI = i;
+                button.setOnAction(actionEvent -> {
+                    stdoutPipeline.setLength(0);
+                    stderrPipeline.setLength(0);
+
+                    if (textField.getText().isEmpty()) {
+                        Label labelErr = new Label("You must enter a number.");
+                        labelErr.getStyleClass().add("text-base-warning");
+                        labelErr.getStyleClass().add("title-wrap");
+
+                        if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
+                            this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
+                        this.mainarea.getChildren().add(labelErr);
+
+                        AnchorPane.setLeftAnchor(labelErr, 0.0);
+                        AnchorPane.setRightAnchor(labelErr, 0.0);
+                        AnchorPane.setBottomAnchor(labelErr, 0.0);
+
+                        return;
+                    }
+
+                    // We can do this because of the regex in the listener.
+                    int guessAffection = Integer.parseInt(textField.getText());
+                    if (guessAffection < 2 || guessAffection > 8) {
+                        Label labelErr = new Label("You must enter a number between 2 and 8.");
+                        labelErr.getStyleClass().add("text-base-warning");
+                        labelErr.getStyleClass().add("title-wrap");
+
+                        if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
+                            this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
+                        this.mainarea.getChildren().add(labelErr);
+
+                        AnchorPane.setLeftAnchor(labelErr, 0.0);
+                        AnchorPane.setRightAnchor(labelErr, 0.0);
+                        AnchorPane.setBottomAnchor(labelErr, 0.0);
+
+                        return;
+                    }
+
+
+                    int RC = bHandCard
+                            ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().callback(
+                            GameState.getActiveGameMode().getMostRecentPlayerController(),
+                            GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                            stdoutPipeline,
+                            stderrPipeline,
+                            new String[] { String.valueOf(guessAffection) }
+                    )
+                            : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().callback(
+                            GameState.getActiveGameMode().getMostRecentPlayerController(),
+                            GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                            stdoutPipeline,
+                            stderrPipeline,
+                            new String[] { String.valueOf(guessAffection) }
+                    );
+
+                    if (RC == ACard.RC_OK_HANDS_UPDATED) {
+                        this.mainarea.getChildren().clear();
+
+                        Label labelSuccess = new Label(String.format("You played %s.\n%s",
+                                GameState.getActiveGameMode()
+                                        .getMostRecentPlayerController().getDiscardedCardsPile()
+                                        [GameState.getActiveGameMode().getMostRecentPlayerController()
+                                        .getDiscardedCardsPile().length - 1].getName(),
+                                stdoutPipeline.toString()
+                        ));
+                        labelSuccess.getStyleClass().add("text-lg");
+                        labelSuccess.getStyleClass().add("title-wrap");
+
+                        AnchorPane.setLeftAnchor(labelSuccess, 0.0);
+                        AnchorPane.setRightAnchor(labelSuccess, 0.0);
+                        AnchorPane.setTopAnchor(labelSuccess, 0.0);
+                        AnchorPane.setBottomAnchor(labelSuccess, 0.0);
+
+                        this.mainarea.getChildren().add(labelSuccess);
+                        GameState.getActiveGameMode().getMostRecentPlayerController().setIsPlaying(false);
+                        GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(true);
+                        this.renderChoiceAreaScreen();
+                        this.renderDiscardedPileAreaScreen();
+
+                        return;
+                    }
+
+                    if (RC == ACard.RC_ERR) {
+                        Label labelErr = new Label(String.format("You have chosen %s but it failed.\n%s",
+                                GameState.getActiveGameMode().getPlayerControllerByID(finalI).getPlayerName(),
+                                stderrPipeline.toString()
+                        ));
+                        labelErr.getStyleClass().add("text-base-warning");
+                        labelErr.getStyleClass().add("title-wrap");
+
+                        if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
+                            this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
+                        this.mainarea.getChildren().add(labelErr);
+
+                        AnchorPane.setLeftAnchor(labelErr, 0.0);
+                        AnchorPane.setRightAnchor(labelErr, 0.0);
+                        AnchorPane.setBottomAnchor(labelErr, 0.0);
+
+                        button.setDisable(true);
+
+                        return;
+                    }
+
+                    if (RC == ACard.RC_OK_PLAYER_KNOCKED_OUT) {
+                        Label labelKnockedOut = new Label(String.format("You have been knocked out of the game.\n%s",
+                                stdoutPipeline.toString()
+                        ));
+                        labelKnockedOut.getStyleClass().add("text-lg-warning");
+                        labelKnockedOut.getStyleClass().add("title-wrap");
+
+                        this.mainarea.getChildren().clear();
+                        this.mainarea.getChildren().add(labelKnockedOut);
+
+                        AnchorPane.setLeftAnchor(labelKnockedOut, 0.0);
+                        AnchorPane.setRightAnchor(labelKnockedOut, 0.0);
+                        AnchorPane.setTopAnchor(labelKnockedOut, 0.0);
+                        AnchorPane.setBottomAnchor(labelKnockedOut, 0.0);
+
+                        this.renderDiscardedPileAreaScreen();
+                        this.renderChoiceAreaScreen();
+
+                        return;
+                    }
+
+                    throw new RuntimeException("Unhandled return code from ACard.callback().");
+                });
+
+                hbox.getChildren().add(button);
+                continue;
+            }
+
+            this.mainarea.getChildren().add(label);
+            this.mainarea.getChildren().add(hbox);
+            this.mainarea.getChildren().add(textField);
+
+            return;
+        }
+
 
 
         this.mainarea.getChildren().clear();

@@ -25,6 +25,7 @@ public abstract class ACard {
 
     public static final int RC_CHOOSE_ANY_PLAYER = 4;
     public static final int RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED = 5;
+    public static final int RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED_WITH_INTEGER = 6;
 
     protected final String name;
     private final String backgroundStory;
@@ -88,6 +89,6 @@ public abstract class ACard {
 
     public abstract int callback(
             PlayerController PC,
-            PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced);
+            PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String[] args);
 
 }

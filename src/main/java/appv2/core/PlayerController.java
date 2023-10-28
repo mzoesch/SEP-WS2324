@@ -122,6 +122,13 @@ public class PlayerController {
             return ECardResponse.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED;
         }
 
+        if (RC == ACard.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED_WITH_INTEGER) {
+            this.bIsPlaying = true;
+            this.bPlayedCard = false;
+
+            return ECardResponse.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED_WITH_INTEGER;
+        }
+
         throw new RuntimeException("Unhandled return code from ACard.playCard().");
     }
 

@@ -64,7 +64,7 @@ public class HandmaidSusannah extends ACard {
             PlayerController targetPC,
             StringBuilder stdoutPipeline,
             StringBuilder stderrPipeline,
-            String messageForPlayerWhenForced
+            String[] args
     ) {
         throw new RuntimeException("HandmaidSusannah.callback() should never be called.");
     }

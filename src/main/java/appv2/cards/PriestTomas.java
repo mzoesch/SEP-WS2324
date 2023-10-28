@@ -94,14 +94,14 @@ public class PriestTomas extends ACard {
             PlayerController targetPC,
             StringBuilder stdoutPipeline,
             StringBuilder stderrPipeline,
-            String messageForPlayerWhenForced
+            String[] args
     ) {
         if (targetPC.isProtected()) {
             stderrPipeline.append("This player is protected.\n");
             return ACard.RC_ERR;
         }
 
-        if (Objects.equals(PC.getHandCard().getName(), BaronTalus.NAME)) {
+        if (Objects.equals(PC.getHandCard().getName(), PriestTomas.NAME)) {
             PC.addToDiscardedCardsPile(PC.getHandCard());
             PC.setHandCard(PC.getTableCard());
             PC.setTableCard(null);

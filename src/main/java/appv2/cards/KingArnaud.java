@@ -85,7 +85,7 @@ public class KingArnaud extends ACard {
             PlayerController targetPC,
             StringBuilder stdoutPipeline,
             StringBuilder stderrPipeline,
-            String messageForPlayerWhenForced
+            String[] args
     ) {
         if (targetPC.isProtected()) {
             stderrPipeline.append("This player is protected.\n");
