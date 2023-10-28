@@ -6,6 +6,8 @@ public final class GameState {
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 4;
 
+    public static final int MAX_PLAYER_NAME_LENGTH = 16;
+
     private static GameMode gameMode;
 
     private GameState() {

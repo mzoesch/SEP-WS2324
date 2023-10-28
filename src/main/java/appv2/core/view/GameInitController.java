@@ -60,8 +60,6 @@ public class GameInitController {
         TextField textField = new TextField();
         textField.setPromptText("Enter Player Name");
         textField.getStyleClass().add("player-name-text-field");
-        // TODO: Remove this. just for faster testing.
-        textField.setText("Player " + (this.getPlayerCount() + 1));
 
         Button button = new Button("X");
         button.getStyleClass().add("danger-btn");
@@ -134,6 +132,15 @@ public class GameInitController {
             )
                 return false;
 
+            if (
+                    (
+                            (TextField)
+                                    ((HBox) this.playernamescontainer.getChildren().get(i))
+                                            .getChildren().get(GameInitController.INDEX_OF_PLAYER_NAME_INPUT_FIELD)
+                    ).getText().length() > GameState.MAX_PLAYER_NAME_LENGTH
+            )
+                return false;
+
             for (int j = i + 1; j < this.playernamescontainer.getChildren().size(); j++) {
                 if (this.playernamescontainer.getChildren().get(j) instanceof Button)
                     continue;
@@ -171,6 +178,27 @@ public class GameInitController {
         return true;
     }
 
+    private boolean isAPlayerNameToLong() {
+        for (int i = 0; i < this.playernamescontainer.getChildren().size(); i++) {
+            if (this.playernamescontainer.getChildren().get(i)
+                    instanceof Button)
+                continue;
+
+            if (
+                    (
+                            (TextField)
+                                    ((HBox) this.playernamescontainer.getChildren().get(i))
+                                            .getChildren().get(GameInitController.INDEX_OF_PLAYER_NAME_INPUT_FIELD)
+                    ).getText().length() > GameState.MAX_PLAYER_NAME_LENGTH
+            )
+                return true;
+
+            continue;
+        }
+
+        return false;
+    }
+
     private void renderErrorMessage(String Message) {
         this.errormessagefield.setText(Message);
         return;
@@ -179,6 +207,10 @@ public class GameInitController {
     @FXML
     protected void onPlayBtn() {
         if (!this.isFormValid()) {
+            if (this.isAPlayerNameToLong()) {
+                this.renderErrorMessage("Can not start game. A player name is too long.");
+                return;
+            }
             this.renderErrorMessage("Can not start game. Ensure all fields are filled and unique.");
             return;
         }
