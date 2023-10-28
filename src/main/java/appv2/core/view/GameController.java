@@ -32,8 +32,11 @@ public class GameController {
         if (res == ECardResponse.RC_OK) {
             Label label = new Label(
                 String.format(
-                    "You played %s",
-                    GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile()[GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile().length - 1].getName()
+                    "You played %s\n%s",
+                    GameState.getActiveGameMode().getMostRecentPlayerController()
+                            .getDiscardedCardsPile()[GameState.getActiveGameMode().getMostRecentPlayerController()
+                            .getDiscardedCardsPile().length - 1].getName(),
+                    stdoutPipeline.toString()
                 )
             );
             label.getStyleClass().add("text-lg");

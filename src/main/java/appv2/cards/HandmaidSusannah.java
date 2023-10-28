@@ -36,13 +36,37 @@ public class HandmaidSusannah extends ACard {
     }
 
     @Override
-    public int playCard(PlayerController PC, boolean bPlayedManually, String messageForPlayerWhenForced, StringBuilder stdoutPipeline, StringBuilder stderrPipeline) {
-        return 0;
+    public int playCard(
+            PlayerController PC,
+            boolean bPlayedManually,
+            String messageForPlayerWhenForced,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline
+    ) {
+        if (bPlayedManually) {
+            PC.setIsProtected(true);
+            stdoutPipeline.append("You are protected from other players card effects until the start of your next turn.\n");
+            return ACard.RC_OK;
+        }
+
+        if (PC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        PC.setMessageForPlayerNextTurn(messageForPlayerWhenForced);
+        return ACard.RC_OK;
     }
 
     @Override
-    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced) {
-        return 0;
+    public int callback(
+            PlayerController PC,
+            PlayerController targetPC,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline,
+            String messageForPlayerWhenForced
+    ) {
+        throw new RuntimeException("HandmaidSusannah.callback() should never be called.");
     }
 
 }

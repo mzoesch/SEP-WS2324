@@ -18,7 +18,7 @@ public class PlayerController {
 
     private boolean bPlayedCard;
     private boolean bIsPlaying;
-    private boolean bProtected;
+    private boolean bIsProtected;
     private boolean bKnockedOut;
 
     private boolean bSignalPlayerNextTurn;
@@ -35,7 +35,7 @@ public class PlayerController {
 
         this.bPlayedCard = false;
         this.bIsPlaying = false;
-        this.bProtected = false;
+        this.bIsProtected = false;
         this.bKnockedOut = false;
 
         return;
@@ -60,6 +60,10 @@ public class PlayerController {
     public void prepareForNextTurn() {
         this.bPlayedCard = false;
         this.bIsPlaying = false;
+
+        if (this.bIsProtected)
+            this.messageForPlayerNextTurn = "You are no longer protected.";
+        this.bIsProtected = false;
 
         this.tableCard = GameState.getActiveGameMode().drawCard();
         return;
@@ -144,7 +148,7 @@ public class PlayerController {
     }
 
     public boolean isProtected() {
-        return this.bProtected;
+        return this.bIsProtected;
     }
 
     public boolean isKnockedOut() {
@@ -229,6 +233,11 @@ public class PlayerController {
 
     public void setTableCard(ACard card) {
         this.tableCard = card;
+        return;
+    }
+
+    public void setIsProtected(boolean bProtected) {
+        this.bIsProtected = bProtected;
         return;
     }
 
