@@ -1,7 +1,9 @@
 package appv2.cards;
 
-
+import appv2.core.GameState;
 import appv2.core.PlayerController;
+
+import java.util.Objects;
 
 /**
  * <p>Prince Arnaud card.</p>
@@ -35,14 +37,83 @@ public class PrinceArnaud extends ACard {
         return;
     }
 
+    /**
+     * <p><b>Special Effect:</b> <br />
+     * As written in the rules. If the owner has the Countess in their hand,
+     * they must discard the Countess and take the Prince.<br />
+     * When discarded the player must choose another player to discard their
+     * hand and draw a new one (self included).</p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
-    public int playCard(PlayerController PC, boolean bPlayedManually, String messageForPlayerWhenForced, StringBuilder stdoutPipeline, StringBuilder stderrPipeline) {
-        return 0;
+    public int playCard(
+            PlayerController PC,
+            boolean bPlayedManually,
+            String messageForPlayerWhenForced,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline
+    ) {
+        if (bPlayedManually) {
+            if (PC.hasCountessWilhelmina()) {
+                stderrPipeline.append("You must discard the Countess Wilhelmina.\n");
+                return ACard.RC_ERR;
+            }
+
+            stdoutPipeline.append("Choose a player to discard their hand.\n");
+            return ACard.RC_CHOOSE_ANY_PLAYER;
+        }
+
+        if (PC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        PC.setMessageForPlayerNextTurn(messageForPlayerWhenForced);
+        return ACard.RC_OK;
     }
 
     @Override
-    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced) {
-        return 0;
+    public int callback(
+            PlayerController PC,
+            PlayerController targetPC,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline,
+            String messageForPlayerWhenForced
+    ) {
+        if (targetPC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        if (Objects.equals(PC.getHandCard().getName(), PrinceArnaud.NAME)) {
+            PC.addToDiscardedCardsPile(PC.getHandCard());
+            PC.setHandCard(PC.getTableCard());
+            PC.setTableCard(null);
+        }
+        else {
+            targetPC.addToDiscardedCardsPile(targetPC.getTableCard());
+            targetPC.setTableCard(null);
+        }
+
+        targetPC.addToDiscardedCardsPile(targetPC.getHandCard());
+        targetPC.setHandCard(GameState.getActiveGameMode().drawCard());
+
+        if (Objects.equals(PC, targetPC)) {
+            stdoutPipeline.append(String.format(
+                    "You have discarded your hand and drawn %s.\n",
+                    PC.getHandCard().getAsString()
+            ));
+            return ACard.RC_OK_HANDS_UPDATED;
+        }
+
+        stdoutPipeline.append(String.format(
+                "You have discarded %s's hand and they drawn a new one.\n",
+                targetPC.getPlayerName()
+        ));
+        targetPC.setMessageForPlayerNextTurn("A Prince was played on you.\nYou have drawn a new card.");
+
+        return ACard.RC_OK_HANDS_UPDATED;
     }
 
 }

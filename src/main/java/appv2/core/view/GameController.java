@@ -392,6 +392,7 @@ public class GameController {
             endTurn.getStyleClass().add("danger-btn");
 
             endTurn.setOnAction(actionEvent -> {
+                GameState.getActiveGameMode().getMostRecentPlayerController().setMessageForPlayerNextTurn("");
                 EGameModeState state = GameState.getActiveGameMode().selectNextValidPlayer();
 
                 if (state == EGameModeState.ROUND_ENDED) {

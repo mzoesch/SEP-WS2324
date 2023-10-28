@@ -242,7 +242,8 @@ public class GameMode {
         this.tableCardsPile.add(new PrinceArnaud());
 
 //        this.tableCardsPile.add(new HandmaidSusannah());
-        this.tableCardsPile.add(new KingArnaud());
+//        this.tableCardsPile.add(new KingArnaud());
+        this.tableCardsPile.add(new PrinceArnaud());
         this.tableCardsPile.add(new HandmaidSusannah());
 
 //        this.tableCardsPile.add(new CountessWilhelmina());
