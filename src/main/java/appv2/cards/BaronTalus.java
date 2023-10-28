@@ -1,6 +1,7 @@
 package appv2.cards;
 
 import appv2.core.PlayerController;
+import appv2.core.GameState;
 
 import java.util.Objects;
 
@@ -53,6 +54,30 @@ public class BaronTalus extends ACard {
     ) {
         if (bPlayedManually) {
             stdoutPipeline.append("Choose a player to compare hands with.\n");
+
+            int validTargetPCs = 0;
+            for (PlayerController targetPC : GameState.getActiveGameMode().getPlayerControllers()) {
+                if (targetPC.isKnockedOut()) {
+                    continue;
+                }
+
+                if (targetPC.equals(PC)) {
+                    continue;
+                }
+
+                if (targetPC.isProtected()) {
+                    continue;
+                }
+
+                validTargetPCs++;
+                continue;
+            }
+
+            if (validTargetPCs == 0) {
+                stdoutPipeline.append("There are no valid targets.\n");
+                return ACard.RC_OK;
+            }
+
             return ACard.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED;
         }
 
