@@ -1,6 +1,8 @@
 package appv2.cards;
 
 
+import appv2.core.PlayerController;
+
 /**
  * <p>Princess Annette Card.</p>
  * @see ACard
@@ -34,9 +36,37 @@ public class PrincessAnnette extends ACard {
         return;
     }
 
+    /**
+     * <p><b>Special Effect:</b> <br />
+     * As written in the rules. If the player discards this card, they are immediately knocked out
+     * of the round regardless if the play was forced or not.</p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
-    public int playCard() {
-        return 0;
+    public int playCard(
+            PlayerController PC,
+            boolean bPlayedManually,
+            String messageForPlayerWhenForced,
+            StringBuilder stdoutPipeline, StringBuilder stderrPipeline
+    ) {
+        if (bPlayedManually) {
+            PC.setKnockedOut(true, false, null);
+            return ACard.RC_OK_PLAYER_KNOCKED_OUT;
+        }
+
+        if (PC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        PC.setKnockedOut(true, true, messageForPlayerWhenForced);
+        return ACard.RC_OK_PLAYER_KNOCKED_OUT;
+    }
+
+    @Override
+    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced) {
+        throw new RuntimeException("PrincessAnnette.callback() should never be called.");
     }
 
 }

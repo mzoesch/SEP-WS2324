@@ -21,28 +21,28 @@
          <center>
             <AnchorPane
                     fx:id="mainarea"
+                    id="main-area-container" stylesheets="@game.css"
                     BorderPane.alignment="CENTER"
-                    maxHeight="400.0" maxWidth="500.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0"
             />
          </center>
          <left>
             <AnchorPane
                     fx:id="leftarea"
+                    id="left-area-container" stylesheets="@game.css"
                     BorderPane.alignment="CENTER"
-                    prefHeight="200.0" prefWidth="200.0"
             />
          </left>
          <right>
             <AnchorPane
                     fx:id="rightarea"
+                    id="right-area-container" stylesheets="@game.css"
                     BorderPane.alignment="CENTER"
-                    prefHeight="200.0" prefWidth="200.0"
             />
          </right>
          <bottom>
             <AnchorPane
-                    stylesheets="@game.css"
                     fx:id="bottomarea"
+                    id="bottom-area-container" stylesheets="@game.css"
                     BorderPane.alignment="CENTER"
             />
             </bottom>

@@ -40,7 +40,7 @@ public class PrincessAnnette extends ACard {
 
     /**
      * <p><b>Special Effect:</b> <br />
-     * As written in the rules. If the player discards this card, they are knocked out
+     * As written in the rules. If the player discards this card, they are immediately knocked out
      * of the round regardless if the play was forced or not.</p>
      * <br />
      * {@inheritDoc}

@@ -1,5 +1,9 @@
 package appv2.cards;
 
+import appv2.core.PlayerController;
+
+import java.util.Objects;
+
 
 /**
  * <p>King Arnaud IV card.</p>
@@ -30,9 +34,96 @@ public class KingArnaud extends ACard {
         return;
     }
 
+    private static void swapHands(PlayerController PC, PlayerController targetPC) {
+        ACard tempCard1 = PC.getHandCard();
+        ACard tempCard2 = targetPC.getHandCard();
+
+        PC.setHandCard(tempCard2);
+        targetPC.setHandCard(tempCard1);
+
+        return;
+    }
+
+    /**
+     * <p><b>Special Effect:</b> <br />
+     * As written in the rules. If the owner has the Countess in their hand,
+     * they must discard the Countess and take the King.<br />
+     * When discarded the player must choose another player to swap hands with (self included).</p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
-    public int playCard() {
-        return 0;
+    public int playCard(
+            PlayerController PC,
+            boolean bPlayedManually,
+            String messageForPlayerWhenForced,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline
+    ) {
+        if (bPlayedManually) {
+            if (PC.hasCountessWilhelmina()) {
+                stderrPipeline.append("You must discard the Countess Wilhelmina.\n");
+                return ACard.RC_ERR;
+            }
+
+            stdoutPipeline.append("Choose a player to swap hands with.\n");
+            return ACard.RC_CHOOSE_ANY_PLAYER;
+        }
+
+        if (PC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        PC.setMessageForPlayerNextTurn(messageForPlayerWhenForced);
+        return ACard.RC_OK;
+    }
+
+    @Override
+    public int callback(
+            PlayerController PC,
+            PlayerController targetPC,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline,
+            String messageForPlayerWhenForced
+    ) {
+        if (targetPC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        if (Objects.equals(PC, targetPC)) {
+            stdoutPipeline.append("You have swapped hands with yourself.\n");
+
+            if (Objects.equals(PC.getHandCard().getName(), KingArnaud.NAME)) {
+                PC.addToDiscardedCardsPile(PC.getHandCard());
+                PC.setHandCard(PC.getTableCard());
+                PC.setTableCard(null);
+
+                return ACard.RC_OK_HANDS_UPDATED;
+            }
+
+            PC.addToDiscardedCardsPile(PC.getTableCard());
+            PC.setTableCard(null);
+
+            return ACard.RC_OK_HANDS_UPDATED;
+        }
+
+        stdoutPipeline.append(String.format("You have swapped hands with %s.\n", targetPC.getPlayerName()));
+        if (Objects.equals(PC.getHandCard().getName(), KingArnaud.NAME)) {
+            PC.addToDiscardedCardsPile(PC.getHandCard());
+            PC.setHandCard(PC.getTableCard());
+            PC.setTableCard(null);
+        }
+        else {
+            PC.addToDiscardedCardsPile(PC.getTableCard());
+            PC.setTableCard(null);
+        }
+
+        KingArnaud.swapHands(PC, targetPC);
+        targetPC.setMessageForPlayerNextTurn("A King was played on you.\nYour card has been swapped with another player's card.");
+
+        return ACard.RC_OK_HANDS_UPDATED;
     }
 
 }

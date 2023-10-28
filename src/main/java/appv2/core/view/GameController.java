@@ -5,6 +5,7 @@ import appv2.core.GameState;
 import appv2.core.PlayerController;
 import appv2.core.ECardResponse;
 import appv2.core.EGameModeState;
+import appv2.cards.ACard;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
@@ -23,21 +24,211 @@ public class GameController {
     @FXML private AnchorPane bottomarea;
 
     private void playCard(boolean bHandCard) {
-        PlayerController PC = GameState.getActiveGameMode().getMostRecentPlayerController();
-        ECardResponse res = PC.playCard(bHandCard);
+        StringBuilder stderrPipeline = new StringBuilder();
+        StringBuilder stdoutPipeline = new StringBuilder();
+        ECardResponse res = GameState.getActiveGameMode()
+                .getMostRecentPlayerController().playCard(bHandCard, stdoutPipeline, stderrPipeline);
 
+        if (res == ECardResponse.RC_OK) {
+            Label label = new Label(
+                String.format(
+                    "You played %s",
+                    GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile()[GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile().length - 1].getName()
+                )
+            );
+            label.getStyleClass().add("text-lg");
+            label.getStyleClass().add("title-wrap");
+
+            AnchorPane.setLeftAnchor(label, 0.0);
+            AnchorPane.setRightAnchor(label, 00.0);
+            AnchorPane.setTopAnchor(label, 0.0);
+            AnchorPane.setBottomAnchor(label, 0.0);
+
+            this.mainarea.getChildren().clear();
+            this.mainarea.getChildren().add(label);
+
+            return;
+        }
+
+        if (res == ECardResponse.RC_OK_KNOCKED_OUT) {
+            Label label = new Label(
+                String.format(
+                    "You played %s and knocked yourself out",
+                    GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile()[GameState.getActiveGameMode().getMostRecentPlayerController().getDiscardedCardsPile().length - 1].getName()
+                )
+            );
+            label.getStyleClass().add("text-lg");
+            label.getStyleClass().add("title-wrap");
+
+            AnchorPane.setLeftAnchor(label, 0.0);
+            AnchorPane.setRightAnchor(label, 00.0);
+            AnchorPane.setTopAnchor(label, 0.0);
+            AnchorPane.setBottomAnchor(label, 0.0);
+
+            this.mainarea.getChildren().clear();
+            this.mainarea.getChildren().add(label);
+
+            return;
+        }
+
+        if (res == ECardResponse.RC_ERR) {
+            Label label = new Label(
+                String.format(
+                    "You played %s but it failed.\n%s",
+                    bHandCard
+                            ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getName()
+                            : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getName(),
+
+                    stderrPipeline.toString()
+                )
+            );
+            label.getStyleClass().add("text-lg-warning");
+            label.getStyleClass().add("title-wrap");
+
+            AnchorPane.setLeftAnchor(label, 0.0);
+            AnchorPane.setRightAnchor(label, 00.0);
+            AnchorPane.setTopAnchor(label, 0.0);
+            AnchorPane.setBottomAnchor(label, 0.0);
+
+            this.mainarea.getChildren().add(label);
+
+            GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(false);
+            return;
+        }
+
+        if (res == ECardResponse.RC_CHOOSE_ANY_PLAYER) {
+            Label label = new Label(
+                String.format(
+                    "You played %s.\n%s",
+                        (bHandCard
+                            ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getName()
+                            : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getName()
+                        ),
+                        stdoutPipeline.toString()
+                )
+            );
+            label.getStyleClass().add("text-lg");
+            label.getStyleClass().add("title-wrap");
+
+            AnchorPane.setLeftAnchor(label, 0.0);
+            AnchorPane.setRightAnchor(label, 0.0);
+            AnchorPane.setTopAnchor(label, 0.0);
+            AnchorPane.setBottomAnchor(label, 0.0);
+
+            HBox hbox = new HBox();
+            hbox.setId("main-area-vbox");
+
+            AnchorPane.setLeftAnchor(hbox, 0.0);
+            AnchorPane.setRightAnchor(hbox, 0.0);
+            AnchorPane.setBottomAnchor(hbox, 75.0);
+
+            for (int i = 0; i < GameState.getActiveGameMode().getPlayerCount(); i++) {
+                Button button = new Button(
+                    GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
+                );
+                button.getStyleClass().add("primary-mini-btn");
+
+                int finalI = i;
+                button.setOnAction(actionEvent -> {
+                    stdoutPipeline.setLength(0);
+                    stderrPipeline.setLength(0);
+
+                    int RC = bHandCard
+                            ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().callback(
+                                GameState.getActiveGameMode().getMostRecentPlayerController(),
+                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                                stdoutPipeline,
+                                stderrPipeline,
+                                null
+                            )
+                            : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().callback(
+                                GameState.getActiveGameMode().getMostRecentPlayerController(),
+                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                                stdoutPipeline,
+                                stderrPipeline,
+                                null
+                            );
+
+                    if (RC == ACard.RC_OK_HANDS_UPDATED) {
+                        this.mainarea.getChildren().clear();
+
+                        Label labelSuccess = new Label(String.format("You played %s.\n%s",
+                                GameState.getActiveGameMode()
+                                        .getMostRecentPlayerController().getDiscardedCardsPile()
+                                        [GameState.getActiveGameMode().getMostRecentPlayerController()
+                                        .getDiscardedCardsPile().length - 1].getName(),
+                                stdoutPipeline.toString()
+                                ));
+                        labelSuccess.getStyleClass().add("text-lg");
+                        labelSuccess.getStyleClass().add("title-wrap");
+
+                        AnchorPane.setLeftAnchor(labelSuccess, 0.0);
+                        AnchorPane.setRightAnchor(labelSuccess, 0.0);
+                        AnchorPane.setTopAnchor(labelSuccess, 0.0);
+                        AnchorPane.setBottomAnchor(labelSuccess, 0.0);
+
+                        this.mainarea.getChildren().add(labelSuccess);
+                        GameState.getActiveGameMode().getMostRecentPlayerController().setIsPlaying(false);
+                        GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(true);
+                        this.renderChoiceAreaScreen();
+                        this.renderDiscardedPileAreaScreen();
+
+                        return;
+                    }
+
+                    if (RC == ACard.RC_ERR) {
+                        Label labelErr = new Label(String.format("You have chosen %s but it failed.\n%s",
+                            GameState.getActiveGameMode().getPlayerControllerByID(finalI).getPlayerName(),
+                            stderrPipeline.toString()
+                        ));
+                        labelErr.getStyleClass().add("text-base-warning");
+                        labelErr.getStyleClass().add("title-wrap");
+
+                        if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
+                            this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
+                        this.mainarea.getChildren().add(labelErr);
+
+                        AnchorPane.setLeftAnchor(labelErr, 0.0);
+                        AnchorPane.setRightAnchor(labelErr, 0.0);
+                        AnchorPane.setBottomAnchor(labelErr, 0.0);
+
+                        button.setDisable(true);
+
+                        return;
+                    }
+
+                    throw new RuntimeException("Unhandled return code from ACard.callback().");
+                });
+
+                hbox.getChildren().add(button);
+                continue;
+            }
+
+            this.mainarea.getChildren().add(label);
+            this.mainarea.getChildren().add(hbox);
+
+            return;
+        }
+
+        this.mainarea.getChildren().clear();
+        this.bottomarea.getChildren().clear();
+        this.mainarea.getChildren().add(new Label(res.toString()));
 
         return;
     }
 
     // region Utility Methods
-    
-    private static boolean hasHandCard(PlayerController PC) {
-        return !PC.hasPlayedCard() && PC.getHandCard() != null;
+
+    private static boolean showEndTurnButton(PlayerController PC) {
+        return PC.hasPlayedCard() && !PC.isPlaying();
     }
 
-    private static boolean hasTableCard(PlayerController PC) {
-        return !PC.hasPlayedCard() && PC.getTableCard() != null;
+    private static boolean showHandCardButton(PlayerController PC) {
+        return !PC.hasPlayedCard() && PC.getHandCard() != null && !PC.isPlaying();
+    }
+
+    private static boolean showTableCardButton(PlayerController PC) {
+        return !PC.hasPlayedCard() && PC.getTableCard() != null && !PC.isPlaying();
     }
     
     // endregion Utility Methods
@@ -146,6 +337,8 @@ public class GameController {
         remainingCardsLabel.getStyleClass().add("text-base");
 
         VBox vbox = new VBox(remainingPlayersLabel, showScoreButton, remainingCardsLabel);
+        vbox.setId("right-area-vbox");
+
         this.rightarea.getChildren().add(vbox);
 
         return;
@@ -184,13 +377,17 @@ public class GameController {
         }
 
         HBox btnContainer = new HBox();
-        btnContainer.setId("hbox-btn-container");
+        btnContainer.setId("hbox-bottom-btn-container");
 
         AnchorPane.setBottomAnchor(btnContainer, 0.0);
         AnchorPane.setLeftAnchor(btnContainer, 0.0);
         AnchorPane.setRightAnchor(btnContainer, 0.0);
 
-        if (GameState.getActiveGameMode().getMostRecentPlayerController().hasPlayedCard()) {
+        if (GameState.getActiveGameMode().getMostRecentPlayerController().isPlaying()) {
+            this.bottomarea.getChildren().clear();
+            return;
+        }
+        if (GameController.showEndTurnButton(GameState.getActiveGameMode().getMostRecentPlayerController())) {
             Button endTurn = new Button("End Your Turn");
             endTurn.getStyleClass().add("danger-btn");
 
@@ -199,13 +396,13 @@ public class GameController {
 
                 if (state == EGameModeState.ROUND_ENDED) {
                     View.renderNewScreen(
-                            new GameScene(
-                                    MasterController.ROUND_ENDED,
-                                    View.loadFXML(View.PATH_TO_ROUND_ENDED),
-                                    true,
-                                    null
-                            ),
-                            false
+                        new GameScene(
+                            MasterController.ROUND_ENDED,
+                            View.loadFXML(View.PATH_TO_ROUND_ENDED),
+                            true,
+                            null
+                        ),
+                        false
                     );
 
                     return;
@@ -213,39 +410,39 @@ public class GameController {
 
                 if (state == EGameModeState.GAME_ENDED) {
                     View.renderNewScreen(new GameScene(
-                            MasterController.GAME_ENDED,
-                                    View.loadFXML(View.PATH_TO_GAME_ENDED),
-                                    true,
-                                    null
-                            ),
-                            false
+                        MasterController.GAME_ENDED,
+                            View.loadFXML(View.PATH_TO_GAME_ENDED),
+                            true,
+                            null
+                        ),
+                        false
                     );
 
                     return;
                 }
 
                 View.renderNewScreen(
-                        new GameScene(
-                                MasterController.getUniqueIdentifier(
-                                        String.format(
-                                                "%s-player%s",
-                                                MasterController.GAME,
-                                                GameState.getActiveGameMode()
-                                                    .getMostRecentPlayerController().getPlayerName()
-                                        )
-                                ),
-                                View.loadFXML(View.PATH_TO_GAME),
-                                true,
-                                null
+                    new GameScene(
+                        MasterController.getUniqueIdentifier(
+                            String.format(
+                                "%s-player%s",
+                                MasterController.GAME,
+                                GameState.getActiveGameMode()
+                                    .getMostRecentPlayerController().getPlayerName()
+                            )
                         ),
-                        false
+                        View.loadFXML(View.PATH_TO_GAME),
+                        true,
+                        null
+                    ),
+                    false
                 );
                 return;
             });
 
             btnContainer.getChildren().add(endTurn);
         }
-        if (GameController.hasHandCard(GameState.getActiveGameMode().getMostRecentPlayerController())) {
+        if (GameController.showHandCardButton(GameState.getActiveGameMode().getMostRecentPlayerController())) {
             Button handCardButton = new Button(
                 String.format(
                     "Play %s",
@@ -264,7 +461,7 @@ public class GameController {
 
             btnContainer.getChildren().add(handCardButton);
         }
-        if (GameController.hasTableCard(GameState.getActiveGameMode().getMostRecentPlayerController())) {
+        if (GameController.showTableCardButton(GameState.getActiveGameMode().getMostRecentPlayerController())) {
             Button tableCardButton = new Button(
                 String.format(
                     "Play %s",
@@ -308,10 +505,10 @@ public class GameController {
         Button button = new Button("Press To Play Your Turn");
         button.getStyleClass().add("primary-btn");
 
-        AnchorPane.setBottomAnchor(button, 160.0);
         AnchorPane.setLeftAnchor(button, 60.0);
         AnchorPane.setRightAnchor(button, 60.0);
         AnchorPane.setTopAnchor(button, 160.0);
+        AnchorPane.setBottomAnchor(button, 160.0);
 
         button.setOnAction(actionEvent -> {
             this.renderPlayTurnScreen();
@@ -320,6 +517,35 @@ public class GameController {
 
         this.clearScreen();
         this.mainarea.getChildren().add(button);
+
+        if (GameState.getActiveGameMode().getMostRecentPlayerController().getMessageForPlayerNextTurn() == null ||
+                GameState.getActiveGameMode().getMostRecentPlayerController().getMessageForPlayerNextTurn().isEmpty()) {
+
+//            Label label = new Label("Just some testing");
+//            label.getStyleClass().add("text-lg-warning");
+//            label.getStyleClass().add("title-wrap");
+//
+//            AnchorPane.setLeftAnchor(label, 0.0);
+//            AnchorPane.setRightAnchor(label, 0.0);
+//            AnchorPane.setTopAnchor(label, 0.0);
+//            AnchorPane.setBottomAnchor(label, 0.0);
+//
+//            this.bottomarea.getChildren().add(label);
+
+            return;
+        }
+
+        Label label = new Label(
+                GameState.getActiveGameMode().getMostRecentPlayerController().getMessageForPlayerNextTurn());
+        label.getStyleClass().add("text-lg-warning");
+        label.getStyleClass().add("title-wrap");
+
+        AnchorPane.setLeftAnchor(label, 0.0);
+        AnchorPane.setRightAnchor(label, 0.0);
+        AnchorPane.setTopAnchor(label, 0.0);
+        AnchorPane.setBottomAnchor(label, 0.0);
+
+        this.bottomarea.getChildren().add(label);
 
         return;
     }

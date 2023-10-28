@@ -112,7 +112,7 @@ public abstract class ACard {
      *
      * @param scanner The scanner to read the input from. This is only used if the
      *                card is played manually (if not manually, null is safe to pass).
-     * @param PC The player controller to play the card for.
+     * @param PC The Player Controller to play the card for.
      * @param bPlayedManually True if the card is played manually, false otherwise.
      * @param bIsHandCard True if the card is a hand card, false otherwise.
      *                    Null is safe to pass if not played manually.

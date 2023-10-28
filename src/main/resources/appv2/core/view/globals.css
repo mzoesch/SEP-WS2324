@@ -23,6 +23,7 @@
     -secondary-hover-btn-color: rgba(255, 255, 255, 0.2);
     -danger-btn-color: rgba(255, 255, 255, 0.1);
     -danger-hover-btn-color: rgba(255, 0, 0, 0.2);
+    -warning-color: rgba(255, 255, 0, 0.3);
 }
 
 #master-container {
@@ -41,10 +42,22 @@
     -fx-text-alignment: justify;
 }
 
+.text-base-warning {
+    -fx-font-size: 16px;
+    -fx-font-weight: 400;
+    -fx-text-fill: -warning-color;
+}
+
 .text-lg {
     -fx-font-size: 32px;
     -fx-font-weight: 700;
     -fx-text-fill: -primary-text-fill;
+}
+
+.text-lg-warning {
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -warning-color;
 }
 
 .text-xl {

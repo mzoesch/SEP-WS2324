@@ -146,3 +146,8 @@ When you discard the Guard, choose a player and name a number (other than one). 
 
 GitLab: https://gitlab2.cip.ifi.lmu.de/zoeschinger/sep-ws2324 <br />
 GitHub: https://github.com/mzoesch/SEP-WS2324 <br />
+
+# TODO
+
+Show current round in game <br />
+Show detailed card info on hover <br />

@@ -1,6 +1,8 @@
 package appv2.cards;
 
 
+import appv2.core.PlayerController;
+
 /**
  * <p>Guard Odette card.</p>
  * @see ACard
@@ -42,7 +44,12 @@ public class GuardOdette extends ACard {
     }
 
     @Override
-    public int playCard() {
+    public int playCard(PlayerController PC, boolean bPlayedManually, String messageForPlayerWhenForced, StringBuilder stdoutPipeline, StringBuilder stderrPipeline) {
+        return 0;
+    }
+
+    @Override
+    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced) {
         return 0;
     }
 

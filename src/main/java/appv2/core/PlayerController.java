@@ -17,8 +17,12 @@ public class PlayerController {
     private final ArrayList<ACard> discardedCardsPile;
 
     private boolean bPlayedCard;
+    private boolean bIsPlaying;
     private boolean bProtected;
     private boolean bKnockedOut;
+
+    private boolean bSignalPlayerNextTurn;
+    private String messageForPlayerNextTurn;
 
     public PlayerController(int playerID, String playerName) {
         super();
@@ -30,6 +34,7 @@ public class PlayerController {
         this.discardedCardsPile = new ArrayList<ACard>();
 
         this.bPlayedCard = false;
+        this.bIsPlaying = false;
         this.bProtected = false;
         this.bKnockedOut = false;
 
@@ -44,6 +49,9 @@ public class PlayerController {
         this.tableCard = null;
         this.discardedCardsPile.clear();
 
+        this.bPlayedCard = false;
+        this.bIsPlaying = false;
+
         this.handCard = GameState.getActiveGameMode().drawCard();
 
         return;
@@ -51,25 +59,57 @@ public class PlayerController {
 
     public void prepareForNextTurn() {
         this.bPlayedCard = false;
+        this.bIsPlaying = false;
 
         this.tableCard = GameState.getActiveGameMode().drawCard();
         return;
     }
 
-    public ECardResponse playCard(boolean bHandCard) {
-        if (this.bPlayedCard)
+    public ECardResponse playCard(boolean bHandCard, StringBuilder stdoutPipeline, StringBuilder stderrPipeline) {
+        if (this.bPlayedCard || this.bIsPlaying)
             throw new RuntimeException("Player has already played a card this turn.");
-        this.bPlayedCard = true;
+        this.bIsPlaying = true;
 
-        if (bHandCard) {
-            this.discardedCardsPile.add(this.handCard);
-            this.handCard = this.tableCard;
-        } else {
-            this.discardedCardsPile.add(this.tableCard);
+        int RC = bHandCard
+                ? this.handCard.playCard(this, true, null, stdoutPipeline, stderrPipeline)
+                : this.tableCard.playCard(this, true, null, stdoutPipeline, stderrPipeline);
+
+        if (RC == ACard.RC_OK) {
+            if (bHandCard) {
+                this.discardedCardsPile.add(this.handCard);
+                this.handCard = this.tableCard;
+            } else
+                this.discardedCardsPile.add(this.tableCard);
+            this.tableCard = null;
+
+            this.bIsPlaying = false;
+            this.bPlayedCard = true;
+
+            return ECardResponse.RC_OK;
         }
-        this.tableCard = null;
 
-        return ECardResponse.OK;
+        if (RC == ACard.RC_OK_PLAYER_KNOCKED_OUT) {
+            this.bIsPlaying = false;
+            this.bPlayedCard = true;
+
+            return ECardResponse.RC_OK_KNOCKED_OUT;
+        }
+
+        if (RC == ACard.RC_ERR) {
+            this.bIsPlaying = false;
+            this.bPlayedCard = false;
+
+            return ECardResponse.RC_ERR;
+        }
+
+        if (RC == ACard.RC_CHOOSE_ANY_PLAYER) {
+            this.bIsPlaying = true;
+            this.bPlayedCard = false;
+
+            return ECardResponse.RC_CHOOSE_ANY_PLAYER;
+        }
+
+        throw new RuntimeException("Unhandled return code from ACard.playCard().");
     }
 
     public void increaseAffection() {
@@ -123,6 +163,73 @@ public class PlayerController {
 
     public int getAffectionTokens() {
         return this.affectionTokens;
+    }
+
+    public void setKnockedOut(boolean bKnockedOut, boolean bSignalPlayerNextTurn, String message) {
+        this.bKnockedOut = bKnockedOut;
+        this.bSignalPlayerNextTurn = bSignalPlayerNextTurn;
+        this.messageForPlayerNextTurn = message;
+
+        // As written in the rules, the player must discard his hand faced-up when he is knocked out.
+        // The effect of the card is not applied.
+        if (bKnockedOut) {
+            if (this.handCard != null) {
+                this.discardedCardsPile.add(this.handCard);
+                this.handCard = null;
+            }
+
+            if (this.tableCard != null) {
+                this.discardedCardsPile.add(this.tableCard);
+                this.tableCard = null;
+            }
+
+            return;
+        }
+
+        return;
+    }
+
+    public String getMessageForPlayerNextTurn() {
+        return this.messageForPlayerNextTurn;
+    }
+
+    public void setMessageForPlayerNextTurn(String messageForPlayerNextTurn) {
+        this.messageForPlayerNextTurn = messageForPlayerNextTurn;
+        return;
+    }
+
+    public boolean hasCountessWilhelmina() {
+        return this.handCard != null && this.handCard instanceof appv2.cards.CountessWilhelmina
+                || this.tableCard != null && this.tableCard instanceof appv2.cards.CountessWilhelmina;
+    }
+
+    public void setPlayedCard(boolean bPlayedCard) {
+        this.bPlayedCard = bPlayedCard;
+        return;
+    }
+
+    public void setIsPlaying(boolean bIsPlaying) {
+        this.bIsPlaying = bIsPlaying;
+        return;
+    }
+
+    public boolean isPlaying() {
+        return this.bIsPlaying;
+    }
+
+    public void addToDiscardedCardsPile(ACard card) {
+        this.discardedCardsPile.add(card);
+        return;
+    }
+
+    public void setHandCard(ACard card) {
+        this.handCard = card;
+        return;
+    }
+
+    public void setTableCard(ACard card) {
+        this.tableCard = card;
+        return;
     }
 
     // endregion Getters and setters

@@ -1,6 +1,8 @@
 package appv2.cards;
 
 
+import appv2.core.PlayerController;
+
 /**
  * <p>Countess Wilhelmina card.</p>
  * @see ACard
@@ -34,9 +36,35 @@ public class CountessWilhelmina extends ACard {
         return;
     }
 
+    /**
+     * <p><b>Special Effect:</b> <br />
+     * As written in the rules. If the owner has a King or Prince in their hand, they must discard this card. <br />
+     * The card does not have any effect when discarded. </p>
+     * <br />
+     * {@inheritDoc}
+     */
     @Override
-    public int playCard() {
-        return 0;
+    public int playCard(
+            PlayerController PC,
+            boolean bPlayedManually,
+            String messageForPlayerWhenForced,
+            StringBuilder stdoutPipeline, StringBuilder stderrPipeline
+    ) {
+        if (bPlayedManually)
+            return ACard.RC_OK;
+
+        if (PC.isProtected()) {
+            stderrPipeline.append("This player is protected.\n");
+            return ACard.RC_ERR;
+        }
+
+        PC.setMessageForPlayerNextTurn(messageForPlayerWhenForced);
+        return ACard.RC_OK;
+    }
+
+    @Override
+    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String messageForPlayerWhenForced) {
+        throw new RuntimeException("CountessWilhelmina.callback() should never be called.");
     }
 
 }
