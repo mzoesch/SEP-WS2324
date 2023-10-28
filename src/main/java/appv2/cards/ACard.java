@@ -24,6 +24,7 @@ public abstract class ACard {
     public static final int RC_OK_PLAYER_KNOCKED_OUT = 3;
 
     public static final int RC_CHOOSE_ANY_PLAYER = 4;
+    public static final int RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED = 5;
 
     protected final String name;
     private final String backgroundStory;

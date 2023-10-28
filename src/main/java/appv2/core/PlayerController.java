@@ -52,6 +52,8 @@ public class PlayerController {
         this.bPlayedCard = false;
         this.bIsPlaying = false;
 
+        this.bKnockedOut = false;
+
         this.handCard = GameState.getActiveGameMode().drawCard();
 
         return;
@@ -111,6 +113,13 @@ public class PlayerController {
             this.bPlayedCard = false;
 
             return ECardResponse.RC_CHOOSE_ANY_PLAYER;
+        }
+
+        if (RC == ACard.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED) {
+            this.bIsPlaying = true;
+            this.bPlayedCard = false;
+
+            return ECardResponse.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED;
         }
 
         throw new RuntimeException("Unhandled return code from ACard.playCard().");

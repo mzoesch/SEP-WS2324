@@ -92,8 +92,8 @@ public class PrinceArnaud extends ACard {
             PC.setTableCard(null);
         }
         else {
-            targetPC.addToDiscardedCardsPile(targetPC.getTableCard());
-            targetPC.setTableCard(null);
+            PC.addToDiscardedCardsPile(PC.getTableCard());
+            PC.setTableCard(null);
         }
 
         targetPC.addToDiscardedCardsPile(targetPC.getHandCard());

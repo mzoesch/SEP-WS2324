@@ -14,6 +14,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 
+import java.util.Objects;
+
 
 public class GameController {
 
@@ -126,6 +128,9 @@ public class GameController {
             AnchorPane.setBottomAnchor(hbox, 75.0);
 
             for (int i = 0; i < GameState.getActiveGameMode().getPlayerCount(); i++) {
+                if (GameState.getActiveGameMode().getPlayerControllerByID(i).isKnockedOut())
+                    continue;
+
                 Button button = new Button(
                     GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
                 );
@@ -212,6 +217,150 @@ public class GameController {
 
             return;
         }
+
+        if (res == ECardResponse.RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED) {
+            Label label = new Label(
+                    String.format(
+                            "You played %s.\n%s",
+                            (bHandCard
+                                    ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getName()
+                                    : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getName()
+                            ),
+                            stdoutPipeline.toString()
+                    )
+            );
+            label.getStyleClass().add("text-lg");
+            label.getStyleClass().add("title-wrap");
+
+            AnchorPane.setLeftAnchor(label, 0.0);
+            AnchorPane.setRightAnchor(label, 0.0);
+            AnchorPane.setTopAnchor(label, 0.0);
+            AnchorPane.setBottomAnchor(label, 0.0);
+
+            HBox hbox = new HBox();
+            hbox.setId("main-area-vbox");
+
+            AnchorPane.setLeftAnchor(hbox, 0.0);
+            AnchorPane.setRightAnchor(hbox, 0.0);
+            AnchorPane.setBottomAnchor(hbox, 75.0);
+
+            for (int i = 0; i < GameState.getActiveGameMode().getPlayerCount(); i++) {
+                if (GameState.getActiveGameMode().getPlayerControllerByID(i).isKnockedOut())
+                    continue;
+                if (Objects.equals(
+                        GameState.getActiveGameMode().getPlayerControllerByID(i),
+                        GameState.getActiveGameMode().getMostRecentPlayerController()
+                ))
+                    continue;
+
+                Button button = new Button(
+                        GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
+                );
+                button.getStyleClass().add("primary-mini-btn");
+
+                int finalI = i;
+                button.setOnAction(actionEvent -> {
+                    stdoutPipeline.setLength(0);
+                    stderrPipeline.setLength(0);
+
+                    int RC = bHandCard
+                            ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().callback(
+                            GameState.getActiveGameMode().getMostRecentPlayerController(),
+                            GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                            stdoutPipeline,
+                            stderrPipeline,
+                            null
+                    )
+                            : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().callback(
+                            GameState.getActiveGameMode().getMostRecentPlayerController(),
+                            GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                            stdoutPipeline,
+                            stderrPipeline,
+                            null
+                    );
+
+                    if (RC == ACard.RC_OK_HANDS_UPDATED) {
+                        this.mainarea.getChildren().clear();
+
+                        Label labelSuccess = new Label(String.format("You played %s.\n%s",
+                                GameState.getActiveGameMode()
+                                        .getMostRecentPlayerController().getDiscardedCardsPile()
+                                        [GameState.getActiveGameMode().getMostRecentPlayerController()
+                                        .getDiscardedCardsPile().length - 1].getName(),
+                                stdoutPipeline.toString()
+                        ));
+                        labelSuccess.getStyleClass().add("text-lg");
+                        labelSuccess.getStyleClass().add("title-wrap");
+
+                        AnchorPane.setLeftAnchor(labelSuccess, 0.0);
+                        AnchorPane.setRightAnchor(labelSuccess, 0.0);
+                        AnchorPane.setTopAnchor(labelSuccess, 0.0);
+                        AnchorPane.setBottomAnchor(labelSuccess, 0.0);
+
+                        this.mainarea.getChildren().add(labelSuccess);
+                        GameState.getActiveGameMode().getMostRecentPlayerController().setIsPlaying(false);
+                        GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(true);
+                        this.renderChoiceAreaScreen();
+                        this.renderDiscardedPileAreaScreen();
+
+                        return;
+                    }
+
+                    if (RC == ACard.RC_ERR) {
+                        Label labelErr = new Label(String.format("You have chosen %s but it failed.\n%s",
+                                GameState.getActiveGameMode().getPlayerControllerByID(finalI).getPlayerName(),
+                                stderrPipeline.toString()
+                        ));
+                        labelErr.getStyleClass().add("text-base-warning");
+                        labelErr.getStyleClass().add("title-wrap");
+
+                        if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
+                            this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
+                        this.mainarea.getChildren().add(labelErr);
+
+                        AnchorPane.setLeftAnchor(labelErr, 0.0);
+                        AnchorPane.setRightAnchor(labelErr, 0.0);
+                        AnchorPane.setBottomAnchor(labelErr, 0.0);
+
+                        button.setDisable(true);
+
+                        return;
+                    }
+
+                    if (RC == ACard.RC_OK_PLAYER_KNOCKED_OUT) {
+                        Label labelKnockedOut = new Label(String.format("You have been knocked out of the game.\n%s",
+                                stdoutPipeline.toString()
+                        ));
+                        labelKnockedOut.getStyleClass().add("text-lg-warning");
+                        labelKnockedOut.getStyleClass().add("title-wrap");
+
+                        this.mainarea.getChildren().clear();
+                        this.mainarea.getChildren().add(labelKnockedOut);
+
+                        AnchorPane.setLeftAnchor(labelKnockedOut, 0.0);
+                        AnchorPane.setRightAnchor(labelKnockedOut, 0.0);
+                        AnchorPane.setTopAnchor(labelKnockedOut, 0.0);
+                        AnchorPane.setBottomAnchor(labelKnockedOut, 0.0);
+
+                        this.renderDiscardedPileAreaScreen();
+                        this.renderChoiceAreaScreen();
+
+                        return;
+                    }
+
+                    throw new RuntimeException("Unhandled return code from ACard.callback().");
+                });
+
+                hbox.getChildren().add(button);
+                continue;
+            }
+
+            this.mainarea.getChildren().add(label);
+            this.mainarea.getChildren().add(hbox);
+
+            return;
+        }
+
 
         this.mainarea.getChildren().clear();
         this.bottomarea.getChildren().clear();
