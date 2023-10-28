@@ -233,30 +233,20 @@ public class GameMode {
 
         this.tableCardsPile.add(new PrincessAnnette());
 
-//        this.tableCardsPile.add(new CountessWilhelmina());
+        this.tableCardsPile.add(new CountessWilhelmina());
 
         this.tableCardsPile.add(new KingArnaud());
 
         this.tableCardsPile.add(new PrinceArnaud());
         this.tableCardsPile.add(new PrinceArnaud());
 
-//        this.tableCardsPile.add(new HandmaidSusannah());
-//        this.tableCardsPile.add(new KingArnaud());
-        this.tableCardsPile.add(new PrinceArnaud());
-        this.tableCardsPile.add(new KingArnaud());
-//        this.tableCardsPile.add(new BaronTalus());
-
-//        this.tableCardsPile.add(new CountessWilhelmina());
-//        this.tableCardsPile.add(new HandmaidSusannah());
-//        this.tableCardsPile.add(new BaronTalus());
-//        this.tableCardsPile.add(new PriestTomas());
-        this.tableCardsPile.add(new GuardOdette());
+        this.tableCardsPile.add(new HandmaidSusannah());
+        this.tableCardsPile.add(new HandmaidSusannah());
 
         this.tableCardsPile.add(new BaronTalus());
         this.tableCardsPile.add(new BaronTalus());
 
-//        this.tableCardsPile.add(new PriestTomas());
-        this.tableCardsPile.add(new KingArnaud());
+        this.tableCardsPile.add(new PriestTomas());
         this.tableCardsPile.add(new PriestTomas());
 
         this.tableCardsPile.add(new GuardOdette());
@@ -265,7 +255,7 @@ public class GameMode {
         this.tableCardsPile.add(new GuardOdette());
         this.tableCardsPile.add(new GuardOdette());
 
-//        Collections.shuffle(this.tableCardsPile);
+        Collections.shuffle(this.tableCardsPile);
         if (this.tableCardsPile.size() != GameMode.CARD_AMOUNT_IN_DECK)
             throw new RuntimeException("Table cards pile size is not 16.");
 
