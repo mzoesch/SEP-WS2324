@@ -18,7 +18,8 @@ public class App {
      *
      * @throws IllegalStateException If an instance of this class is created.
      */
-    public App() throws IllegalStateException {
+    private App() throws IllegalStateException {
+        super();
         throw new IllegalStateException("Utility class");
     }
 
@@ -37,6 +38,8 @@ public class App {
                 "The application took %f seconds to run.\n",
                 (System.currentTimeMillis() - start) / 1000
         );
+        System.exit(appv2.core.GameInstance.getExitCode());
+
         return;
     }
 

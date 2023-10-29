@@ -9,16 +9,17 @@ import javafx.application.Platform;
  */
 public final class GameInstance {
 
+    private static int exitCode = 0;
+
     /**
      * <p>Utility class. No instances allowed.</p>
      *
      * @throws IllegalStateException If an instance of this class is created.
      */
-    private GameInstance() {
+    private GameInstance() throws IllegalStateException {
         super();
         throw new IllegalStateException("Utility class");
     }
-
 
     /**
      * <p>Starts the Graphical User Interface of the application.</p>
@@ -33,8 +34,30 @@ public final class GameInstance {
      */
     public static void quitApplication() {
         Platform.exit();
-        System.exit(0);
         return;
     }
+
+    // region Getters and Setters
+
+    /**
+     * <p>Sets the exit code of this application.</p>
+     *
+     * @param exitCode Exit code to set.
+     */
+    public static void setExitCode(int exitCode) {
+        GameInstance.exitCode = exitCode;
+        return;
+    }
+
+    /**
+     * <p>Gets the exit code of this application.</p>
+     *
+     * @return Exit code of the application.
+     */
+    public static int getExitCode() {
+        return GameInstance.exitCode;
+    }
+
+    // endregion Getters and Setters
 
 }

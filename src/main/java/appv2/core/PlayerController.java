@@ -209,7 +209,7 @@ public class PlayerController {
                 this.discardedCardsPile.add(this.tableCard);
                 this.tableCard = null;
             }
-            
+
             return;
         }
 
