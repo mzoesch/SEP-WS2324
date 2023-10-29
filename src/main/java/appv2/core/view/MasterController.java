@@ -157,23 +157,14 @@ public class MasterController {
 
         for (GameScene screen : this.screens) {
             if (screen.getIdentifier().equals(oldIdentifier) && screen.killAfterUse()) {
-                if (bKeepOldAlive) {
-                    // TODO: Just for debug. Remove.
-                    for (GameScene gs : this.screens)
-                        System.out.printf("%s\n", gs.getIdentifier());
-
+                if (bKeepOldAlive)
                     return oldIdentifier;
-                }
 
                 this.removeScreen(oldIdentifier);
                 break;
             }
             continue;
         }
-
-        // TODO: Just for debug. Remove.
-        for (GameScene gs : this.screens)
-            System.out.printf("%s\n", gs.getIdentifier());
 
         return "";
     }

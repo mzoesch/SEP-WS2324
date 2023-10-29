@@ -9,6 +9,9 @@ import javafx.application.Platform;
  */
 public final class GameInstance {
 
+    /**
+     * <p>Exit code of this application.</p>
+     */
     private static int exitCode = 0;
 
     /**
