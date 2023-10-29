@@ -70,7 +70,7 @@ public class PlayerController {
         if (this.isKnockedOut()) {
             this.bPlayedCard = true;
             this.bIsPlaying = false;
-            
+
             return;
         }
 

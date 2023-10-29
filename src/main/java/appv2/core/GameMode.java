@@ -170,11 +170,15 @@ public class GameMode {
         if (nextPlayerID >= this.getPlayerCount())
             nextPlayerID = 0;
 
-        if (this.getPlayerControllerByID(nextPlayerID).isKnockedOut()
-                && this.getPlayerControllerByID(nextPlayerID).getMessageForPlayerNextTurn().isEmpty())
+        this.mostRecentPlayerID = nextPlayerID;
+
+        if (this.getPlayerControllerByID(this.mostRecentPlayerID).isKnockedOut()
+                && (
+                        this.getPlayerControllerByID(this.mostRecentPlayerID).getMessageForPlayerNextTurn() == null
+                || this.getPlayerControllerByID(this.mostRecentPlayerID).getMessageForPlayerNextTurn().isEmpty()
+        ))
             return this.selectNextValidPlayer();
 
-        this.mostRecentPlayerID = nextPlayerID;
         return EGameModeState.GAME_RUNNING;
     }
 

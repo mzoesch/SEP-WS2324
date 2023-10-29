@@ -603,11 +603,6 @@ public class GameController {
         return;
     }
 
-    private void renderKnockedOutScreen() {
-        this.clearScreen();
-        return;
-    }
-
     private void renderDiscardedPileAreaScreen() {
         Label label = new Label("Your discarded cards pile.");
         label.getStyleClass().add("text-base");
@@ -844,6 +839,28 @@ public class GameController {
         return;
     }
 
+    private void renderKnockedOutScreen() {
+        this.clearScreen();
+
+        this.renderDiscardedPileAreaScreen();
+        this.renderGameStateOverviewAreaScreen();
+        this.renderChoiceAreaScreen();
+
+        Label label =
+                new Label("You have been knocked out of this round.\nYou may only end your turn now. You will be able to play again next round.");
+        label.getStyleClass().add("text-lg-warning");
+        label.getStyleClass().add("title-wrap");
+
+        AnchorPane.setLeftAnchor(label, 0.0);
+        AnchorPane.setRightAnchor(label, 0.0);
+        AnchorPane.setTopAnchor(label, 0.0);
+        AnchorPane.setBottomAnchor(label, 0.0);
+
+        this.mainarea.getChildren().add(label);
+
+        return;
+    }
+
     private void renderStandardScreen() {
         this.clearScreen();
 
@@ -874,21 +891,8 @@ public class GameController {
         this.mainarea.getChildren().add(button);
 
         if (GameState.getActiveGameMode().getMostRecentPlayerController().getMessageForPlayerNextTurn() == null ||
-                GameState.getActiveGameMode().getMostRecentPlayerController().getMessageForPlayerNextTurn().isEmpty()) {
-
-//            Label label = new Label("Just some testing");
-//            label.getStyleClass().add("text-lg-warning");
-//            label.getStyleClass().add("title-wrap");
-//
-//            AnchorPane.setLeftAnchor(label, 0.0);
-//            AnchorPane.setRightAnchor(label, 0.0);
-//            AnchorPane.setTopAnchor(label, 0.0);
-//            AnchorPane.setBottomAnchor(label, 0.0);
-//
-//            this.bottomarea.getChildren().add(label);
-
+                GameState.getActiveGameMode().getMostRecentPlayerController().getMessageForPlayerNextTurn().isEmpty())
             return;
-        }
 
         Label label = new Label(
                 GameState.getActiveGameMode().getMostRecentPlayerController().getMessageForPlayerNextTurn());
@@ -908,8 +912,10 @@ public class GameController {
     private void renderPlayTurnScreen() {
         this.mainarea.getChildren().clear();
 
-        // Here logic what exact scree to implement
-        // if isKnockedOut do: [knocked out screen]
+        if (GameState.getActiveGameMode().getMostRecentPlayerController().isKnockedOut()) {
+            this.renderKnockedOutScreen();
+            return;
+        }
 
         this.renderStandardScreen();
 
