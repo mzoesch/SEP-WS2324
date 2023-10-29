@@ -72,14 +72,15 @@ public class GameController {
     }
 
     /**
-     * <p>Standard method to render the title of the Game Screen when a card's
-     * side effect needs a player to be chosen.</p>
+     * <p>Base title creation when choosing a player.</p>
      *
      * @param bHandCard Whether the card to play is a hand card or a table card.
-     * @param stdoutPipeline The stdout pipeline of the card.
+     * @param stdoutPipeline The stdout pipeline to get the information from.
+     * @return The just created title label.
+     * @see #renderStandardChoosePlayerTitle(boolean, StringBuilder) 
      * @see #playCard(boolean)
      */
-    private void renderStandardChoosePlayerTitle(boolean bHandCard, StringBuilder stdoutPipeline) {
+    private Label baseChoosePlayerTitle(boolean bHandCard, StringBuilder stdoutPipeline) {
         Label label = new Label(
             String.format(
                 "You played %s.\n%s",
@@ -96,10 +97,186 @@ public class GameController {
         AnchorPane.setLeftAnchor(label, 0.0);
         AnchorPane.setRightAnchor(label, 0.0);
         AnchorPane.setTopAnchor(label, 0.0);
+
+        return label;
+    }
+
+    /**
+     * <p>Standard method to render the title of the Game Screen when a card's
+     * side effect needs a player to be chosen.</p>
+     *
+     * @param bHandCard Whether the card to play is a hand card or a table card.
+     * @param stdoutPipeline The stdout pipeline to get the information from.
+     * @see #playCard(boolean)
+     */
+    private void renderStandardChoosePlayerTitle(boolean bHandCard, StringBuilder stdoutPipeline) {
+        Label label = baseChoosePlayerTitle(bHandCard, stdoutPipeline);
         AnchorPane.setBottomAnchor(label, 0.0);
 
         this.mainarea.getChildren().add(label);
 
+        return;
+    }
+
+    /**
+     * <p>Renders a label with an error message in the main area.</p>
+     *
+     * @param labelErr The label to render.
+     */
+    private void renderErrorInMainArea(Label labelErr) {
+        labelErr.getStyleClass().add("text-base-warning");
+        labelErr.getStyleClass().add("title-wrap");
+
+        if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
+            this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
+        this.mainarea.getChildren().add(labelErr);
+
+        AnchorPane.setLeftAnchor(labelErr, 0.0);
+        AnchorPane.setRightAnchor(labelErr, 0.0);
+        AnchorPane.setBottomAnchor(labelErr, 0.0);
+
+        return;
+    }
+
+    /**
+     * <p>Gets the return code fo a callback of a played card.</p>
+     *
+     * @param bHandCard Whether the card to play is a hand card or a table card.
+     * @param stderrPipeline The stderr pipeline of the card.
+     * @param stdoutPipeline The stdout pipeline of the card.
+     * @param finalI The index of the player to choose.
+     * @param args The arguments to pass to the callback.
+     * @return The return code of the card's callback.
+     * @see appv2.cards.ACard#callback(PlayerController, PlayerController, StringBuilder, StringBuilder, String[])
+     */
+    private int getReturnCodeFromCallback(
+            boolean bHandCard,
+            StringBuilder stderrPipeline,
+            StringBuilder stdoutPipeline,
+            int finalI,
+            String[] args
+    ) {
+        return bHandCard
+                ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().callback(
+                GameState.getActiveGameMode().getMostRecentPlayerController(),
+                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                stdoutPipeline,
+                stderrPipeline,
+                args
+        )
+                : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().callback(
+                GameState.getActiveGameMode().getMostRecentPlayerController(),
+                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
+                stdoutPipeline,
+                stderrPipeline,
+                args
+        );
+    }
+
+    /**
+     * <p>Standard behaviour of the return codes from a card's callback.</p>
+     *
+     * @param button The button to disable if failed.
+     * @param finalI The index of the player to choose.
+     * @param RC The return code of the card's callback.
+     * @param stdoutPipeline The stdout pipeline to get the information from.
+     * @param stderrPipeline The stderr pipeline to get the information from.
+     * @return Whether the return code was handled or not.
+     */
+    private boolean isStandardPlayerButtonBehaviourWhenChoosingValid(
+            Button button,
+            int finalI,
+            int RC,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline
+    ) {
+        if (RC == ACard.RC_OK_HANDS_UPDATED) {
+            this.mainarea.getChildren().clear();
+
+            Label labelSuccess = new Label(String.format("You played %s.\n%s",
+                GameState.getActiveGameMode()
+                    .getMostRecentPlayerController().getDiscardedCardsPile()
+                    [GameState.getActiveGameMode().getMostRecentPlayerController()
+                    .getDiscardedCardsPile().length - 1].getName(),
+                stdoutPipeline.toString()
+            ));
+            labelSuccess.getStyleClass().add("text-lg");
+            labelSuccess.getStyleClass().add("title-wrap");
+
+            AnchorPane.setLeftAnchor(labelSuccess, 0.0);
+            AnchorPane.setRightAnchor(labelSuccess, 0.0);
+            AnchorPane.setTopAnchor(labelSuccess, 0.0);
+            AnchorPane.setBottomAnchor(labelSuccess, 0.0);
+
+            this.mainarea.getChildren().add(labelSuccess);
+            GameState.getActiveGameMode().getMostRecentPlayerController().setIsPlaying(false);
+            GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(true);
+            this.renderChoiceAreaScreen();
+            this.renderDiscardedPileAreaScreen();
+
+            return true;
+        }
+
+        if (RC == ACard.RC_ERR) {
+            Label labelErr = new Label(String.format("You have chosen %s but it failed.\n%s",
+                GameState.getActiveGameMode().getPlayerControllerByID(finalI).getPlayerName(),
+                stderrPipeline.toString()
+            ));
+            this.renderErrorInMainArea(labelErr);
+
+            button.setDisable(true);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * <p>Checks if the return code of a card's callback is
+     * RC_OK_PLAYER_KNOCKED_OUT and handles it if so.</p>
+     *
+     * @param stdoutPipeline The stdout pipeline to get the information from.
+     * @param RC The return code of the card's callback.
+     * @return Whether the return code was handled or not.
+     */
+    private boolean isStandardPlayerButtonBehaviourWhenChoosingValidOnlyKnockedOut(
+            StringBuilder stdoutPipeline,
+            int RC
+    ) {
+        if (RC == ACard.RC_OK_PLAYER_KNOCKED_OUT) {
+            Label labelKnockedOut = new Label(String.format("You have been knocked out of the game.\n%s",
+                    stdoutPipeline.toString()
+            ));
+            labelKnockedOut.getStyleClass().add("text-lg-warning");
+            labelKnockedOut.getStyleClass().add("title-wrap");
+
+            this.mainarea.getChildren().clear();
+            this.mainarea.getChildren().add(labelKnockedOut);
+
+            AnchorPane.setLeftAnchor(labelKnockedOut, 0.0);
+            AnchorPane.setRightAnchor(labelKnockedOut, 0.0);
+            AnchorPane.setTopAnchor(labelKnockedOut, 0.0);
+            AnchorPane.setBottomAnchor(labelKnockedOut, 0.0);
+
+            this.renderDiscardedPileAreaScreen();
+            this.renderChoiceAreaScreen();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * <p>Standard behaviour if the number text field is invalid
+     * (only used if the card's callback requires a number text field).</p>
+     *
+     * @param labelErr The label to render.
+     * @see #playCard(boolean)
+     */
+    private void standardBehaviourIfNumberTextFieldIsInvalid(Label labelErr) {
+        this.renderErrorInMainArea(labelErr);
         return;
     }
 
@@ -199,69 +376,24 @@ public class GameController {
                         stdoutPipeline.setLength(0);
                         stderrPipeline.setLength(0);
 
-                        int RC = bHandCard
-                                ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().callback(
-                                GameState.getActiveGameMode().getMostRecentPlayerController(),
-                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
-                                stdoutPipeline,
+                        int RC = this.getReturnCodeFromCallback(
+                                bHandCard,
                                 stderrPipeline,
-                                null
-                        )
-                                : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().callback(
-                                GameState.getActiveGameMode().getMostRecentPlayerController(),
-                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
                                 stdoutPipeline,
-                                stderrPipeline,
+                                finalI,
                                 null
                         );
 
-                        if (RC == ACard.RC_OK_HANDS_UPDATED) {
-                            this.mainarea.getChildren().clear();
-
-                            Label labelSuccess = new Label(String.format("You played %s.\n%s",
-                                    GameState.getActiveGameMode()
-                                            .getMostRecentPlayerController().getDiscardedCardsPile()
-                                            [GameState.getActiveGameMode().getMostRecentPlayerController()
-                                            .getDiscardedCardsPile().length - 1].getName(),
-                                    stdoutPipeline.toString()
-                            ));
-                            labelSuccess.getStyleClass().add("text-lg");
-                            labelSuccess.getStyleClass().add("title-wrap");
-
-                            AnchorPane.setLeftAnchor(labelSuccess, 0.0);
-                            AnchorPane.setRightAnchor(labelSuccess, 0.0);
-                            AnchorPane.setTopAnchor(labelSuccess, 0.0);
-                            AnchorPane.setBottomAnchor(labelSuccess, 0.0);
-
-                            this.mainarea.getChildren().add(labelSuccess);
-                            GameState.getActiveGameMode().getMostRecentPlayerController().setIsPlaying(false);
-                            GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(true);
-                            this.renderChoiceAreaScreen();
-                            this.renderDiscardedPileAreaScreen();
-
+                        if (
+                            this.isStandardPlayerButtonBehaviourWhenChoosingValid(
+                                button,
+                                finalI,
+                                RC,
+                                stdoutPipeline,
+                                stderrPipeline
+                            )
+                        )
                             return;
-                        }
-
-                        if (RC == ACard.RC_ERR) {
-                            Label labelErr = new Label(String.format("You have chosen %s but it failed.\n%s",
-                                    GameState.getActiveGameMode().getPlayerControllerByID(finalI).getPlayerName(),
-                                    stderrPipeline.toString()
-                            ));
-                            labelErr.getStyleClass().add("text-base-warning");
-                            labelErr.getStyleClass().add("title-wrap");
-
-                            if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
-                                this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
-                            this.mainarea.getChildren().add(labelErr);
-
-                            AnchorPane.setLeftAnchor(labelErr, 0.0);
-                            AnchorPane.setRightAnchor(labelErr, 0.0);
-                            AnchorPane.setBottomAnchor(labelErr, 0.0);
-
-                            button.setDisable(true);
-
-                            return;
-                        }
 
                         throw new RuntimeException("Unhandled return code from ACard.callback().");
                     });
@@ -295,7 +427,7 @@ public class GameController {
                         continue;
 
                     Button button = new Button(
-                            GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
+                        GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
                     );
                     button.getStyleClass().add("primary-mini-btn");
 
@@ -304,90 +436,29 @@ public class GameController {
                         stdoutPipeline.setLength(0);
                         stderrPipeline.setLength(0);
 
-                        int RC = bHandCard
-                                ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().callback(
-                                GameState.getActiveGameMode().getMostRecentPlayerController(),
-                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
-                                stdoutPipeline,
+                        int RC = this.getReturnCodeFromCallback(
+                                bHandCard,
                                 stderrPipeline,
-                                null
-                        )
-                                : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().callback(
-                                GameState.getActiveGameMode().getMostRecentPlayerController(),
-                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
                                 stdoutPipeline,
-                                stderrPipeline,
+                                finalI,
                                 null
                         );
 
-                        if (RC == ACard.RC_OK_HANDS_UPDATED) {
-                            this.mainarea.getChildren().clear();
-
-                            Label labelSuccess = new Label(String.format("You played %s.\n%s",
-                                    GameState.getActiveGameMode()
-                                            .getMostRecentPlayerController().getDiscardedCardsPile()
-                                            [GameState.getActiveGameMode().getMostRecentPlayerController()
-                                            .getDiscardedCardsPile().length - 1].getName(),
-                                    stdoutPipeline.toString()
-                            ));
-                            labelSuccess.getStyleClass().add("text-lg");
-                            labelSuccess.getStyleClass().add("title-wrap");
-
-                            AnchorPane.setLeftAnchor(labelSuccess, 0.0);
-                            AnchorPane.setRightAnchor(labelSuccess, 0.0);
-                            AnchorPane.setTopAnchor(labelSuccess, 0.0);
-                            AnchorPane.setBottomAnchor(labelSuccess, 0.0);
-
-                            this.mainarea.getChildren().add(labelSuccess);
-                            GameState.getActiveGameMode().getMostRecentPlayerController().setIsPlaying(false);
-                            GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(true);
-                            this.renderChoiceAreaScreen();
-                            this.renderDiscardedPileAreaScreen();
-
+                        if (
+                            this.isStandardPlayerButtonBehaviourWhenChoosingValid(
+                                button,
+                                finalI,
+                                RC,
+                                stdoutPipeline,
+                                stderrPipeline
+                            )
+                        )
                             return;
-                        }
 
-                        if (RC == ACard.RC_ERR) {
-                            Label labelErr = new Label(String.format("You have chosen %s but it failed.\n%s",
-                                    GameState.getActiveGameMode().getPlayerControllerByID(finalI).getPlayerName(),
-                                    stderrPipeline.toString()
-                            ));
-                            labelErr.getStyleClass().add("text-base-warning");
-                            labelErr.getStyleClass().add("title-wrap");
-
-                            if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
-                                this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
-                            this.mainarea.getChildren().add(labelErr);
-
-                            AnchorPane.setLeftAnchor(labelErr, 0.0);
-                            AnchorPane.setRightAnchor(labelErr, 0.0);
-                            AnchorPane.setBottomAnchor(labelErr, 0.0);
-
-                            button.setDisable(true);
-
+                        if (
+                            isStandardPlayerButtonBehaviourWhenChoosingValidOnlyKnockedOut(stdoutPipeline, RC)
+                        )
                             return;
-                        }
-
-                        if (RC == ACard.RC_OK_PLAYER_KNOCKED_OUT) {
-                            Label labelKnockedOut = new Label(String.format("You have been knocked out of the game.\n%s",
-                                    stdoutPipeline.toString()
-                            ));
-                            labelKnockedOut.getStyleClass().add("text-lg-warning");
-                            labelKnockedOut.getStyleClass().add("title-wrap");
-
-                            this.mainarea.getChildren().clear();
-                            this.mainarea.getChildren().add(labelKnockedOut);
-
-                            AnchorPane.setLeftAnchor(labelKnockedOut, 0.0);
-                            AnchorPane.setRightAnchor(labelKnockedOut, 0.0);
-                            AnchorPane.setTopAnchor(labelKnockedOut, 0.0);
-                            AnchorPane.setBottomAnchor(labelKnockedOut, 0.0);
-
-                            this.renderDiscardedPileAreaScreen();
-                            this.renderChoiceAreaScreen();
-
-                            return;
-                        }
 
                         throw new RuntimeException("Unhandled return code from ACard.callback().");
                     });
@@ -402,22 +473,7 @@ public class GameController {
             }
 
             case RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED_WITH_INTEGER -> {
-                Label label = new Label(
-                    String.format(
-                        "You played %s.\n%s",
-                        (bHandCard
-                            ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().getName()
-                            : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().getName()
-                        ),
-                        stdoutPipeline.toString()
-                    )
-                );
-                label.getStyleClass().add("text-lg");
-                label.getStyleClass().add("title-wrap");
-
-                AnchorPane.setLeftAnchor(label, 0.0);
-                AnchorPane.setRightAnchor(label, 0.0);
-                AnchorPane.setTopAnchor(label, 0.0);
+                Label label = baseChoosePlayerTitle(bHandCard, stdoutPipeline);
                 AnchorPane.setBottomAnchor(label, 150.0);
 
                 TextField textField = new TextField();
@@ -450,13 +506,13 @@ public class GameController {
                     if (GameState.getActiveGameMode().getPlayerControllerByID(i).isKnockedOut())
                         continue;
                     if (Objects.equals(
-                            GameState.getActiveGameMode().getPlayerControllerByID(i),
-                            GameState.getActiveGameMode().getMostRecentPlayerController()
+                        GameState.getActiveGameMode().getPlayerControllerByID(i),
+                        GameState.getActiveGameMode().getMostRecentPlayerController()
                     ))
                         continue;
 
                     Button button = new Button(
-                            GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
+                        GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()
                     );
                     button.getStyleClass().add("primary-mini-btn");
 
@@ -467,17 +523,7 @@ public class GameController {
 
                         if (textField.getText().isEmpty()) {
                             Label labelErr = new Label("You must enter a number.");
-                            labelErr.getStyleClass().add("text-base-warning");
-                            labelErr.getStyleClass().add("title-wrap");
-
-                            if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
-                                this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
-                            this.mainarea.getChildren().add(labelErr);
-
-                            AnchorPane.setLeftAnchor(labelErr, 0.0);
-                            AnchorPane.setRightAnchor(labelErr, 0.0);
-                            AnchorPane.setBottomAnchor(labelErr, 0.0);
-
+                            this.standardBehaviourIfNumberTextFieldIsInvalid(labelErr);
                             return;
                         }
 
@@ -485,105 +531,33 @@ public class GameController {
                         int guessAffection = Integer.parseInt(textField.getText());
                         if (guessAffection < 2 || guessAffection > 8) {
                             Label labelErr = new Label("You must enter a number between 2 and 8.");
-                            labelErr.getStyleClass().add("text-base-warning");
-                            labelErr.getStyleClass().add("title-wrap");
-
-                            if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
-                                this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
-                            this.mainarea.getChildren().add(labelErr);
-
-                            AnchorPane.setLeftAnchor(labelErr, 0.0);
-                            AnchorPane.setRightAnchor(labelErr, 0.0);
-                            AnchorPane.setBottomAnchor(labelErr, 0.0);
-
+                            this.standardBehaviourIfNumberTextFieldIsInvalid(labelErr);
                             return;
                         }
 
-
-                        int RC = bHandCard
-                                ? GameState.getActiveGameMode().getMostRecentPlayerController().getHandCard().callback(
-                                GameState.getActiveGameMode().getMostRecentPlayerController(),
-                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
-                                stdoutPipeline,
-                                stderrPipeline,
-                                new String[] { String.valueOf(guessAffection) }
-                        )
-                                : GameState.getActiveGameMode().getMostRecentPlayerController().getTableCard().callback(
-                                GameState.getActiveGameMode().getMostRecentPlayerController(),
-                                GameState.getActiveGameMode().getPlayerControllerByID(finalI),
-                                stdoutPipeline,
-                                stderrPipeline,
-                                new String[] { String.valueOf(guessAffection) }
+                        int RC = this.getReturnCodeFromCallback(
+                            bHandCard,
+                            stderrPipeline,
+                            stdoutPipeline,
+                            finalI,
+                            new String[] { String.valueOf(guessAffection) }
                         );
 
-                        if (RC == ACard.RC_OK_HANDS_UPDATED) {
-                            this.mainarea.getChildren().clear();
-
-                            Label labelSuccess = new Label(String.format("You played %s.\n%s",
-                                    GameState.getActiveGameMode()
-                                            .getMostRecentPlayerController().getDiscardedCardsPile()
-                                            [GameState.getActiveGameMode().getMostRecentPlayerController()
-                                            .getDiscardedCardsPile().length - 1].getName(),
-                                    stdoutPipeline.toString()
-                            ));
-                            labelSuccess.getStyleClass().add("text-lg");
-                            labelSuccess.getStyleClass().add("title-wrap");
-
-                            AnchorPane.setLeftAnchor(labelSuccess, 0.0);
-                            AnchorPane.setRightAnchor(labelSuccess, 0.0);
-                            AnchorPane.setTopAnchor(labelSuccess, 0.0);
-                            AnchorPane.setBottomAnchor(labelSuccess, 0.0);
-
-                            this.mainarea.getChildren().add(labelSuccess);
-                            GameState.getActiveGameMode().getMostRecentPlayerController().setIsPlaying(false);
-                            GameState.getActiveGameMode().getMostRecentPlayerController().setPlayedCard(true);
-                            this.renderChoiceAreaScreen();
-                            this.renderDiscardedPileAreaScreen();
-
+                        if (
+                            this.isStandardPlayerButtonBehaviourWhenChoosingValid(
+                                button,
+                                finalI,
+                                RC,
+                                stdoutPipeline,
+                                stderrPipeline
+                            )
+                        )
                             return;
-                        }
 
-                        if (RC == ACard.RC_ERR) {
-                            Label labelErr = new Label(String.format("You have chosen %s but it failed.\n%s",
-                                    GameState.getActiveGameMode().getPlayerControllerByID(finalI).getPlayerName(),
-                                    stderrPipeline.toString()
-                            ));
-                            labelErr.getStyleClass().add("text-base-warning");
-                            labelErr.getStyleClass().add("title-wrap");
-
-                            if (this.mainarea.getChildren().get(this.mainarea.getChildren().size() - 1) instanceof Label)
-                                this.mainarea.getChildren().remove(this.mainarea.getChildren().size() - 1);
-                            this.mainarea.getChildren().add(labelErr);
-
-                            AnchorPane.setLeftAnchor(labelErr, 0.0);
-                            AnchorPane.setRightAnchor(labelErr, 0.0);
-                            AnchorPane.setBottomAnchor(labelErr, 0.0);
-
-                            button.setDisable(true);
-
+                        if (
+                            isStandardPlayerButtonBehaviourWhenChoosingValidOnlyKnockedOut(stdoutPipeline, RC)
+                        )
                             return;
-                        }
-
-                        if (RC == ACard.RC_OK_PLAYER_KNOCKED_OUT) {
-                            Label labelKnockedOut = new Label(String.format("You have been knocked out of the game.\n%s",
-                                    stdoutPipeline.toString()
-                            ));
-                            labelKnockedOut.getStyleClass().add("text-lg-warning");
-                            labelKnockedOut.getStyleClass().add("title-wrap");
-
-                            this.mainarea.getChildren().clear();
-                            this.mainarea.getChildren().add(labelKnockedOut);
-
-                            AnchorPane.setLeftAnchor(labelKnockedOut, 0.0);
-                            AnchorPane.setRightAnchor(labelKnockedOut, 0.0);
-                            AnchorPane.setTopAnchor(labelKnockedOut, 0.0);
-                            AnchorPane.setBottomAnchor(labelKnockedOut, 0.0);
-
-                            this.renderDiscardedPileAreaScreen();
-                            this.renderChoiceAreaScreen();
-
-                            return;
-                        }
 
                         throw new RuntimeException("Unhandled return code from ACard.callback().");
                     });
