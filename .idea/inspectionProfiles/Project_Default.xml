@@ -12,5 +12,8 @@
         </value>
       </option>
     </inspection_tool>
+    <inspection_tool class="JavadocReference" enabled="true" level="ERROR" enabled_by_default="true">
+      <option name="REPORT_INACCESSIBLE" value="false" />
+    </inspection_tool>
   </profile>
 </component>

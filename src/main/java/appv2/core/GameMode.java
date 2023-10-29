@@ -55,7 +55,10 @@ public class GameMode {
      */
     private int mostRecentPlayerID;
     /**
-     * <p>Array of all player controllers in the game.</p>
+     * <p>Array of all player controllers in the game.<br />
+     * This can not be changes throughout the entirety of a game. Therefore the index of a player controller
+     * in this array is the same as the player ID of the player controller.</p>
+     * @see appv2.core.PlayerController#getPlayerID()
      */
     private final PlayerController[] playerControllers;
 
@@ -405,6 +408,7 @@ public class GameMode {
      *
      * @param playerID The identifier of the player to get the PlayerController of.
      * @return The PlayerController of the player with the provided ID.
+     * @see #playerControllers
      */
     public PlayerController getPlayerControllerByID(int playerID) {
         return this.playerControllers[playerID];
@@ -548,6 +552,9 @@ public class GameMode {
     /**
      * @return The tokens of affection needed to win the game.
      * @throws IllegalStateException If the player count is invalid.
+     * @see #PLAYER_COUNT_TWO_TOKENS_TO_WIN
+     * @see #PLAYER_COUNT_THREE_TOKENS_TO_WIN
+     * @see #PLAYER_COUNT_FOUR_TOKENS_TO_WIN
      */
     public int getAmountOfTokensOfAffectionToWin() throws IllegalStateException {
         if (this.getPlayerCount() == 2)

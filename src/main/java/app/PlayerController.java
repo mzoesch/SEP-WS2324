@@ -25,6 +25,9 @@ public class PlayerController {
      * <p>The card that was just picked up from the deck this round (maybe null).</p>
      */
     ACard pickedCardFromDeck;
+    /**
+     * <p>The pile of discarded cards of the player (maybe empty).</p>
+     */
     private ArrayList<ACard> discardedCards;
 
     private boolean bPlayedTurn;
@@ -453,7 +456,7 @@ public class PlayerController {
      * cards as it is stated in the rules.</p>
      *
      * @param bIsKnockedOut True if the player is knocked out, false otherwise.
-     * @param bSignalPlayerNextTurn True if the player should be notified about his knockout
+     * @param bSignalPlayerNextTurn True, if the player should be notified about his knockout
      *                              at the beginning of his next turn, false otherwise.
      * @param messageForPlayer The message that should be displayed to the player at the beginning
      *                         of his next turn (requires bSignalPlayerNextTurn to be True).
