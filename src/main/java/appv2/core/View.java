@@ -1,6 +1,5 @@
 package appv2.core;
 
-import appv2.core.GameInstance;
 import appv2.core.view.GameScene;
 import appv2.core.view.MasterController;
 

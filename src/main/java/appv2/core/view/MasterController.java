@@ -1,5 +1,7 @@
 package appv2.core.view;
 
+import appv2.core.PlayerController;
+
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -46,7 +48,7 @@ public class MasterController {
      * <p>Unique identifier for the Game Screen in the application. We will attach a
      * UUID to this String, to differentiate between different player screen.</p>
      *
-     * @see appv2.core.view.MasterController#getUniqueIdentifier(String)
+     * @see appv2.core.view.MasterController#getUniqueIdentifierForAPlayersTurn(PlayerController)
      */
     public static final String GAME = "game";
     /**
@@ -155,14 +157,23 @@ public class MasterController {
 
         for (GameScene screen : this.screens) {
             if (screen.getIdentifier().equals(oldIdentifier) && screen.killAfterUse()) {
-                if (bKeepOldAlive)
+                if (bKeepOldAlive) {
+                    // TODO: Just for debug. Remove.
+                    for (GameScene gs : this.screens)
+                        System.out.printf("%s\n", gs.getIdentifier());
+
                     return oldIdentifier;
+                }
 
                 this.removeScreen(oldIdentifier);
                 break;
             }
             continue;
         }
+
+        // TODO: Just for debug. Remove.
+        for (GameScene gs : this.screens)
+            System.out.printf("%s\n", gs.getIdentifier());
 
         return "";
     }
@@ -177,6 +188,22 @@ public class MasterController {
      */
     public static String getUniqueIdentifier(String prefix) {
         return String.format("%s-%s", prefix, UUID.randomUUID().toString());
+    }
+
+    /**
+     * <p>Generates a unique identifier for a player's turn.</p>
+     *
+     * @param PC PlayerController object to get the name from.
+     * @return Unique identifier for a player's turn.
+     */
+    public static String getUniqueIdentifierForAPlayersTurn(PlayerController PC) {
+        return MasterController.getUniqueIdentifier(
+            String.format(
+                "%s-player-%s",
+                MasterController.GAME,
+                PC.getPlayerName().toLowerCase().replace(" ", "-")
+            )
+        );
     }
 
     // endregion Utility methods

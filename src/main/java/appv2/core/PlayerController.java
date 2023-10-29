@@ -53,6 +53,8 @@ public class PlayerController {
         this.bIsPlaying = false;
 
         this.bKnockedOut = false;
+        this.bSignalPlayerNextTurn = false;
+        this.messageForPlayerNextTurn = "";
 
         this.handCard = GameState.getActiveGameMode().drawCard();
 
