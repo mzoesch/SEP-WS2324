@@ -8,9 +8,14 @@ import java.util.Objects;
 
 /**
  * <p>Priest Tomas card.</p>
+ * <p><b>Special Effect:</b> <br />
+ * When discarded the player can look at another player's hand. If all players are
+ * protected (e.g. by the Handmaid) the effect is being cancelled. </p>
+ * <br />
  * @see ACard
+ * @see #playCard(PlayerController, boolean, String, StringBuilder, StringBuilder) playCard
  */
-public class PriestTomas extends ACard {
+public non-sealed class PriestTomas extends ACard {
 
     /**
      * <p>Name of the card.</p>
@@ -25,10 +30,10 @@ public class PriestTomas extends ACard {
         super(
                 PriestTomas.NAME,
                 "Open, honest, and uplifting, Father Tomas always seeks out the opportunity to do good. "
-                        + "With the arrest of the Queen, he is often seen about the palace, acting as confessor, "
-                        + "counselor, and friend.",
+                    + "With the arrest of the Queen, he is often seen about the palace, acting as confessor, "
+                    + "counselor, and friend.",
                 "When you discard the Priest, you can look at another player’s hand. Do not reveal the "
-                        + "hand to any other players",
+                    + "hand to any other players",
                 PriestTomas.CARD_AFFECTION
         );
 
@@ -37,10 +42,14 @@ public class PriestTomas extends ACard {
 
     /**
      * <p><b>Special Effect:</b> <br />
-     * When discarded the player can look at another player's hand. If all players are
-     * protected (e.g. by the Handmaid) the effect is being cancelled. </p>
+     * When discarded the player can look at another player's hand
+     * ({@link ACard#RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED}). If all players are
+     * protected (e.g. by the Handmaid) the effect is being cancelled ({@link ACard#RC_OK}). </p>
      * <br />
      * {@inheritDoc}
+     * @see ACard#RC_OK
+     * @see ACard#RC_ERR
+     * @see ACard#RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED
      */
     @Override
     public int playCard(
@@ -88,6 +97,14 @@ public class PriestTomas extends ACard {
         return ACard.RC_OK;
     }
 
+    /**
+     * <p>Returns {@link ACard#RC_ERR} if the target player is protected or invalid. Otherwise
+     * the caller Player Controller will see the targets hands ({@link ACard#RC_OK_HANDS_UPDATED}).</p>
+     * <p>The args are ignored here.</p>
+     * {@inheritDoc}
+     * @see ACard#RC_ERR
+     * @see ACard#RC_OK_HANDS_UPDATED
+     */
     @Override
     public int callback(
             PlayerController PC,

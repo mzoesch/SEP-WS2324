@@ -7,9 +7,15 @@ import java.util.Objects;
 
 /**
  * <p>King Arnaud IV card.</p>
+ * <p><b>Special Effect:</b> <br />
+ * As written in the rules. If the owner has the Countess in their hand,
+ * they must discard the Countess and take the King.<br />
+ * When discarded the player must choose another player to swap hands with (self included).</p>
+ *
  * @see ACard
+ * @see #playCard(PlayerController, boolean, String, StringBuilder, StringBuilder) playCard
  */
-public class KingArnaud extends ACard {
+public non-sealed class KingArnaud extends ACard {
 
     /**
      * <p>Name of the card.</p>
@@ -24,16 +30,22 @@ public class KingArnaud extends ACard {
         super(
                 KingArnaud.NAME,
                 "The undisputed ruler of Tempest... for the moment. Because of his role in the arrest "
-                        + "of Queen Marianna, he does not rate as highly with Princess Annette as a father "
-                        + "should. He hopes to work himself back into her graces.",
+                    + "of Queen Marianna, he does not rate as highly with Princess Annette as a father "
+                    + "should. He hopes to work himself back into her graces.",
                 "When you discard King Arnaud IV, trade the card in your hand with the card held by another "
-                        + "player of your choice. You cannot trade with a player who is out of the round.",
+                    + "player of your choice. You cannot trade with a player who is out of the round.",
                 KingArnaud.CARD_AFFECTION
         );
 
         return;
     }
 
+    /**
+     * <p>Special one time use to update the hand of the players after the King was played.</p>
+     *
+     * @param PC The player controller who invoked the effect.
+     * @param targetPC The player controller who was chosen to swap hands with.
+     */
     private static void swapHands(PlayerController PC, PlayerController targetPC) {
         ACard tempCard1 = PC.getHandCard();
         ACard tempCard2 = targetPC.getHandCard();
@@ -47,10 +59,14 @@ public class KingArnaud extends ACard {
     /**
      * <p><b>Special Effect:</b> <br />
      * As written in the rules. If the owner has the Countess in their hand,
-     * they must discard the Countess and take the King.<br />
-     * When discarded the player must choose another player to swap hands with (self included).</p>
+     * they must discard the Countess and take the King ({@link ACard#RC_ERR}).<br />
+     * When discarded the player must choose another player to swap hands with
+     * (self included) ({@link ACard#RC_CHOOSE_ANY_PLAYER}).</p>
      * <br />
      * {@inheritDoc}
+     * @see ACard#RC_OK
+     * @see ACard#RC_ERR
+     * @see ACard#RC_CHOOSE_ANY_PLAYER
      */
     @Override
     public int playCard(
@@ -79,6 +95,14 @@ public class KingArnaud extends ACard {
         return ACard.RC_OK;
     }
 
+    /**
+     * <p>Returns {@link ACard#RC_ERR} if the target player is protected or invalid. Otherwise the
+     * hands of the players are swapped ({@link ACard#RC_OK_HANDS_UPDATED}).</p>
+     * <p>The args are ignored here.</p>
+     * {@inheritDoc}
+     * @see ACard#RC_ERR
+     * @see ACard#RC_OK_HANDS_UPDATED
+     */
     @Override
     public int callback(
             PlayerController PC,
@@ -121,7 +145,8 @@ public class KingArnaud extends ACard {
         }
 
         KingArnaud.swapHands(PC, targetPC);
-        targetPC.setMessageForPlayerNextTurn("A King was played on you.\nYour card has been swapped with another player's card.");
+        targetPC.setMessageForPlayerNextTurn(
+                "A King was played on you.\nYour card has been swapped with another player's card.");
 
         return ACard.RC_OK_HANDS_UPDATED;
     }

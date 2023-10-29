@@ -8,9 +8,15 @@ import java.util.Objects;
 
 /**
  * <p>Baron Talus card.</p>
+ * <p><b>Special Effect:</b> <br />
+ * When discarded the player can compare his hand with another player. The player with the
+ * lower affection of his card is knocked out of the round. If all players are
+ * protected (e.g. by the Handmaid) the effect is being cancelled.</p>
+ * <br />
  * @see ACard
+ * @see #playCard(PlayerController, boolean, String, StringBuilder, StringBuilder) playCard
  */
-public class BaronTalus extends ACard {
+public non-sealed class BaronTalus extends ACard {
 
     /**
      * <p>Name of the card.</p>
@@ -25,11 +31,11 @@ public class BaronTalus extends ACard {
         super(
                 BaronTalus.NAME,
                 "The scion of an esteemed house that has long been a close ally of the royal family, "
-                        + "Baron Talus has a quiet and gentle demeanor that conceals a man used to being obeyed. "
-                        + "His suggestions are often treated as if they came from the King himself.",
+                    + "Baron Talus has a quiet and gentle demeanor that conceals a man used to being obeyed. "
+                    + "His suggestions are often treated as if they came from the King himself.",
                 "When you discard the Baron, choose another player still in the round. You and that player "
-                        + "secretly compare your hands. The player with the lower number is knocked out of the round. "
-                        + "In case of a tie, nothing happens.",
+                    + "secretly compare your hands. The player with the lower number is knocked out of the round. "
+                    + "In case of a tie, nothing happens.",
                 BaronTalus.CARD_AFFECTION
         );
 
@@ -38,11 +44,15 @@ public class BaronTalus extends ACard {
 
     /**
      * <p><b>Special Effect:</b> <br />
-     * When discarded the player can compare his hand with another player. The player with the
+     * When discarded the player can compare his hand with another player
+     * ({@link ACard#RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED}). The player with the
      * lower affection of his card is knocked out of the round. If all players are
-     * protected (e.g. by the Handmaid) the effect is being cancelled.</p>
+     * protected (e.g. by the Handmaid) the effect is being cancelled ({@link ACard#RC_OK}).</p>
      * <br />
      * {@inheritDoc}
+     * @see ACard#RC_OK
+     * @see ACard#RC_ERR
+     * @see ACard#RC_CHOOSE_ANY_PLAYER_SELF_EXCLUDED
      */
     @Override
     public int playCard(
@@ -90,6 +100,18 @@ public class BaronTalus extends ACard {
         return ACard.RC_OK;
     }
 
+    /**
+     * <p>Returns {@link ACard#RC_ERR} if the target player is protected or invalid. Otherwise
+     * the players will compare their hands ({@link ACard#RC_OK_HANDS_UPDATED},
+     * {@link ACard#RC_OK_PLAYER_KNOCKED_OUT} if the caller Player
+     * Controller lost the comparison).</p>
+     * <p>The args are ignored here.</p>
+     * {@inheritDoc}
+     * @see ACard#RC_ERR
+     * @see ACard#RC_OK_HANDS_UPDATED
+     * @see ACard#RC_OK_PLAYER_KNOCKED_OUT
+     * @throws RuntimeException If the impossible happens.
+     */
     @Override
     public int callback(
             PlayerController PC,
@@ -97,7 +119,7 @@ public class BaronTalus extends ACard {
             StringBuilder stdoutPipeline,
             StringBuilder stderrPipeline,
             String[] args
-    ) {
+    ) throws RuntimeException {
 
         if (targetPC.isProtected()) {
             stderrPipeline.append("This player is protected.\n");

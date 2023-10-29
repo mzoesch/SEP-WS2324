@@ -1,13 +1,18 @@
 package appv2.cards;
 
-
 import appv2.core.PlayerController;
+
 
 /**
  * <p>Countess Wilhelmina card.</p>
+ * <p><b>Special Effect:</b> <br />
+ * As written in the rules. If the owner has a King or Prince in their hand, they must discard this card. <br />
+ * The card does not have any effect when discarded.</p>
+ *
  * @see ACard
+ * @see #playCard(PlayerController, boolean, String, StringBuilder, StringBuilder) playCard
  */
-public class CountessWilhelmina extends ACard {
+public non-sealed class CountessWilhelmina extends ACard {
 
     /**
      * <p>Name of the card.</p>
@@ -22,14 +27,14 @@ public class CountessWilhelmina extends ACard {
         super(
                 CountessWilhelmina.NAME,
                 "Always on the prowl for a handsome man or juicy gossip, Wilhelmina’s age and noble blood make her "
-                        + "one of Princess Annette's friends. While she has great influence over the Princess, she makes "
-                        + "herself scarce whenever the King or Prince are around.",
+                    + "one of Princess Annette's friends. While she has great influence over the Princess, she makes "
+                    + "herself scarce whenever the King or Prince are around.",
                 "Unlike other cards, which take effect when discarded, the text on the Countess applies while she "
-                        + "is in your hand. In fact, the only time it doesn't apply is when you discard her.\nIf you ever "
-                        + "have the Countess and either the King or Prince in your hand, you must discard the Countess. "
-                        + "You do not have to reveal the other card in your hand. Of course, you can also discard the "
-                        + "Countess even if you do not have a royal family member in your hand. The Countess likes to play "
-                        + "mind games...",
+                    + "is in your hand. In fact, the only time it doesn't apply is when you discard her.\nIf you ever "
+                    + "have the Countess and either the King or Prince in your hand, you must discard the Countess. "
+                    + "You do not have to reveal the other card in your hand. Of course, you can also discard the "
+                    + "Countess even if you do not have a royal family member in your hand. The Countess likes to play "
+                    + "mind games...",
                 CountessWilhelmina.CARD_AFFECTION
         );
 
@@ -38,10 +43,13 @@ public class CountessWilhelmina extends ACard {
 
     /**
      * <p><b>Special Effect:</b> <br />
-     * As written in the rules. If the owner has a King or Prince in their hand, they must discard this card. <br />
-     * The card does not have any effect when discarded. </p>
+     * As written in the rules. If the owner has a King or Prince in their hand, they must discard
+     * this card ({@link ACard#RC_OK}). <br />
+     * The card does not have any effect when discarded.</p>
      * <br />
      * {@inheritDoc}
+     * @see ACard#RC_OK
+     * @see ACard#RC_ERR
      */
     @Override
     public int playCard(
@@ -62,8 +70,18 @@ public class CountessWilhelmina extends ACard {
         return ACard.RC_OK;
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws RuntimeException This method should never be called.
+     */
     @Override
-    public int callback(PlayerController PC, PlayerController targetPC, StringBuilder stdoutPipeline, StringBuilder stderrPipeline, String[] args) {
+    public int callback(
+            PlayerController PC,
+            PlayerController targetPC,
+            StringBuilder stdoutPipeline,
+            StringBuilder stderrPipeline,
+            String[] args
+    ) {
         throw new RuntimeException("CountessWilhelmina.callback() should never be called.");
     }
 

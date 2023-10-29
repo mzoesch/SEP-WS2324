@@ -41,7 +41,7 @@ public class CountessWilhelmina extends ACard {
     /**
      * <p><b>Special Effect:</b> <br />
      * As written in the rules. If the owner has a King or Prince in their hand, they must discard this card. <br />
-     * The card does not have any effect when discarded. </p>
+     * The card does not have any effect when discarded.</p>
      * <br />
      * {@inheritDoc}
      */

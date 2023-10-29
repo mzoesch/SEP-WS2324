@@ -1,13 +1,18 @@
 package appv2.cards;
 
-
 import appv2.core.PlayerController;
+
 
 /**
  * <p>Handmaid Susannah card.</p>
+ * <p><b>Special Effect:</b> <br />
+ * When discarded the player is protected until his next turn by any card
+ * effects from other players.</p>
+ *
  * @see ACard
+ * @see #playCard(PlayerController, boolean, String, StringBuilder, StringBuilder) playCard
  */
-public class HandmaidSusannah extends ACard {
+public non-sealed class HandmaidSusannah extends ACard {
 
     /**
      * <p>Name of the card.</p>
@@ -22,19 +27,28 @@ public class HandmaidSusannah extends ACard {
         super(
                 HandmaidSusannah.NAME,
                 "Few would trust a mere Handmaid with a letter of importance. Fewer still understand "
-                        + "Susannah's cleverness, or her skilled ability at playing the foolish Handmaid. That "
-                        + "the Queen’s confidante and loyal servant escaped any attention after the Queen's "
-                        + "arrest is a testament to her clever mind.",
+                    + "Susannah's cleverness, or her skilled ability at playing the foolish Handmaid. That "
+                    + "the Queen’s confidante and loyal servant escaped any attention after the Queen's "
+                    + "arrest is a testament to her clever mind.",
                 "When you discard the Handmaid, you are immune to the effects of other players' cards until "
-                        + "the start of your next turn. If all players other than the player whose turn it is are "
-                        + "protected by the Handmaid, the player must choose him- or herself for a card's effects, "
-                        + "if possible.",
+                    + "the start of your next turn. If all players other than the player whose turn it is are "
+                    + "protected by the Handmaid, the player must choose him- or herself for a card's effects, "
+                    + "if possible.",
                 HandmaidSusannah.CARD_AFFECTION
         );
 
         return;
     }
 
+    /**
+     * <p><b>Special Effect:</b> <br />
+     * When discarded the player is protected until his next turn by any card
+     * effects from other players ({@link ACard#RC_OK}).</p>
+     * <br />
+     * {@inheritDoc}
+     * @see ACard#RC_OK
+     * @see ACard#RC_ERR
+     */
     @Override
     public int playCard(
             PlayerController PC,
@@ -45,7 +59,8 @@ public class HandmaidSusannah extends ACard {
     ) {
         if (bPlayedManually) {
             PC.setIsProtected(true);
-            stdoutPipeline.append("You are protected from other players card effects until the start of your next turn.\n");
+            stdoutPipeline.append(
+                    "You are protected from other players card effects until the start of your next turn.\n");
             return ACard.RC_OK;
         }
 
@@ -58,6 +73,10 @@ public class HandmaidSusannah extends ACard {
         return ACard.RC_OK;
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws RuntimeException This method should never be called.
+     */
     @Override
     public int callback(
             PlayerController PC,
@@ -65,7 +84,7 @@ public class HandmaidSusannah extends ACard {
             StringBuilder stdoutPipeline,
             StringBuilder stderrPipeline,
             String[] args
-    ) {
+    ) throws RuntimeException {
         throw new RuntimeException("HandmaidSusannah.callback() should never be called.");
     }
 
