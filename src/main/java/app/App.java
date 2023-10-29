@@ -12,6 +12,7 @@ import java.io.IOException;
  * <p>Love Letter Premium Edition by Seiji Kanai.<br />
  * Java implementation by Magnus Zoeschinger.</p>
  *
+ * @since 1.0
  * @author mzoesch
  * @version 1.0
  */

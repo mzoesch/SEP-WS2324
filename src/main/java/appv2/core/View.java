@@ -1,7 +1,7 @@
 package appv2.core;
 
-import appv2.core.view.MasterController;
 import appv2.core.view.GameScene;
+import appv2.core.view.MasterController;
 
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 
+/**
+ * <p>Implements high-level methods relevant for the Graphical User Interface.</p>
+ */
 public class View extends Application {
 
     public static final String PATH_TO_RULES = "view/rules.fxml";
@@ -24,13 +27,29 @@ public class View extends Application {
     public static final String PATH_TO_PLAYERS_SCORE = "view/playersscore.fxml";
     public static final String PATH_TO_DISCARDED_PILE = "view/discardedpile.fxml";
 
+    /**
+     * <p>MasterController object.<br />
+     * Is valid throughout the entirety of the application runtime
+     * and not destroyed until the application is killed.</p>
+     */
     private static MasterController masterController;
 
+    /**
+     * <p>Required constructor for JavaFX Application Child.</p>
+     */
     public View() {
         super();
         return;
     }
 
+    /**
+     * <p> Called by the JavaFX Application Thread to initialize the GUI.<br />
+     * This method initializes the MasterController and loads the MainMenu FXML file.</p>
+     *
+     * @param stage Stage object.
+     * @throws IOException If the MainMenu FXML file cannot be loaded.
+     * @see appv2.core.view.MasterController
+     */
     @Override
     public void start(Stage stage) throws IOException {
         View.masterController = new MasterController(

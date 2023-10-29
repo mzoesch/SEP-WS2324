@@ -170,6 +170,10 @@ public class GameMode {
         if (nextPlayerID >= this.getPlayerCount())
             nextPlayerID = 0;
 
+        if (this.getPlayerControllerByID(nextPlayerID).isKnockedOut()
+                && this.getPlayerControllerByID(nextPlayerID).getMessageForPlayerNextTurn().isEmpty())
+            return this.selectNextValidPlayer();
+
         this.mostRecentPlayerID = nextPlayerID;
         return EGameModeState.GAME_RUNNING;
     }
@@ -235,6 +239,7 @@ public class GameMode {
 
         this.tableCardsPile.add(new CountessWilhelmina());
 
+        this.tableCardsPile.add(new GuardOdette());
         this.tableCardsPile.add(new KingArnaud());
 
         this.tableCardsPile.add(new PrinceArnaud());
@@ -249,13 +254,13 @@ public class GameMode {
         this.tableCardsPile.add(new PriestTomas());
         this.tableCardsPile.add(new PriestTomas());
 
-        this.tableCardsPile.add(new GuardOdette());
+//        this.tableCardsPile.add(new GuardOdette());
         this.tableCardsPile.add(new GuardOdette());
         this.tableCardsPile.add(new GuardOdette());
         this.tableCardsPile.add(new GuardOdette());
         this.tableCardsPile.add(new GuardOdette());
 
-        Collections.shuffle(this.tableCardsPile);
+//        Collections.shuffle(this.tableCardsPile);
         if (this.tableCardsPile.size() != GameMode.CARD_AMOUNT_IN_DECK)
             throw new RuntimeException("Table cards pile size is not 16.");
 
