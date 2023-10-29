@@ -64,7 +64,7 @@ public class GameMode {
      * <p>Constructor.</p>
      *
      * @param scanner Scanner object to inherit to other objects.
-     * @param playerCount The amount of players in this game.
+     * @param playerCount The number of players in this game.
      * @param playerNames The names of all players in the game.
      */
     public GameMode(Scanner scanner, int playerCount, String[] playerNames) {
@@ -134,7 +134,7 @@ public class GameMode {
      * @param currentAffection Current affection of the provided player to check.
      * @return The updated highest affection.
      */
-    private int updateRoundWinnersListBasedOnAffection(
+    private int updateRoundWinnerListBasedOnAffection(
             ArrayList<PlayerController> winners, int highestAffection, PlayerController PC, int currentAffection
     ) {
         if (currentAffection > highestAffection) {
@@ -173,7 +173,7 @@ public class GameMode {
             else
                 currentAffection = PC.getCardInHand().getAffection();
 
-            highestAffection = updateRoundWinnersListBasedOnAffection(
+            highestAffection = updateRoundWinnerListBasedOnAffection(
                     playersWithHighestAffection, highestAffection, PC, currentAffection);
             continue;
         }
@@ -197,7 +197,7 @@ public class GameMode {
         for (PlayerController PC : playersWithHighestAffection) {
             int currentAffection = PC.getSumOfAffectionInDiscardPile();
             highestDiscardPileAffection =
-                    updateRoundWinnersListBasedOnAffection(
+                    updateRoundWinnerListBasedOnAffection(
                             playerWithHighestAffectionInDiscardPile, highestDiscardPileAffection, PC, currentAffection
                     );
             continue;
@@ -486,14 +486,14 @@ public class GameMode {
     // region Utility functions
 
     /**
-     * @return The amount of players in this game.
+     * @return The number of players in this game.
      */
     public int getPlayerCount() {
         return this.playerCount;
     }
 
     /**
-     * @return The amount of all remaining players in a round.
+     * @return The number of all remaining players in a round.
      */
     public int getRemainingPlayerCount() {
         int remainingPlayerCount = 0;
@@ -545,7 +545,7 @@ public class GameMode {
     }
 
     /**
-     * @return The current 3 faced-up lying cards on the
+     * @return The current three faced-up lying cards on the
      * table (only relevant in 2-player games - maybe empty).
      */
     public ACard[] getExaminingCards() {
@@ -553,7 +553,7 @@ public class GameMode {
     }
 
     /**
-     * @return The current 3 faced-up lying cards on the table as
+     * @return The current three faced-up lying cards on the table as
      * Strings (only relevant in 2-player games - maybe empty).
      */
     public String[] getExaminingCardsAsString() {
@@ -565,7 +565,7 @@ public class GameMode {
     }
 
     /**
-     * @return The current 3 faced-up lying cards on the table as one
+     * @return The current three faced-up lying cards on the table as one
      * String (only relevant in 2-player games - maybe empty).
      */
     public String getExaminingCardsAsOneString() {
