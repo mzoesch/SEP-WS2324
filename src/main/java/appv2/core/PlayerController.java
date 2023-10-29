@@ -209,13 +209,7 @@ public class PlayerController {
                 this.discardedCardsPile.add(this.tableCard);
                 this.tableCard = null;
             }
-
-            System.out.printf("Player %s has been knocked out.\n", this.playerName);
-            if (this.handCard == null)
-                System.out.printf("Player %s discarded his hand faced-up.\n", this.playerName);
-            else
-                System.out.printf("%s\n", this.handCard.getAsString());
-
+            
             return;
         }
 
