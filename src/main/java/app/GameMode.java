@@ -590,6 +590,20 @@ public class GameMode {
     }
 
     /**
+     * <p>The round information is, if a player is currently knocked out or not.</p>
+     *
+     * @return All players with the round information as Strings.
+     */
+    public String[] getAllPlayerWithRoundInformation() {
+        String[] allPlayerWithRoundInformation = new String[this.playerCount];
+        for (int i = 0; i < this.playerCount; i++)
+            allPlayerWithRoundInformation[i] = String.format("%s: knocked out %s",
+                    this.players[i].getPlayerName(), this.players[i].isKnockedOut() ? "yes" : "no");
+
+        return allPlayerWithRoundInformation;
+    }
+
+    /**
      * @param playerID The ID of the player to get the PlayerController of.
      * @return The PlayerController of the player with the provided ID.
      */

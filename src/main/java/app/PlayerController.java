@@ -49,6 +49,7 @@ public class PlayerController {
         new Command("playHand", "ph", "Discards the card in your hand."),
         new Command("showHand", "sh", "Shows both cards - if available - in your hand."),
         new Command("showScore", "ss", "Shows the current score (affection) of all players."),
+        new Command("showPlayers", "sp", "Shows all players and if they are still in the round."),
         new Command("showExaminationCards", "ex", "Shows all cards that are currently open for examination (only usefully in two-player games)."),
         new Command("showDiscarded", "dis", "Shows your discarded cards."),
         new Command("showAllDiscarded", "disa", "Shows all discarded cards of all players."),
@@ -269,6 +270,12 @@ public class PlayerController {
             case "ss":
             case "showScore": {
                 App.printArray_V2(GameInstance.getActiveGameMode().getAffectionOfAllPlayerAsString(), ", ", "");
+                return false;
+            }
+
+            case "sp":
+            case "showPlayers": {
+                App.printArray_V2(GameInstance.getActiveGameMode().getAllPlayerWithRoundInformation(), "\n", "");
                 return false;
             }
 
