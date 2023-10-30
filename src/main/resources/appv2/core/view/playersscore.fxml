@@ -7,7 +7,7 @@
 
 <AnchorPane
         id="master-container" stylesheets="@globals.css"
-        fx:controller="appv2.core.view.PlayersScoreController"
+        fx:controller="appv2.core.view.PlayerScoresController"
         xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
 >
    <children>

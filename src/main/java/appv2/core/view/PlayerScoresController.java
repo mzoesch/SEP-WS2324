@@ -10,19 +10,26 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 
-public class PlayersScoreController {
+/**
+ * <p>Controller for the Player Scores Screen.</p>
+ */
+public class PlayerScoresController {
 
     @FXML private Button closebtn;
     @FXML private VBox vbox;
     @FXML private Label tokenstowinlabel;
 
+    /**
+     * <p>Initializes the Player Scores Screen.<br />
+     * Adds the closing button and necessary information as labels to the screen.</p>
+     */
     @FXML
     private void initialize() {
         this.vbox.getChildren().clear();
 
         for (PlayerController PC : GameState.getActiveGameMode().getPlayerControllers()) {
             Label label = new Label(
-                    String.format("%s: %d", PC.getPlayerName(), PC.getAffectionTokens()));
+                String.format("%s: %d", PC.getPlayerName(), PC.getAffectionTokens()));
             label.getStyleClass().add("text-lg");
 
             this.vbox.getChildren().add(label);
@@ -35,10 +42,10 @@ public class PlayersScoreController {
         });
 
         this.tokenstowinlabel.setText(
-                String.format(
-                        "In this game, a player must collect %d tokens to win.",
-                        GameState.getActiveGameMode().getAmountOfTokensOfAffectionToWin()
-                )
+            String.format(
+                "In this game, a player must collect %d tokens to win.",
+                GameState.getActiveGameMode().getAmountOfTokensOfAffectionToWin()
+            )
         );
 
         return;
