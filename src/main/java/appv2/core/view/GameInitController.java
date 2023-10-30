@@ -255,6 +255,9 @@ public class GameInitController {
 
     // endregion Utility methods for onPlayBtn()
 
+    /**
+     * <p>Starts a new game with the given player names if they are valid.</p>
+     */
     @FXML
     protected void onPlayBtn() {
         this.renderErrorMessage("");
