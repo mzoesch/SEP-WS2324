@@ -84,6 +84,12 @@ public class PlayerController {
 
     // region Turn helper functions
 
+    /**
+     * <p>Prepares the Standard Output Pipeline with
+     * necessary information in a turn for the player.</p>
+     *
+     * @param scanner Scanner object to use.
+     */
     private void prepareStdForTurn(Scanner scanner) {
         App.flushStdOut();
 
@@ -128,7 +134,7 @@ public class PlayerController {
         System.out.println();
         System.out.printf("Your new card is %s.\n", this.pickedCardFromDeck.getAsString());
         System.out.printf("Your hand card is %s.\n", this.cardInHand.getAsString());
-        System.out.printf("There are %d left in the deck and ", GameInstance.getActiveGameMode().getCurrentDeckSize());
+        System.out.printf("There are %d cards left in the deck and ", GameInstance.getActiveGameMode().getCurrentDeckSize());
         if (GameInstance.getActiveGameMode().getHiddenCard() == null)
             System.out.print("there is no hidden card.\n");
         else
