@@ -20,7 +20,7 @@ Run the application's jar file with the provided batch file `runJAR.bat` or with
 java -jar out/artifacts/SEP_WS2324_jar/SEP-WS2324.jar
 ```
 
-### Compile from source
+<b>Compile from source.</b>
 
 Compile and run the app from source with the batch file `run.bat` or with the following command:
 
