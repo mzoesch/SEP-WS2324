@@ -12,6 +12,10 @@ public final class GameState {
 
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_PLAYERS = 4;
+    /**
+     * <p>Default number of players already added to
+     * the lobby when creating a game.</p>
+     */
     public static final int DEFAULT_PLAYERS = 2;
 
     public static final int MAX_PLAYER_NAME_LENGTH = 16;

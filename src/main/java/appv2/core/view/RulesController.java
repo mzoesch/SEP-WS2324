@@ -8,76 +8,89 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
+/**
+ * <p>Controller for the Rules Screen.</p>
+ */
 public class RulesController {
 
-    @FXML Text prologtext01;
-    @FXML Text prologtext02;
-    @FXML Text prologtext03;
-    @FXML Text prologtext04;
-    @FXML Text prologtext05;
-    @FXML Text prologtext06;
-    @FXML Text prologtext07;
+    @FXML private Text prologtext01;
+    @FXML private Text prologtext02;
+    @FXML private Text prologtext03;
+    @FXML private Text prologtext04;
+    @FXML private Text prologtext05;
+    @FXML private Text prologtext06;
+    @FXML private Text prologtext07;
 
-    @FXML Text objectofthegametext01;
-    @FXML Text objectofthegametext02;
-    @FXML Text objectofthegametext03;
+    @FXML private Text objectofthegametext01;
+    @FXML private Text objectofthegametext02;
+    @FXML private Text objectofthegametext03;
 
-    @FXML Text gamecardstext;
+    @FXML private Text gamecardstext;
 
-    @FXML Text tokensofaffectiontext;
+    @FXML private Text tokensofaffectiontext;
 
-    @FXML Text setuptext01;
-    @FXML Text setuptext02;
+    @FXML private Text setuptext01;
+    @FXML private Text setuptext02;
 
-    @FXML Text howtoplaytext;
+    @FXML private Text howtoplaytext;
 
-    @FXML Text takingaturntext;
+    @FXML private Text takingaturntext;
 
-    @FXML Text outoftheroundtext;
+    @FXML private Text outoftheroundtext;
 
-    @FXML Text choosingaplayertext;
+    @FXML private Text choosingaplayertext;
 
-    @FXML Text endofaroundtext;
+    @FXML private Text endofaroundtext;
 
-    @FXML Text gamenedtext;
+    @FXML private Text gamenedtext;
 
-    @FXML Text princess01;
-    @FXML Text princess02;
-    @FXML Text princess03;
+    @FXML private Text princess01;
+    @FXML private Text princess02;
+    @FXML private Text princess03;
 
-    @FXML Text countess01;
-    @FXML Text countess02;
-    @FXML Text countess03;
+    @FXML private Text countess01;
+    @FXML private Text countess02;
+    @FXML private Text countess03;
 
-    @FXML Text king01;
-    @FXML Text king02;
-    @FXML Text king03;
+    @FXML private Text king01;
+    @FXML private Text king02;
+    @FXML private Text king03;
 
-    @FXML Text prince01;
-    @FXML Text prince02;
-    @FXML Text prince03;
+    @FXML private Text prince01;
+    @FXML private Text prince02;
+    @FXML private Text prince03;
 
-    @FXML Text handmaid01;
-    @FXML Text handmaid02;
-    @FXML Text handmaid03;
+    @FXML private Text handmaid01;
+    @FXML private Text handmaid02;
+    @FXML private Text handmaid03;
 
-    @FXML Text baron01;
-    @FXML Text baron02;
-    @FXML Text baron03;
+    @FXML private Text baron01;
+    @FXML private Text baron02;
+    @FXML private Text baron03;
 
-    @FXML Text priest01;
-    @FXML Text priest02;
-    @FXML Text priest03;
+    @FXML private Text priest01;
+    @FXML private Text priest02;
+    @FXML private Text priest03;
 
-    @FXML Text guard01;
-    @FXML Text guard02;
-    @FXML Text guard03;
+    @FXML private Text guard01;
+    @FXML private Text guard02;
+    @FXML private Text guard03;
 
+    /**
+     * <p>Destroys the rules screen and displays the Main Menu.</p>
+     *
+     * @param event The event that triggered this method.
+     */
     public void onContinueBtn(ActionEvent event) {
         View.renderExistingScreen(MasterController.MAIN_MENU);
         return;
     }
 
+    /**
+     * <p>Sets the wrapping width of all the text elements to the width of the scroll pane.</p>
+     *
+     * @param width The width of the window.
+     */
     private void setWrappingWidthToText(double width) {
         int DEFAULT_PADDING = 96;
 
@@ -147,6 +160,10 @@ public class RulesController {
         return;
     }
 
+    /**
+     * <p>Initializes the rules screen with a event listener to
+     * the window to update the text in the scroll pane.</p>
+     */
     @FXML
     protected void initialize() {
         this.setWrappingWidthToText(((Stage) View.getScene().getWindow()).getWidth());
