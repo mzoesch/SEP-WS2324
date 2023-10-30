@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"app","l":"app"},{"m":"app","l":"app.cards"},{"m":"app","l":"appv2"},{"m":"app","l":"appv2.cards"},{"m":"app","l":"appv2.core"},{"m":"app","l":"appv2.core.view"}];updateSearchResults();
