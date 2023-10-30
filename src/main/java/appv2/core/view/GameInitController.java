@@ -264,7 +264,13 @@ public class GameInitController {
 
         if (!this.isFormValid()) {
             if (this.isAPlayerNameToLong()) {
-                this.renderErrorMessage("Can not start game. A player name is too long.");
+                this.renderErrorMessage(
+                    String.format(
+                        "Can not start game. A player name is too long (max %s characters).",
+                        GameState.MAX_PLAYER_NAME_LENGTH
+                    )
+                );
+
                 return;
             }
 
