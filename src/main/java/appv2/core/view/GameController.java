@@ -280,6 +280,27 @@ public class GameController {
         return;
     }
 
+    /**
+     * <p>Needed for rare bug, where the player could play the Princess Annette Card as
+     * their hand card not their table card and the view would recognize the wrong card being played.</p>
+     *
+     * @return Whether the player knocked himself out by playing a princess as hand card.
+     */
+    private static boolean isbKnockedOutByPrincessHandCardAsHandCard() {
+        try {
+            return GameState.getActiveGameMode()
+                .getMostRecentPlayerController().getDiscardedCardsPile()
+                [
+                GameState.getActiveGameMode().getMostRecentPlayerController()
+                    .getDiscardedCardsPile().length - 2
+                ].getName().equals(
+                appv2.cards.PrincessAnnette.NAME
+            );
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
     // endregion Utility methods for playCard()
 
     /**
@@ -312,6 +333,22 @@ public class GameController {
             }
 
             case RC_OK_KNOCKED_OUT -> {
+                if (GameController.isbKnockedOutByPrincessHandCardAsHandCard()) {
+                    Label label = new Label(
+                        String.format(
+                            "You played %s and knocked yourself out",
+                            GameState.getActiveGameMode().getMostRecentPlayerController()
+                                .getDiscardedCardsPile()
+                                [GameState.getActiveGameMode().getMostRecentPlayerController()
+                                    .getDiscardedCardsPile().length - 2]
+                                .getName()
+                        )
+                    );
+                    renderStandardTitleOnPlayCard(label);
+
+                    return;
+                }
+
                 Label label = new Label(
                     String.format(
                         "You played %s and knocked yourself out",
