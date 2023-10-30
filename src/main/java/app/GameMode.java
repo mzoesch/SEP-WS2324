@@ -158,7 +158,8 @@ public class GameMode {
      * <p>The player with the highest affection on their hand wins the round.<br />
      * If there is a tie, the player with the highest sum of affection in their discard pile wins the round.<br />
      * If there is still a tie, all tied players win the round and get their affection increased by one.</p>
-     * @link GameMode#applyRoundWinBonusToPlayers()
+     *
+     * @see app.GameMode
      */
     private void applyRoundWinBonusToPlayers() {
         ArrayList<PlayerController> playersWithHighestAffection = new ArrayList<PlayerController>(0);

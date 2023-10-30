@@ -61,7 +61,8 @@ public class PlayerController {
 
     /**
      * @deprecated We don't need this anymore.
-     *             We can just use the messageForPlayerNextTurn variable and whether it is empty or not.
+     *             We can just use the messageForPlayerNextTurn variable and check whether it is empty or not.
+     * @see #messageForPlayerNextTurn
      */
     private boolean bSignalPlayerNextTurn;
     /**

@@ -3,7 +3,7 @@
  * Their implementation and effects.</p>
  *
  * @author mzoesch
- * @since 1.0
- * @see app.cards.ACard
+ * @since 2.0
+ * @see appv2.cards.ACard
  */
-package app.cards;
+package appv2.cards;
