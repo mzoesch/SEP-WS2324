@@ -44,23 +44,49 @@ public class GameScene {
 
     // region Getters and Setters
 
+    /**
+     * @return Unique identifier of this object.
+     * @see GameScene#identifier
+     */
     public String getIdentifier() {
         return this.identifier;
     }
 
+    /**
+     * @return Fully rendered screen of this object.
+     * @see GameScene#pane
+     */
     public Pane getPane() {
         return this.pane;
     }
 
+    /**
+     * @return Whether this screen should be destroyed after use.
+     * @see GameScene#killAfterUse
+     */
     public boolean killAfterUse() {
         return this.killAfterUse;
     }
 
+    /**
+     * <p>Sets the unique identifier of an already rendered screen as a fallback screen when this
+     * screen is destroyed.</p>
+     *
+     * @param fallback Unique identifier of an already rendered screen.
+     * @see GameScene#fallbackIdentifier
+     */
     public void setFallback(String fallback) {
         this.fallbackIdentifier = fallback;
         return;
     }
 
+    /**
+     * <p>Gets the unique identifier of an already rendered screen as a fallback screen when this
+     * screen is destroyed.</p>
+     *
+     * @return Unique identifier of an already rendered screen.
+     * @see GameScene#fallbackIdentifier
+     */
     public String getFallback() {
         return this.fallbackIdentifier;
     }

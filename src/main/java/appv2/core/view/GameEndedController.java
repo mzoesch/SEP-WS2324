@@ -9,11 +9,38 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 
+/**
+ * <p>Controller for the Game Ended Screen.</p>
+ */
 public class GameEndedController {
 
     @FXML private Label winnersubtitlelabel;
     @FXML private VBox playersscorecontainer;
 
+
+    /**
+     * <p>Exits the application.</p>
+     */
+    @FXML
+    protected void onExitBtn() {
+        appv2.core.GameInstance.quitApplication();
+        return;
+    }
+
+    /**
+     * <p>Routs the user back to the Main Menu Screen.</p>
+     */
+    @FXML
+    protected void onMainMenuBtn() {
+        View.renderExistingScreen(MasterController.MAIN_MENU);
+        return;
+    }
+
+    /**
+     * <p>Initializes the Game Ended Screen.<br />
+     * Also sets the winners subtitle label and renders the affection
+     * tokens of all players as labels in descending order.</p>
+     */
     @FXML
     private void initialize() {
         if (GameState.getActiveGameMode().getMostRecentRoundWinners().isEmpty())
@@ -30,18 +57,6 @@ public class GameEndedController {
             continue;
         }
 
-        return;
-    }
-
-    @FXML
-    protected void onExitBtn() {
-        appv2.core.GameInstance.quitApplication();
-        return;
-    }
-
-    @FXML
-    protected void onMainMenuBtn() {
-        View.renderExistingScreen(MasterController.MAIN_MENU);
         return;
     }
 
