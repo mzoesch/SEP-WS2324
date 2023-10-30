@@ -4,6 +4,16 @@
 
 ## Setup and run
 
+### appv2 (JavaFX GUI)
+
+Run the application's jar file with:
+
+```
+java -jar out/artifacts/SEP_WS2324_jarFX/SEP-WS2324.jar
+```
+
+### app (console only)
+
 Run the application's jar file with:
 
 ```
@@ -151,3 +161,7 @@ GitHub: https://github.com/mzoesch/SEP-WS2324 <br />
 
 Show current round in game <br />
 Show detailed card info on hover <br />
+
+```
+
+```
