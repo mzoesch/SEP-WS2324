@@ -10,19 +10,24 @@ import javafx.scene.layout.HBox;
 import javafx.scene.control.Label;
 
 
+/**
+ * <p>Controller for the Discarded Pile Screen.</p>
+ */
 public class DiscardedPileController {
 
     @FXML private Button closebtn;
-
     @FXML private HBox discardedpilecontainer;
 
+    /**
+     * <p>Renders the discarded cards of all players to the screen.</p>
+     */
     private void renderDiscardedPiles() {
         this.discardedpilecontainer.getChildren().clear();
 
         for (int i = 0; i < GameState.getActiveGameMode().getPlayerCount(); i++) {
             Label label = new Label(
-                    String.format("%s",
-                            GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()));
+                String.format("%s",
+                    GameState.getActiveGameMode().getPlayerControllerByID(i).getPlayerName()));
             label.getStyleClass().add("text-lg");
             VBox vbox = new VBox(label);
 
@@ -35,13 +40,15 @@ public class DiscardedPileController {
             }
 
             for (
-                    int j = 0;
-                    j < GameState.getActiveGameMode().getPlayerControllerByID(i).getDiscardedCardsPile().length;
-                    j++
+                int j = 0;
+                j < GameState.getActiveGameMode().getPlayerControllerByID(i).getDiscardedCardsPile().length;
+                j++
             ) {
-                Label discardedcardlabel = new Label(String.format(
+                Label discardedcardlabel = new Label(
+                    String.format(
                         "-> %s",
-                        GameState.getActiveGameMode().getPlayerControllerByID(i).getDiscardedCardsPile()[j].getAsString()
+                        GameState.getActiveGameMode().getPlayerControllerByID(i)
+                            .getDiscardedCardsPile()[j].getAsString()
                     )
                 );
                 discardedcardlabel.getStyleClass().add("text-base");
@@ -57,6 +64,10 @@ public class DiscardedPileController {
         return;
     }
 
+    /**
+     * <p>Initializes the Discarded Pile Screen.<br />
+     * Adds the closing button for this screen and renders the discarded cards of all players.</p>
+     */
     @FXML
     private void initialize() {
         this.renderDiscardedPiles();
