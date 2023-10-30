@@ -6,7 +6,7 @@
 
 ### appv2 (JavaFX GUI)
 
-Run the application's jar file with:
+Run the application's jar file with the provided batch file `runJAR-FX.bat` or with the following command:
 
 ```
 java -jar out/artifacts/SEP_WS2324_jarFX/SEP-WS2324.jar
@@ -14,7 +14,7 @@ java -jar out/artifacts/SEP_WS2324_jarFX/SEP-WS2324.jar
 
 ### app (console only)
 
-Run the application's jar file with:
+Run the application's jar file with the provided batch file `runJAR.bat` or with the following command:
 
 ```
 java -jar out/artifacts/SEP_WS2324_jar/SEP-WS2324.jar
@@ -25,7 +25,7 @@ java -jar out/artifacts/SEP_WS2324_jar/SEP-WS2324.jar
 Compile and run the app from source with the batch file `run.bat` or with the following command:
 
 ```
-cd src/ && javac app/App.java -d ../bin && cd ../bin && java app.App && cd ..
+cd src/main/java/ && javac app/App.java -d ../../../bin && cd ../../../bin && java app.App && cd ..
 ```
 
 Requires Java 19 or higher.
@@ -130,7 +130,7 @@ When you discard King Arnaud IV, trade the card in your hand with the card held 
 #### 5: Prince Arnaud
 
 As a social gadfly, Prince Arnaud was not as distressed over his mother's arrest as one would suppose. Since many women clamor for his attention, he hopes to help his sister find the same banal happiness by playing matchmaker. <p>
-When you discard Prince Arnaud, choose one player still in the round (including yourself). That player discards his or her hand (but doesn't apply its effect, unless it is the Princess, see [above](#princess-annette) and draws a new one. If the deck is empty and the player cannot draw a card, that player draws the card that was removed at the start of the round. If all other players are protected by the Handmaid, you must choose yourself. <p>
+When you discard Prince Arnaud, choose one player still in the round (including yourself). That player discards his or her hand (but doesn't apply its effect, unless it is the Princess, see [above](#princess-annette)) and draws a new one. If the deck is empty and the player cannot draw a card, that player draws the card that was removed at the start of the round. If all other players are protected by the Handmaid, you must choose yourself. <p>
 
 #### 4: Handmaid Susannah
 
@@ -161,7 +161,3 @@ GitHub: https://github.com/mzoesch/SEP-WS2324 <br />
 
 Show current round in game <br />
 Show detailed card info on hover <br />
-
-```
-
-```
