@@ -31,6 +31,10 @@ public class GameController {
      */
     @FXML private Label turntitle;
     /**
+     * <p>Displays the current turn number.</p>
+     */
+    @FXML private Label roundnumbertitle;
+    /**
      * <p>The Middle Area of the Game Screen where we display Card effect choices.</p>
      */
     @FXML private AnchorPane mainarea;
@@ -635,6 +639,9 @@ public class GameController {
      */
     private void setTurnTitle(String playerName) {
         this.turntitle.setText(String.format("%s's Turn", playerName));
+        this.roundnumbertitle.setText(
+                String.format("Round %d", GameState.getActiveGameMode().getCurrentRoundNumber()));
+
         return;
     }
 
