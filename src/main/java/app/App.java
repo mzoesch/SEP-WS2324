@@ -290,21 +290,27 @@ public final class App {
     /**
      * <p>Gets and validates a string from the user. Will only return valid strings.</p>
      *
-     * @param scanner The scanner to read the input from.
+     * @param scanner   The scanner to read the input from.
      * @param minLength The minimum length of the string.
-     * @param prompt The prompt to display to the user what information to supply.
+     * @param maxLength The maximum length of the string (zero for no maximum).
+     * @param prompt    The prompt to display to the user what information to supply.
      * @return The validated input.
      */
-    public static String waitForInputString_V2(Scanner scanner, int minLength, String prompt) {
+    public static String waitForInputString_V2(Scanner scanner, int minLength, int maxLength, String prompt) {
         while (true) {
             if (prompt == null)
-                System.out.printf("Enter your choice (min. %d characters): ", minLength);
+                System.out.print("Enter your choice: ");
             else
-                System.out.printf("%s (min. %d characters): ", prompt, minLength);
+                System.out.printf("%s: ", prompt);
 
             String input = scanner.nextLine();
             if (input.length() < minLength) {
-                System.out.printf("Input \"%s\" is too short. Retrying.\n\n", input);
+                System.out.printf("Input \"%s\" is too short (min characters %d). Retrying.\n\n", input, minLength);
+                continue;
+            }
+
+            if (maxLength != 0 && input.length() > maxLength) {
+                System.out.printf("Input \"%s\" is too long (max characters %d). Retrying.\n\n", input, maxLength);
                 continue;
             }
 

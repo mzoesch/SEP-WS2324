@@ -153,14 +153,20 @@ import java.util.Scanner;
      * <p>Gets and validates the name of all players. Will only return a valid amount of player names.</p>
      *
      * @param scanner The scanner to read the input from.
-     * @param playerCount The amount of players.
+     * @param playerCount The number of players.
      * @return An array of player names.
      */
     static private String[] getPlayerNames(Scanner scanner, int playerCount) {
         String[] playerNames = new String[playerCount];
         for (int i = 0; i < playerCount; i++) {
             playerNames[i] =
-                    App.waitForInputString_V2(scanner, 1, String.format("Enter the name of player %d: ", i + 1));
+                    App.waitForInputString_V2(
+                            scanner,
+                            GameMode.MINIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME,
+                            GameMode.MAXIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME,
+                            String.format("Enter the name of player %d: ", i + 1)
+                    );
+
             continue;
         }
 

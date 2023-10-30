@@ -32,6 +32,15 @@ public class GameMode {
 
     public static final int AMOUNT_OF_PLAYER_REQUIRED_FOR_EXAMINING_CARDS = 2;
 
+    /**
+     * <p>The player name must be at least 1 character in size.</p>
+     */
+    public static final int MINIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME = 1;
+    /**
+     * <p>The player name must be at most 16 characters in size.</p>
+     */
+    public static final int MAXIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME = 16;
+
     private final Scanner scanner;
     private final int playerCount;
 
