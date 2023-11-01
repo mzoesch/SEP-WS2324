@@ -2,6 +2,10 @@
 
 ## @mzoesch (Magnus Zoeschinger)
 
+## Documentation
+
+You can view the docs online [here](https://api.zoeschinger.com/static/SEP-WS2324/javadocs/index.html).
+
 ## Setup and run
 
 ### appv2 (JavaFX GUI)
