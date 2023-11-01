@@ -159,13 +159,33 @@ import java.util.Scanner;
     static private String[] getPlayerNames(Scanner scanner, int playerCount) {
         String[] playerNames = new String[playerCount];
         for (int i = 0; i < playerCount; i++) {
-            playerNames[i] =
+            while (true) {
+                playerNames[i] =
                     App.waitForInputString_V2(
-                            scanner,
-                            GameMode.MINIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME,
-                            GameMode.MAXIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME,
-                            String.format("Enter the name of player %d: ", i + 1)
-                    );
+                        scanner,
+                        GameMode.MINIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME,
+                        GameMode.MAXIMAL_CHARACTER_COUNT_FOR_PLAYER_NAME,
+                        String.format("Enter the name of player %d: ", i + 1)
+                        );
+
+                boolean bValid = true;
+                for (int j = 0; j < i; j++) {
+                    if (playerNames[i].equals(playerNames[j])) {
+                        System.out.printf("The name \"%s\" is already taken.\n", playerNames[i]);
+                        playerNames[i] = null;
+
+                        bValid = false;
+                        break;
+                    }
+
+                    continue;
+                }
+
+                if (bValid)
+                    break;
+
+                continue;
+            }
 
             continue;
         }
