@@ -1,7 +1,7 @@
 ## javadocs/
 
 You can view the docs online here: <br />
-https://api.zoeschinger.com/static/SEP-WS2324/javadocs/app/module-summary.html
+https://api.zoeschinger.com/static/SEP-WS2324/javadocs/index.html
 
 ## SEP_WS2324_jar/
 
