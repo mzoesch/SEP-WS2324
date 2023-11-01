@@ -1,5 +1,8 @@
 ## javadocs/
 
+You can view the docs online here:
+https://api.zoeschinger.com/static/SEP-WS2324/javadocs/app/module-summary.html
+
 ## SEP_WS2324_jar/
 
 The application's Jar file can be found here.
