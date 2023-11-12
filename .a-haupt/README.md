@@ -1,1 +1,1 @@
-# The UML is App-radial.png
+# The UML diagram is App-radial.png
