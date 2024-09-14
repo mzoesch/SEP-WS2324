@@ -2,6 +2,12 @@
 
 ## @mzoesch (Magnus Zoeschinger)
 
+## About
+
+This is a small project developed in a practical course at the Ludwig-Maximilians-Universität München at the start of the semester WS2324.
+The goal was to learn the basics of Java before the [main group project](https://github.com/mzoesch/RoboRally) should be developed. The requirements that
+should be implemented can be found [here](http://alderac.com/wp-content/uploads/2017/11/Love-Letter-Premium_Rulebook.pdf).
+
 ## Documentation
 
 You can view the docs online [here](https://api.zoeschinger.com/static/SEP-WS2324/javadocs/index.html).
